@@ -1,0 +1,1930 @@
+<!doctype html>
+<html lang="af">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Leereenheid 1 &mdash; Wat is Ekonomie?</title>
+<style>
+/* ===================================================================
+   AEKN121 lab shell — shared across every Leereenheid.
+   Do not put unit-specific styling here; use the unit's own unit.css.
+   =================================================================== */
+:root{
+  --paper:#fbfaf7; --panel:#ffffff; --ink:#1c1c1a; --ink-soft:#54524d;
+  --line:#ddd9d0; --line-soft:#eeeae2;
+  --accent:#7a3b1f; --accent-soft:#f4ece6;
+  --good:#2f6b3d; --good-soft:#eaf3ec;
+  --bad:#9a2f2f; --bad-soft:#f8ecec;
+  --note:#3a5a7a; --note-soft:#eaf0f6;
+  --demand:#7a3b1f; --supply:#2f5f6b;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --serif:Cambria,Georgia,"Times New Roman",serif;
+  --sans:Calibri,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+/* Dark tokens declared twice on purpose: the media query covers the default
+   "system" state, the [data-theme] rule covers a host that stamps an explicit
+   choice on the root element. The :not() guard lets an explicit light choice
+   beat a dark OS. */
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+ }
+}
+:root[data-theme="dark"]{
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px 120px}
+
+/* ---------- masthead + progress ---------- */
+header.mast{border-bottom:2px solid var(--ink);padding:22px 0 12px}
+.mast .code{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.mast h1{font-family:var(--serif);font-size:26px;line-height:1.2;margin:6px 0 2px;font-weight:700}
+.mast .sub{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:17px}
+.progwrap{position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:8px 0 9px}
+.progbar{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden}
+.progfill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+.progtext{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:5px;letter-spacing:.04em}
+.saveflag{opacity:0;transition:opacity .4s;color:var(--good)}
+.saveflag.on{opacity:1}
+#tocbtn{background:none;border:0;color:inherit;font-family:var(--mono);font-size:11px;
+  cursor:pointer;padding:0 0 0 12px;letter-spacing:.04em;opacity:.75}
+
+/* ---------- steps ---------- */
+.step{display:none;padding-top:26px}
+.step.active{display:block}
+.stephead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:18px}
+.stepnum{font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:700}
+.steptitle{font-family:var(--serif);font-size:22px;font-weight:700;flex:1 1 auto;line-height:1.2}
+.steptag{font-style:italic;color:var(--ink-soft);font-size:14px;font-family:var(--serif)}
+.stepmin{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+
+/* ---------- prose ---------- */
+h3{font-family:var(--serif);font-size:19px;margin:26px 0 8px;font-weight:700}
+h4{font-family:var(--sans);font-size:15px;margin:20px 0 6px;font-weight:700}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:22px}
+li{margin-bottom:5px}
+.lead{font-family:var(--serif);font-size:19px;line-height:1.55}
+.scripture{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:14px 16px;margin:0 0 18px;font-family:var(--serif);font-style:italic}
+.scripture .ref{display:block;font-style:normal;font-family:var(--mono);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:8px}
+.def{border:1px solid var(--accent);border-left-width:4px;background:var(--panel);
+  padding:13px 15px;margin:0 0 16px;font-family:var(--serif);font-size:18px}
+.def strong{font-family:var(--sans);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:5px;font-weight:700}
+.note{border-left:3px solid var(--note);background:var(--note-soft);
+  padding:12px 15px;margin:0 0 16px;font-size:15px}
+.note b{color:var(--note)}
+.readbox{background:var(--panel);border:1px solid var(--line);
+  padding:16px 18px;margin:0 0 18px;border-radius:3px}
+.readbox .src{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+.hint{font-size:14px;color:var(--ink-soft);margin:5px 0 0;font-style:italic}
+
+/* ---------- forms ---------- */
+label.q{display:block;font-weight:700;margin:18px 0 7px;font-size:16px}
+label.q .mk{font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+  font-weight:400;margin-left:6px}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font-family:inherit;font-size:16px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--ink)}
+textarea{min-height:92px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled,textarea:disabled,select:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible,.opt:focus-visible,.tocitem:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- multiple choice ---------- */
+.opts{display:flex;flex-direction:column;gap:7px;margin:8px 0 4px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:11px 13px;cursor:pointer;
+  font-size:16px;line-height:1.45;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt .lt{font-family:var(--mono);font-weight:700;flex:0 0 auto}
+.opt.locked{cursor:default}
+.fb{margin-top:10px;padding:11px 14px;border-radius:3px;font-size:15px;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:var(--good-soft);border-left:3px solid var(--good)}
+.fb.no{background:var(--bad-soft);border-left:3px solid var(--bad)}
+.fb .verdict{font-weight:700;display:block;margin-bottom:4px}
+.fb.ok .verdict{color:var(--good)}
+.fb.no .verdict{color:var(--bad)}
+
+/* ---------- buttons ---------- */
+button.act{font-family:var(--sans);font-size:15px;font-weight:700;padding:10px 20px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:3px;cursor:pointer}
+button.act:hover{filter:brightness(1.08)}
+button.ghost{font-family:var(--sans);font-size:15px;padding:10px 20px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+button.ghost:hover{border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- sorter ---------- */
+.sorter{margin:14px 0 6px}
+.sortrow{display:flex;gap:9px;align-items:center;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
+.sortrow .txt{flex:1 1 190px;font-size:15.5px;line-height:1.4}
+.sortrow .picks{display:flex;gap:5px;flex-wrap:wrap}
+.sortrow .picks button{font-family:var(--sans);font-size:13px;padding:6px 12px;
+  border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+  border-radius:3px;cursor:pointer;white-space:nowrap}
+.sortrow .picks button.sel{border-color:var(--accent);background:var(--accent-soft);
+  color:var(--accent);font-weight:700}
+.sortrow.right{border-color:var(--good);background:var(--good-soft)}
+.sortrow.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.sortrow .why{flex:1 1 100%;font-size:14px;color:var(--ink-soft);
+  font-style:italic;margin-top:4px;display:none}
+.sortrow.reveal .why{display:block}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:var(--line-soft);font-weight:700;font-size:14px}
+td.num,th.num{text-align:right;font-family:var(--mono);font-size:14px;
+  font-variant-numeric:tabular-nums}
+tr.eq td{background:var(--accent-soft);font-weight:700}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 16px}
+.scroll table{margin:0;min-width:420px}
+
+/* ---------- navigation ---------- */
+.nav{display:flex;gap:10px;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--line);margin-top:34px;padding-top:16px;flex-wrap:wrap}
+
+/* ---------- charts (generic frame; curve styling lives in unit.css) ---------- */
+.chartwrap{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:10px;margin:0 0 14px}
+svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
+.chart .axis{stroke:currentColor;stroke-width:2;fill:none}
+.chart .helper{stroke:currentColor;stroke-width:1;stroke-dasharray:4 3;opacity:.45}
+.chart .axlbl{font-family:var(--sans);font-size:12px;fill:currentColor;opacity:.7;
+  font-variant-numeric:tabular-nums}
+.chart .axname{font-family:var(--sans);font-size:13px;fill:currentColor;font-weight:700}
+.chart .ptlbl{font-family:var(--mono);font-size:14px;fill:currentColor;font-weight:700}
+.verdictbox{font-size:15px;padding:11px 14px;border-radius:3px;margin:0 0 12px;
+  background:var(--note-soft);border-left:3px solid var(--note);min-height:22px}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.ctrls button{font-family:var(--sans);font-size:14px;padding:8px 14px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+.ctrls button.sel{border-color:var(--note);background:var(--note-soft);
+  color:var(--note);font-weight:700}
+.slider{margin:0 0 12px}
+.slider input[type=range]{width:100%;accent-color:var(--accent)}
+.slider .val{font-family:var(--mono);font-size:19px;color:var(--accent);font-weight:700}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:22px;height:3px;display:inline-block;border-radius:2px}
+
+/* ---------- results + export ---------- */
+.scorecard{border:2px solid var(--accent);border-radius:3px;padding:18px;
+  margin:0 0 20px;background:var(--panel);text-align:center}
+.scorecard .big{font-family:var(--serif);font-size:42px;font-weight:700;
+  color:var(--accent);line-height:1}
+.scorecard .cap{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+.codebox{font-family:var(--mono);font-size:19px;letter-spacing:.14em;
+  background:var(--accent-soft);border:1px dashed var(--accent);color:var(--accent);
+  padding:14px;text-align:center;border-radius:3px;margin:0 0 8px;
+  user-select:all;word-break:break-all;font-weight:700}
+.locknote{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+  letter-spacing:.05em;margin:6px 0 0}
+#exportbox{display:none;margin-top:12px;min-height:230px;
+  font-family:var(--mono);font-size:12.5px}
+
+/* ---------- table of contents ---------- */
+.toc{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;
+  padding:40px 18px;overflow-y:auto}
+.toc.open{display:block}
+.toc .inner{max-width:520px;margin:0 auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:4px;padding:8px}
+.tocitem{display:flex;width:100%;gap:11px;align-items:baseline;text-align:left;
+  background:transparent;border:0;border-bottom:1px solid var(--line-soft);
+  padding:12px 10px;cursor:pointer;color:var(--ink);font-family:var(--sans);font-size:15px}
+.tocitem:last-child{border-bottom:0}
+.tocitem:hover{background:var(--accent-soft)}
+.tocitem .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700}
+.tocitem .dn{margin-left:auto;color:var(--good);font-family:var(--mono);font-size:12px}
+
+/* ---------- small screens ---------- */
+@media (max-width:520px){
+  body{font-size:16px}
+  .mast h1{font-size:22px}
+  .steptitle{font-size:19px}
+  .wrap{padding:0 14px 110px}
+  .nav button{flex:1 1 100%}
+  /* the SVG scales down with the viewport, so scale its type back up */
+  .chart .axlbl{font-size:16px}
+  .chart .axname{font-size:17px}
+  .chart .ptlbl{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+@media print{
+  .progwrap,.nav,.ctrls,.toc{display:none!important}
+  .step{display:block!important;page-break-after:always}
+}
+
+
+/* ---- unit-specific ---- */
+/* Leereenheid 1 — produksiemoontlikheidskurwe */
+.chart .curve{stroke:var(--accent);stroke-width:2.5;fill:none}
+.chart .curve2{stroke:var(--note);stroke-width:2;fill:none;stroke-dasharray:6 4}
+.chart .pt{fill:var(--accent)}
+.chart .probe{fill:var(--note);stroke:var(--panel);stroke-width:2}
+.chart .probeline{stroke:var(--note);stroke-width:1;stroke-dasharray:3 3}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="code">AEKN121 &middot; Inleiding tot Ekonomie &middot; AROS</div>
+  <h1>Leereenheid 1 &mdash; Wat is Ekonomie?</h1>
+  <div class="sub">Werk in jou eie tyd hierdeur. Jou antwoorde word outomaties gestoor.</div>
+</header>
+
+<div class="progwrap">
+  <div class="progbar"><div class="progfill" id="progfill"></div></div>
+  <div class="progtext">
+    <span id="progtext">&nbsp;</span>
+    <span><span class="saveflag" id="saveflag">gestoor</span>
+      <button id="tocbtn" type="button">inhoud &#9662;</button></span>
+  </div>
+</div>
+
+<div class="toc" id="toc"><div class="inner" id="tocinner"></div></div>
+
+<main id="steps">
+<!-- ============ 00 ============ -->
+<section class="step" data-title="Begin" data-tag="alleen" data-min="5">
+  <div class="stephead"><span class="stepnum">00</span>
+    <span class="steptitle">Begin hier</span>
+    <span class="steptag">alleen</span><span class="stepmin">5 min</span></div>
+
+  <p class="lead">Hierdie is Leereenheid 1 van AEKN121. Dit vervang nie die Leesbundel nie
+  &mdash; dit is die Leesbundel, met die werk ingebou.</p>
+
+  <p>Werk van bo na onder deur. Jy hoef dit nie in een sessie klaar te maak nie: alles
+  wat jy intik word op hierdie toestel gestoor, en jy kan later terugkom waar jy opgehou het.
+  Reken op ongeveer <b>90 minute</b> in totaal.</p>
+
+  <p>Aan die einde skryf jy <b>e-Klas toets 1</b> (25 punte, 20% van jou deelnamepunt)
+  hier binne-in. Jy kry dadelik jou punt en 'n kode om op e-Klas in te sleutel.</p>
+
+  <div class="note"><b>Werk dit op jou selfoon?</b> Ja. Hou dit regop.
+  Die grafieke werk met 'n tik.</div>
+
+  <label class="q" for="f_naam">Jou naam en van</label>
+  <input type="text" id="f_naam" data-field="naam" autocomplete="name">
+
+  <label class="q" for="f_nr">Jou studentenommer</label>
+  <input type="text" id="f_nr" data-field="studentenr" inputmode="numeric" autocomplete="off">
+  <p class="hint">Dit gaan in jou toetskode in. Maak seker dit is reg.</p>
+
+  <div class="nav"><span></span><button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="step" data-title="Voorspel" data-tag="alleen" data-min="6">
+  <div class="stephead"><span class="stepnum">01</span>
+    <span class="steptitle">Voorspel eers</span>
+    <span class="steptag">alleen</span><span class="stepmin">6 min</span></div>
+
+  <p class="lead">Voordat jy iets lees. Ses stellings &mdash; s&ecirc; net of elkeen waar of
+  onwaar is.</p>
+
+  <p>Jy kry nie nou terugvoer nie. Aan die einde van die eenheid wys ons jou wat jy geraai het
+  en wat die antwoord is. Om verkeerd te wees is nie die punt nie &mdash; om te weet
+  <i>waar</i> jy verkeerd was, is.</p>
+
+  <div class="sorter" data-field="voorspel" data-bins="Waar|Onwaar" data-noreveal="1">
+    <div class="sortrow" data-a="Waar"><div class="txt">Ekonomie is 'n sosiale wetenskap.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Ekonomie gaan in wese oor geld.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Geld is 'n produksiefaktor.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Geleentheidskoste word altyd in rand gemeet.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Wanneer werklose hulpbronne weer in gebruik geneem word, skuif die PMK na regs.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">Normatiewe stellings het 'n plek in ekonomiese beleidvorming.</div></div>
+  </div>
+
+  <label class="q" for="f_gr89">Watter een van die ses sal jou Graad 8- of 9-leerders die
+  moeilikste vind? Hoekom?</label>
+  <textarea id="f_gr89" data-field="gr89_voorspel" data-lock-with-predictions></textarea>
+  <p class="hint">Ons kom in stap 08 hierop terug.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en sluit my raaiskote</button></div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="step" data-title="Wat is ekonomie?" data-tag="lees en doen" data-min="12">
+  <div class="stephead"><span class="stepnum">02</span>
+    <span class="steptitle">Wat is ekonomie?</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">12 min</span></div>
+
+  <div class="scripture">&ldquo;En God het hulle geseën, en God het vir hulle gesê: &lsquo;Wees
+  vrugbaar en vermeerder en vul die aarde, onderwerp dit en heers oor die visse van die see en
+  die voëls van die hemel en oor al die diere wat op die aarde kruip.&rsquo;&rdquo;
+  <span class="ref">Genesis 1:28 &middot; Die Bybel, 1953</span></div>
+
+  <p>In sy Woord het God aan die mens 'n opdrag gegee om te heers en te bou op die aarde.
+  Ekonomie bied aan ons toerusting om hierdie opdrag uit te voer &mdash; of ons nou in
+  Ekonomie spesialiseer en of ons dit as 'n raamwerk vir die alledaagse lewe gebruik.</p>
+
+  <p>Wanneer mense aan die term &ldquo;ekonomie&rdquo; dink, dink hulle gewoonlik dat dit oor
+  geld handel. Geld is egter net 'n maatstaf wat dikwels gebruik word om die uitkomste van
+  ekonomiese beleid te meet. In sy wese streef ekonomie na <b>doeltreffendheid</b>. Sodra ons
+  dit besef, word dit duidelik dat ekonomie nie net in die finansiële wêreld hoort nie, maar
+  dat dit 'n denkpatroon is wat deel vorm van die besluite wat elke mens daagliks neem.</p>
+
+  <p>Die gedagte is ook veel ouer as die studierigting. In Genesis 41:33&ndash;35 lê Josef die
+  farao se droom uit en beskryf dan 'n ekonomiese plan: stel 'n verstandige man aan, hef in die
+  sewe jare van oorvloed 'n vyfde van die opbrengs, en hoop koring op as voedsel vir die
+  jare wat kom.</p>
+
+  <h3>1.1.1 &nbsp;Ekonomie as 'n sosiale wetenskap</h3>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 4&ndash;5</div>
+    <p>Alhoewel baie mense dink dat Ekonomie net met finansies of met wiskunde te make het, is
+    Ekonomie in werklikheid 'n <b>sosiale wetenskap wat menslike gedrag bestudeer</b>.</p>
+    <p>Kamarck (2002:4) onderskei twee soorte wetenskap: (i) 'n presiese wetenskap soos Fisika,
+    waarin wiskunde die realiteit korrek en presies beskryf, en (ii) 'n denkmetode wat
+    betroubare resultate behaal deur logies vanuit waargenome feite te redeneer. Omdat die
+    onderwerp van ekonomiese studie &mdash; menslike keuses &mdash; nie aan presies dieselfde
+    behandeling as Fisika onderwerp kan word nie, val Ekonomie in die <b>tweede</b> kategorie.</p>
+  </div>
+
+  <h3>1.1.2 &nbsp;Waar die woord vandaan kom</h3>
+
+  <p>Die woord &ldquo;ekonomie&rdquo; kom van die Griekse <i>oikonomia</i> (Leshem, 2016).
+  Bou dit self op:</p>
+
+  <div class="sorter" data-field="oikos" data-bins="huishouding|bestuur|geld|mark">
+    <div class="sortrow" data-a="huishouding" data-why="Reg &mdash; oikos is die huishouding."><div class="txt"><b>oikos</b> beteken&hellip;</div></div>
+    <div class="sortrow" data-a="bestuur" data-why="Reg &mdash; nemein word as bestuur vertaal."><div class="txt"><b>nemein</b> beteken&hellip;</div></div>
+  </div>
+
+  <p>Die samestelling s&ecirc; dus twee dinge. Eerstens dat ekonomie nie net op die finansiële
+  milieu van toepassing is nie. Tweedens dat dit met die <b>bestuur van sake</b> te make het.
+  Die kern van die studierigting is die doeltreffende bestuur van sake.</p>
+
+  <h3>Drie definisies</h3>
+  <div class="scroll"><table>
+    <tr><th>Definisie</th><th>Bron</th></tr>
+    <tr><td>&ldquo;Economics is the study of how humans make decisions in the face of scarcity.&rdquo;</td>
+        <td>Dodge, Greenlaw &amp; Taylor, 2017</td></tr>
+    <tr><td>&ldquo;Economics is the science which studies human behaviour as a relationship
+        between ends and scarce means which have alternative uses.&rdquo;</td>
+        <td>Robbins, 1945:16</td></tr>
+    <tr><td>&ldquo;Economics is a study of mankind in the ordinary business of life&hellip;&rdquo;</td>
+        <td>Marshall, aangehaal deur Aspers, 1999:652&ndash;653</td></tr>
+  </table></div>
+
+  <p>Twee dinge loop deur al drie: (i) die studie van <b>menslike gedrag</b>, en (ii) die
+  toewysing van <b>skaars hulpbronne</b>.</p>
+
+  <div class="def"><strong>Onthou hierdie een</strong>
+  Ekonomie is 'n sosiale wetenskap oor die menslike keuses en bestuur van skaars hulpbronne
+  om behoeftes te bevredig.</div>
+
+  <div class="mcq" data-field="m_sosiaal" data-a="c"
+    data-why="Ekonomie bestudeer menslike keuses. Dit is presies wat dit 'n sosiale wetenskap maak. Dit het nie wette soos Fisika nie, en dit gee nie 'n presiese beskrywing van die werklikheid nie.">
+    <label class="q">Hoekom noem ons Ekonomie 'n sosiale wetenskap? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Dit het wette soos Fisika.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Dit is logies.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Dit bestudeer menslike keuses.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dit bied 'n presiese beskrywing van die werklikheid.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <h3>1.1.3 &nbsp;Ekonomie en Besigheidstudies</h3>
+  <p>Studente verwar die twee dikwels. Die verskil is die <b>vlak waarop gekyk word</b>:</p>
+  <div class="scroll"><table>
+    <tr><th></th><th>Ekonomie</th><th>Besigheidstudies</th></tr>
+    <tr><th>Vra</th><td>Hoe neem individue, besighede en regerings besluite om onbeperkte
+      behoeftes met beperkte hulpbronne te vervul?</td>
+      <td>Hoe gebruik hierdie maatskappy sy hulpbronne op 'n georganiseerde wyse om wins te maak?</td></tr>
+    <tr><th>Fokus</th><td>Die omgewing &mdash; politieke en sosiale faktore, plaaslik en oorsee,
+      waarbinne die maatskappy funksioneer</td>
+      <td>Die werksaamhede van die maatskappy self</td></tr>
+    <tr><th>Gebruik ekonomiese aanwysers om&hellip;</th>
+      <td>&hellip;die regering te help om beleid te vorm</td>
+      <td>&hellip;die impak op die besigheid te bepaal</td></tr>
+  </table></div>
+  <p class="hint">Bron: EDUCBA, 2021; Mohr et al., 2015.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="step" data-title="Mikro of makro?" data-tag="doen" data-min="7">
+  <div class="stephead"><span class="stepnum">03</span>
+    <span class="steptitle">Mikro of makro?</span>
+    <span class="steptag">doen</span><span class="stepmin">7 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 6&ndash;7</div>
+    <p><b>Mikro-ekonomie</b> kyk na die individuele dele van die ekonomie &mdash; een huishouding,
+    een besigheid, een mark, een prys.</p>
+    <p><b>Makro-ekonomie</b> is gemoeid met die ekonomie <b>as 'n geheel</b>: die totale groei
+    van 'n ekonomie, die algehele werkloosheidsvlak, die inflasiekoers (Mohr et al., 2015:11).</p>
+  </div>
+
+  <div class="note"><b>Die toets vra dit so:</b> &ldquo;Watter een van die volgende is 'n
+  makro-ekonomiese vraagstuk?&rdquo; Die truuk is om te vra: gaan dit oor <i>een</i> mark,
+  of oor die <i>hele</i> ekonomie?</div>
+
+  <p>Sorteer elkeen. Jy kry terugvoer sodra jy al agt gedoen het.</p>
+
+  <div class="sorter" data-field="mikromakro" data-bins="Mikro|Makro">
+    <div class="sortrow" data-a="Mikro" data-why="Een produk se prys in een mark."><div class="txt">Die prys van melk</div></div>
+    <div class="sortrow" data-a="Makro" data-why="Inflasie is 'n algehele prysvlak-verskynsel."><div class="txt">Zimbabwe se inflasiekoers</div></div>
+    <div class="sortrow" data-a="Makro" data-why="Die algehele vlak van werkloosheid in die ekonomie."><div class="txt">Werkloosheid in Suid-Afrika</div></div>
+    <div class="sortrow" data-a="Makro" data-why="Die groei van 'n hele ekonomie."><div class="txt">Ekonomiese groei in die VSA</div></div>
+    <div class="sortrow" data-a="Mikro" data-why="Een huishouding se besluit oor een aankoop."><div class="txt">Of die Van Wyks 'n tweede motor koop</div></div>
+    <div class="sortrow" data-a="Mikro" data-why="Een firma, een besluit oor sy eie hulpbronne."><div class="txt">Hoeveel werkers 'n bakkery in Potchefstroom aanstel</div></div>
+    <div class="sortrow" data-a="Makro" data-why="Die repokoers geld vir die hele ekonomie."><div class="txt">Die Reserwebank se besluit oor die repokoers</div></div>
+    <div class="sortrow" data-a="Mikro" data-why="Een mark &mdash; die suikermark &mdash; se prys en hoeveelheid."><div class="txt">Wat 'n suikerbelasting aan die suikermark doen</div></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="step" data-title="Positief of normatief?" data-tag="doen" data-min="8">
+  <div class="stephead"><span class="stepnum">04</span>
+    <span class="steptitle">Positief of normatief?</span>
+    <span class="steptag">doen</span><span class="stepmin">8 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 7&ndash;8</div>
+    <p><b>Positiewe</b> stellings is objektiewe, feitlike stellings. Hulle kan in beginsel
+    teen die data getoets word &mdash; hulle kan waar of vals wees.</p>
+    <p><b>Normatiewe</b> stellings is opinie-stellings of waarde-oordele. Hulle s&ecirc; wat
+    <i>behoort</i> te wees (Fontinelle, 2020).</p>
+  </div>
+
+  <div class="scroll"><table>
+    <tr><th>Positiewe stelling</th><th>Normatiewe stelling</th></tr>
+    <tr><td>&ldquo;Die BTW-koers in Suid-Afrika is 15%.&rdquo;</td><td>&ldquo;Die belastingkoers is te hoog.&rdquo;</td></tr>
+    <tr><td>&ldquo;Ek het 80% in die eindeksamen vir AEKN121 behaal.&rdquo;</td><td>&ldquo;Die AEKN121-eindeksamen gaan moeilik wees.&rdquo;</td></tr>
+    <tr><td>&ldquo;Ek het gister twee snye sjokoladekoek geëet.&rdquo;</td><td>&ldquo;Sjokoladekoek is die lekkerste.&rdquo;</td></tr>
+  </table></div>
+
+  <div class="note"><b>Let op die strikvraag.</b> &ldquo;Te ho&euml; minimumlone veroorsaak
+  werkloosheid&rdquo; kl&iacute;nk na 'n opinie omdat mense daaroor stry. Dit is egter 'n
+  <i>positiewe</i> stelling: dit maak 'n bewering oor oorsaak en gevolg wat teen die data
+  getoets kan word. Die woord &ldquo;te hoog&rdquo; is die normatiewe deel &mdash; maar die
+  bewering self is toetsbaar. Dit is presies waar studente in die toets punte verloor.</div>
+
+  <div class="sorter" data-field="posnorm" data-bins="Positief|Normatief">
+    <div class="sortrow" data-a="Positief" data-why="'n Feit wat gemeet is."><div class="txt">Die inflasiekoers is 3,3%.</div></div>
+    <div class="sortrow" data-a="Normatief" data-why="&lsquo;Behoort&rsquo; is die verklikker &mdash; dit is 'n waarde-oordeel."><div class="txt">Die inflasiemikpunt behoort 3% te wees.</div></div>
+    <div class="sortrow" data-a="Positief" data-why="'n Toetsbare bewering oor oorsaak en gevolg, al stry mense daaroor."><div class="txt">Te hoë minimumlone veroorsaak werkloosheid.</div></div>
+    <div class="sortrow" data-a="Normatief" data-why="&lsquo;Dit lyk of&rsquo; &mdash; 'n indruk, nie 'n gemete feit nie."><div class="txt">Dit lyk of dinge beter gaan by Transnet.</div></div>
+    <div class="sortrow" data-a="Positief" data-why="'n Feit oor die verlede."><div class="txt">Rafael Nadal het die Franse Ope in 2020 gewen.</div></div>
+    <div class="sortrow" data-a="Positief" data-why="'n Voorspelling is steeds positief &mdash; die tyd sal wys of dit waar is. Dit is nie 'n waarde-oordeel nie."><div class="txt">Rafael Nadal gaan die Franse Ope in 2021 wen.</div></div>
+  </div>
+
+  <div class="note"><b>Waarom dit saak maak.</b> Ekonomiese beleid kan nie net op normatiewe
+  ekonomie gebou word nie, want opinies is beïnvloedbaar. Maar normatiewe ekonomie het wel 'n
+  plek: dit is waar nuwe idees en teorieë ontstaan. Daardie idees moet dan deur positiewe
+  ekonomie gestaaf word (Fontinelle, 2020). Die moeilike deel is dat ons eie opinies die data
+  inkleur, en ons dan bevooroordeelde afleidings maak.</div>
+
+  <label class="q" for="f_eiestelling">Skryf een positiewe en een normatiewe stelling oor die
+  Suid-Afrikaanse ekonomie &mdash; jou eie.</label>
+  <textarea id="f_eiestelling" data-field="eie_stelling" placeholder="Positief:&#10;Normatief:"></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="step" data-title="Produksiefaktore" data-tag="doen" data-min="9">
+  <div class="stephead"><span class="stepnum">05</span>
+    <span class="steptitle">Die vier produksiefaktore</span>
+    <span class="steptag">doen</span><span class="stepmin">9 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 9</div>
+    <p>Hulpbronne wat in die produksie van goedere en dienste gebruik word, staan bekend as
+    <b>produksiefaktore</b>. Mohr et al. (2015:42&ndash;45) verdeel hulle in vier:</p>
+    <ul>
+      <li><b>Natuurlike hulpbronne</b> &mdash; grond, minerale, water, visse in die see</li>
+      <li><b>Arbeid</b> &mdash; die fisieke en geestelike vermo&euml;ns van mense</li>
+      <li><b>Kapitaal</b> &mdash; mensgemaakte hulpbronne wat gebruik word om ander goedere en
+        dienste te vervaardig</li>
+      <li><b>Entrepreneurskap</b> &mdash; die faktor wat die ander drie bymekaarbring en die
+        risiko dra</li>
+    </ul>
+  </div>
+
+  <div class="def"><strong>Die klassieke strikvraag</strong>
+  In ekonomiese terme verwys kapitaal na <b>mensgemaakte hulpbronne wat in die vervaardiging van
+  ander produkte en dienste gebruik word</b> &mdash; nie na kapitaal in die finansi&euml;le sin
+  van die woord nie (Mohr et al., 2015:44).</div>
+
+  <p>Geld is dus <b>nie</b> kapitaal in ekonomiese sin nie. Geld is 'n eis op hulpbronne. 'n
+  Bakoond is kapitaal. Die R200 000 waarmee jy die bakoond koop, is dit nie.</p>
+
+  <p>Sorteer die volgende:</p>
+
+  <div class="sorter" data-field="faktore" data-bins="Natuurlik|Arbeid|Kapitaal|Entrepreneur">
+    <div class="sortrow" data-a="Kapitaal" data-why="Mensgemaak, en gebruik om ander goedere te produseer."><div class="txt">'n Bakkie wat vir 'n tuindienstebesigheid gebruik word</div></div>
+    <div class="sortrow" data-a="Natuurlik" data-why="Grond is die klassieke natuurlike hulpbron."><div class="txt">Landbougrond in die Vrystaat</div></div>
+    <div class="sortrow" data-a="Arbeid" data-why="Menslike kapitaal &mdash; die vaardighede en gesondheid van werkers &mdash; is deel van arbeid."><div class="txt">Die vaardighede en gesondheid van 'n span werkers</div></div>
+    <div class="sortrow" data-a="Entrepreneur" data-why="Sy bring die ander faktore bymekaar en dra die risiko."><div class="txt">Die persoon wat die besigheid begin en die risiko dra</div></div>
+    <div class="sortrow" data-a="Kapitaal" data-why="Mensgemaakte toerusting wat in produksie gebruik word."><div class="txt">'n Bakoond in 'n bakkery</div></div>
+    <div class="sortrow" data-a="Natuurlik" data-why="Steenkool in die grond is 'n natuurlike hulpbron. Let op: nie alle natuurlike hulpbronne is hernubaar nie."><div class="txt">Steenkool in 'n Mpumalanga-myn</div></div>
+  </div>
+
+  <div class="note"><b>Waarvoor word elke faktor vergoed?</b> Natuurlike hulpbronne kry
+  <b>huur</b>, arbeid kry <b>loon of salaris</b>, kapitaal kry <b>rente</b>, en die entrepreneur
+  kry <b>wins</b>. Die entrepreneur kry n&iacute;e 'n salaris nie &mdash; dit is die res wat
+  oorbly nadat almal anders betaal is, en dit kan negatief wees. Dit kom in stap 06 terug.</div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="step" data-title="Geleentheidskoste" data-tag="reken" data-min="14">
+  <div class="stephead"><span class="stepnum">06</span>
+    <span class="steptitle">Skaarsheid, keuse en geleentheidskoste</span>
+    <span class="steptag">reken</span><span class="stepmin">14 min</span></div>
+
+  <p class="lead">Omdat hulpbronne skaars is, moet gekies word. En omdat gekies moet word,
+  ontstaan daar 'n koste &mdash; selfs waar niks betaal word nie.</p>
+
+  <div class="def"><strong>Definisie</strong>
+  Geleentheidskoste is gelykstaande aan die waarde van die <b>naasbeste alternatief</b> wat
+  verbeur word.</div>
+
+  <p>Let op wat daar n&iacute;e staan nie. Dit s&ecirc; nie &ldquo;al die alternatiewe&rdquo;
+  nie &mdash; net die beste een wat jy opgegee het. En dit s&ecirc; nie &ldquo;in rand&rdquo;
+  nie. Geleentheidskoste kan tyd wees, of 'n opgeoffer&iacute;e kg piesangs, of 'n aand saam
+  met jou gesin.</p>
+
+  <h3>Voorbeeld: Abigail by die mark</h3>
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 10</div>
+    <p>Abigail is 'n student en werk deeltyds as kelnerin by 'n koffiewinkel, waar sy
+    <b>R40 per uur</b> verdien. Sy besluit egter om een Saterdag 'n mark by te woon in plaas
+    daarvan om te werk.</p>
+  </div>
+
+  <p>Verstel die ure en kyk wat gebeur:</p>
+  <div class="chartwrap" style="text-align:center">
+    <label class="q" style="margin-top:0" for="ab_ure">Ure by die mark spandeer:
+      <b id="ab_ure_lbl">2</b></label>
+    <input type="range" id="ab_ure" min="1" max="8" step="1" value="2"
+      style="width:100%;accent-color:var(--accent)">
+    <p style="font-family:var(--mono);font-size:19px;margin:14px 0 0;color:var(--accent)"
+       id="ab_out">Geleentheidskoste = R40 &times; 2 = <b>R80</b></p>
+  </div>
+  <p class="hint">Formule: Geleentheidskoste = R40<i>x</i>, waar <i>x</i> = werksure verbeur.</p>
+
+  <h3>Nou 'n moeiliker een: rekeningkundige koste teenoor geleentheidskoste</h3>
+
+  <div class="readbox">
+    <div class="src">Aangepas uit e-Klas toets 1</div>
+    <p>Jan het tot onlangs in die sekuriteitsbedryf gewerk en <b>R20 000 per maand</b> huis toe
+    geneem. Hy het bedank om toegang tot sy pensioen te kry, <b>R800 000</b> ontvang, en 'n
+    tuindienstebesigheid begin.</p>
+    <ul>
+      <li>Bakkie gekoop vir R200 000</li>
+      <li>Drie dagloners teen R25 per uur, 7 ure per dag, weeksdae</li>
+      <li>Tuinwerktoerusting R60 000, gefinansier, betaal R3 000 per maand af</li>
+      <li>Huur 'n motorhuis by sy swaer vir R2 500 per maand</li>
+      <li>Brandstof en selfoon nog R2 000 per maand</li>
+      <li>Omset is R30 000 per maand</li>
+    </ul>
+  </div>
+
+  <p>Werk dit self uit. Die loonsom is die deel waar mense struikel &mdash;
+  R25 &times; 7 ure &times; 5 dae &times; 4 weke &times; 3 werkers.</p>
+
+  <div class="numq" data-field="jan_loon" data-a="10500"
+    data-why="R25 &times; 7 ure &times; 5 dae &times; 4 weke &times; 3 werkers = R10 500 per maand.">
+    <label class="q">Wat is Jan se loonrekening per maand? <span class="mk">(R)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq" data-field="jan_rek" data-a="18000"
+    data-why="Rente R3 000 + lone R10 500 + huur R2 500 + insette R2 000 = R18 000. Let op: die bakkie se R200 000 is nie 'n maandelikse koste nie, en Jan se eie salaris is nog nie ingesluit nie.">
+    <label class="q">Wat is Jan se rekeningkundige koste per maand? <span class="mk">(R)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq" data-field="jan_sal" data-a="12000"
+    data-why="R30 000 omset &minus; R18 000 koste = R12 000. Dit is die maksimum wat hy homself kan betaal.">
+    <label class="q">Watter salaris kan hy homself bekostig om te betaal? <span class="mk">(R)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq" data-field="jan_gk" data-a="8000"
+    data-why="Hy het R20 000 verdien en kan homself nou R12 000 betaal. Die geleentheidskoste van die verandering is die R8 000 wat die nuwe besigheid nog nie kan opmaak nie.">
+    <label class="q">Wat is die geleentheidskoste daarvan om hierdie verandering te maak?
+      <span class="mk">(R)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="note"><b>Dink verder &mdash; nie in die toets nie.</b> Ons het net Jan se salaris
+  as opgeoffer&iacute;e alternatief getel. Maar hy het ook R800 000 in die besigheid gesit.
+  As daardie geld in 'n bankdeposito was, sou dit rente verdien het. Streng gesproke is daardie
+  verbeurde rente ook deel van sy geleentheidskoste. Ekonome noem die wins wat oorbly n&aacute;
+  alle geleentheidskoste die <b>ekonomiese wins</b> &mdash; en dit is byna altyd kleiner as die
+  rekeningkundige wins. Hou dit in gedagte; jy sal dit later weer sien.</div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section class="step" data-title="Die PMK" data-tag="doen" data-min="16">
+  <div class="stephead"><span class="stepnum">07</span>
+    <span class="steptitle">Die produksiemoontlikheidskurwe</span>
+    <span class="steptag">doen</span><span class="stepmin">16 min</span></div>
+
+  <div class="def"><strong>Definisie</strong>
+  Die produksiemoontlikheidskurwe (PMK) toon die kombinasies van enige twee produkte wat
+  geproduseer kan word, gegewe die beskikbare hulpbronne (Mohr et al., 2015:6).</div>
+
+  <p>Ons gebruik die Leesbundel se voorbeeld: die geslote ekonomie van <b>Mars</b>, wat net
+  piesangs en koffie kan produseer.</p>
+
+  <div class="scroll"><table>
+    <tr><th>Moontlikheid</th><th class="num">Piesangs (kg per dag)</th><th class="num">Koffie (kg per dag)</th></tr>
+    <tr><td>A</td><td class="num">140 000</td><td class="num">0</td></tr>
+    <tr><td>B</td><td class="num">130 000</td><td class="num">20 000</td></tr>
+    <tr><td>C</td><td class="num">80 000</td><td class="num">35 000</td></tr>
+    <tr><td>D</td><td class="num">0</td><td class="num">40 000</td></tr>
+  </table></div>
+  <p class="hint">Tabel 1, Leesbundel bl. 11. 'n Geslote ekonomie dryf geen handel met die
+  buiteland nie.</p>
+
+  <h3>Tik op die grafiek</h3>
+  <p>Tik enige plek in die grafiek. Die grafiek s&ecirc; jou of daardie kombinasie
+  doeltreffend, ondoeltreffend of onbereikbaar is.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="marsvg" viewBox="0 0 640 400" role="img"
+      aria-label="Produksiemoontlikheidskurwe vir die Mars-ekonomie">
+      <g id="mars_static"></g>
+      <path class="curve" id="mars_curve" d=""></path>
+      <path class="curve2" id="mars_curve2" d="" style="display:none"></path>
+      <g id="mars_pts"></g>
+      <g id="mars_probe" style="display:none">
+        <line class="probeline" id="mars_pl_x"></line>
+        <line class="probeline" id="mars_pl_y"></line>
+        <circle class="probe" id="mars_pc" r="6"></circle>
+      </g>
+    </svg>
+  </div>
+
+  <div class="ctrls">
+    <button data-shift="base" class="sel">Oorspronklike PMK</button>
+    <button data-shift="ban">Beter tegniek: piesangs</button>
+    <button data-shift="cof">Beter tegniek: koffie</button>
+    <button data-shift="both">Ekonomiese groei</button>
+  </div>
+
+  <div class="verdictbox" id="mars_verdict">Tik op die grafiek hierbo.</div>
+
+  <h3>Geleentheidskoste van 'n beweging</h3>
+  <p>Kies twee punte. Die grafiek reken die geleentheidskoste uit.</p>
+  <div class="movepick">
+    <span>Van</span>
+    <select id="mv_from"><option>A</option><option>B</option><option selected>C</option><option>D</option></select>
+    <span>na</span>
+    <select id="mv_to"><option>A</option><option selected>B</option><option>C</option><option>D</option></select>
+  </div>
+  <div class="verdictbox" id="mv_out"></div>
+
+  <h3>Waarom is die kurwe konkaaf?</h3>
+
+  <p>Kyk na wat gebeur namate Mars al hoe meer koffie wil h&ecirc;:</p>
+  <div class="scroll"><table>
+    <tr><th>Beweging</th><th class="num">Ekstra koffie</th><th class="num">Piesangs opgeoffer</th>
+      <th class="num">Koste per kg koffie</th></tr>
+    <tr><td>A &rarr; B</td><td class="num">20 000</td><td class="num">10 000</td><td class="num">0,5 kg</td></tr>
+    <tr><td>B &rarr; C</td><td class="num">15 000</td><td class="num">50 000</td><td class="num">3,3 kg</td></tr>
+    <tr><td>C &rarr; D</td><td class="num">5 000</td><td class="num">80 000</td><td class="num">16 kg</td></tr>
+  </table></div>
+
+  <p>Elke ekstra kg koffie kos meer piesangs as die vorige. Dit is die
+  <b>Wet van Toenemende Geleentheidskoste</b>, en dit is waarom die kurwe konkaaf is
+  (boontoe gebuig, weg van die oorsprong).</p>
+
+  <p>Die rede is nie geheimsinnig nie: <b>produksiefaktore is nie ewe geskik vir albei
+  gebruike nie</b>. Die grond en die werkers wat die beste piesangs lewer, is die swakste
+  koffieboere. Namate Mars meer koffie wil h&ecirc;, moet dit al hoe minder geskikte hulpbronne
+  oorskuif &mdash; en dus al hoe meer piesangs prysgee.</p>
+
+  <div class="note"><b>Let op &mdash; regstelling op die Leesbundel.</b> Die Leesbundel (bl. 15)
+  skryf die konkawe vorm toe aan die &ldquo;Wet van Dalende Grensnut&rdquo;. Dit is nie korrek
+  nie. <i>Grensnut</i> gaan oor die bevrediging wat 'n verbruiker uit 'n ekstra eenheid kry
+  &mdash; 'n verbruiksbegrip. Die vorm van die PMK is 'n produksie-verskynsel, en die regte
+  naam daarvoor is die Wet van Toenemende Geleentheidskoste (of, in terme van die onderliggende
+  meganisme, dalende grensopbrengste). Gebruik die regte een &mdash; jy gaan dit self onderrig.</div>
+
+  <div class="mcq" data-field="m_pmk" data-a="b"
+    data-why="Net 'n toename in potensi&euml;le produksie skuif die kurwe. Werklose hulpbronne in gebruik neem beweeg jou van 'n punt bínne die kurwe ná die kurwe toe &mdash; die kurwe self bly waar dit is. Dit is die vraag waar die meeste punte verloor word.">
+    <label class="q">Watter een van die volgende is korrek? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die keuse tussen vrye goedere word op die PMK aangedui.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Toename in potensiële produksie skuif die PMK na regs.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die gebruik van hulpbronne wat vroeër werkloos was, skuif die PMK na regs.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Daling in die vraag na goedere en dienste skuif die PMK inwaarts.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section class="step" data-title="Leer dit vir Graad 8 en 9" data-tag="onderwyser" data-min="12">
+  <div class="stephead"><span class="stepnum">08</span>
+    <span class="steptitle">Leer dit vir Graad 8 en 9</span>
+    <span class="steptag">onderwyser</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Jy is nie hier om Ekonomie te ken nie. Jy is hier om dit te kan
+  <i>onderrig</i>.</p>
+
+  <p>Dit is 'n ander vaardigheid. Om geleentheidskoste te verstaan neem tien minute. Om dit so
+  te verduidelik dat 'n veertienjarige dit die volgende week nog onthou, is die werk.</p>
+
+  <h3>Drie wanbegrippe wat leerders inbring</h3>
+  <div class="scroll"><table>
+    <tr><th>Wat die leerder dink</th><th>Waarom dit vashaak</th></tr>
+    <tr><td>&ldquo;Ekonomie is somme oor geld.&rdquo;</td>
+      <td>Elke voorbeeld wat hulle nog ooit gesien het, het 'n randteken in gehad. Hulle het nog
+      nooit 'n geleentheidskoste in tyd of in piesangs gesien nie.</td></tr>
+    <tr><td>&ldquo;Geleentheidskoste is wat jy betaal het.&rdquo;</td>
+      <td>Hulle meng dit met prys. Die naasbeste alternatief is onsigbaar &mdash; dit is die ding
+      wat <i>nie</i> gebeur het nie.</td></tr>
+    <tr><td>&ldquo;As jy niks betaal nie, is dit gratis.&rdquo;</td>
+      <td>Gratis skoolkos, gratis Wi-Fi, gratis klasse. Die idee dat iets sonder 'n prys steeds
+      'n koste het, is die hele vak in een gedagte.</td></tr>
+  </table></div>
+
+  <h3>Wat werk in 'n Graad 8-klas</h3>
+  <ul>
+    <li><b>Begin met hulle eie Saterdag.</b> Nie met 'n definisie nie. Vra: wat het jy Saterdag
+    gedoen, en wat het jy opgegee om dit te doen? Elke kind het 'n antwoord. Die definisie kom
+    daarna.</li>
+    <li><b>Gebruik 'n geleentheidskoste sonder rand.</b> 'n Vrye periode, 'n plek in die span,
+    'n Saterdagoggend. Sodra hulle sien dat koste nie geld hoef te wees nie, is die grootste
+    wanbegrip weg.</li>
+    <li><b>Teken die PMK met twee dinge wat hulle omgee.</b> Nie piesangs en koffie nie.
+    Sokkeroefening en huiswerkure. Dieselfde kurwe, dieselfde punt.</li>
+    <li><b>Punt E en punt F is die les.</b> Binne die kurwe = ons mors. Buite die kurwe = ons
+    kan nie, nog nie. Dit is 'n gesprek oor 'n land, nie oor 'n grafiek nie.</li>
+  </ul>
+
+  <div class="note"><b>Vergelyk met jou raaiskoot.</b> In stap 01 het jy gesê watter stelling
+  jou leerders die moeilikste sou vind. Kyk of jy nou dieselfde sou antwoord.</div>
+
+  <label class="q" for="f_lesplan">Skryf 'n verduideliking van <b>geleentheidskoste</b> vir 'n
+  Graad 8-klas. Vyf minute se praatwerk. Gebruik één voorbeeld uit hulle w&ecirc;reld, en g&eacute;én
+  randtekens nie.</label>
+  <textarea id="f_lesplan" data-field="lesplan" style="min-height:150px"></textarea>
+  <p class="hint">Dit tel nie punte nie, maar dit gaan in jou uitvoer in en jou dosent lees dit.
+  Dit is ook die maklikste ding om reguit in jou volgende klas te gebruik.</p>
+
+  <label class="q" for="f_vraag">Watter een vraag oor Leereenheid 1 wil jy in die klas
+  bespreek?</label>
+  <textarea id="f_vraag" data-field="klasvraag" style="min-height:70px"></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 09 ============ -->
+<section class="step" data-title="e-Klas toets 1" data-tag="assessering" data-min="20">
+  <div class="stephead"><span class="stepnum">09</span>
+    <span class="steptitle">e-Klas toets 1</span>
+    <span class="steptag">assessering &middot; 25 punte</span><span class="stepmin">20 min</span></div>
+
+  <p class="lead">Hierdie toets tel <b>25 punte</b>, en dra <b>20%</b> van jou deelnamepunt by.</p>
+
+  <p>Beantwoord alles, en druk dan <b>Dien in en merk</b> heel onder. Jy kan nie na indiening
+  verander nie. Al 25 punte word onmiddellik gemerk, en jou kode dra jou punt.</p>
+
+  <h3>Afdeling A &mdash; Veelkeusevrae <span style="font-weight:400;color:var(--ink-soft)">(10 punte)</span></h3>
+
+  <div class="mcq test" data-field="t1" data-a="c" data-marks="1"
+    data-why="Die ekonomiese probleem is onbeperkte behoeftes teenoor skaars hulpbronne. Geleentheidskoste is 'n gevolg daarvan, nie die oorsaak nie.">
+    <label class="q">1. Die ekonomiese probleem word veroorsaak deur <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>geleentheidskoste.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>president Trump.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>onbeperkte behoeftes en skaars hulpbronne.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>markseine.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t2" data-a="b" data-marks="1"
+    data-why="Die prys van melk is één produk in één mark &mdash; mikro. Die ander drie is verskynsels van 'n hele ekonomie.">
+    <label class="q">2. Watter een van die volgende is 'n mikro-ekonomiese vraagstuk?
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Zimbabwe se inflasiekoers.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die prys van melk.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Werkloosheid in Suid-Afrika.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Ekonomiese groei in die VSA.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t3" data-a="d" data-marks="1"
+    data-why="Ekonomie bestudeer menslike keuses. Dit het nie wette soos Fisika nie, en dit gee nie 'n presiese beskrywing van die werklikheid nie.">
+    <label class="q">3. Ekonomie is 'n sosiale wetenskap omdat: <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>dit wette soos Fisika het.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>dit logies is.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>dit 'n presiese beskrywing van die werklikheid bied.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>dit menslike keuses bestudeer.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t4" data-a="a" data-marks="1"
+    data-why="Indiensnamesyfers vir die hele land is 'n makro-verskynsel. Die ander drie is enkelmarkte of enkelpryse.">
+    <label class="q">4. Watter een van die volgende is 'n makro-ekonomiese vraagstuk?
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die daling in indiensnamesyfers sedert 2023.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>BTW-nulkoerse.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die berekening van die brandstofprys.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Die prys van biltong.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t5" data-a="b" data-marks="1"
+    data-why="&lsquo;Die inflasiekoers is 3,3%&rsquo; is 'n gemete feit. &lsquo;Behoort&rsquo; s&ecirc; wat moet wees, en &lsquo;dit lyk of&rsquo; is 'n indruk. Die minimumloon-stelling is ook positief in beginsel &mdash; maar die gemete syfer is die duidelikste en enigste bedoelde antwoord.">
+    <label class="q">5. Watter een van die volgende is 'n positiewe stelling?
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die inflasiemikpunt behoort 3% te wees.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die inflasiekoers is 3,3%.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Te hoë minimumlone veroorsaak werkloosheid.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dit lyk of dinge beter gaan by Transnet.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t6" data-a="d" data-marks="1"
+    data-why="Menslike kapitaal is die vaardighede en gesondheid van werkers. Geld is nie kapitaal in ekonomiese sin nie, nie alle natuurlike hulpbronne is hernubaar nie, en die entrepreneur kry wins, nie 'n salaris nie.">
+    <label class="q">6. Watter een van die volgende is korrek? <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Geld is 'n vorm van kapitaal.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Alle natuurlike hulpbronne is hernubaar.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die entrepreneur ontvang 'n salaris.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Menslike kapitaal verwys na die vaardighede en gesondheid van werkers.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t7" data-a="a" data-marks="1"
+    data-why="Geleentheidskoste is die waarde van die naasbeste alternatief wat opgeoffer word. Dit hoef nie in geld gemeet te word nie, en dit is nie dieselfde as rekeningkundige koste nie.">
+    <label class="q">7. Watter een van die volgende stellings oor geleentheidskoste is korrek?
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Dit is die waarde van die naasbeste alternatief wat opgeoffer word.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Dit word in geldterme gemeet.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Dit is die koste van die produksiefaktore.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dit is dieselfde as rekeningkundige koste.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t8" data-a="c" data-marks="1"
+    data-why="Landbougrond is beperk &mdash; dit is presies wat skaarsheid beteken. Ekonome is wél gemoeid met kollektiewe behoeftes, die mark voorsien nie alles waarna 'n behoefte bestaan nie, en ryk mense het óók geleentheidskoste, want hulle tyd bly skaars.">
+    <label class="q">8. Watter een van die volgende is korrek? <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Ekonome is nie gemoeid met kollektiewe behoeftes soos welsynsdienste nie.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Omdat mense 'n behoefte aan goedere en dienste het, word dit deur die mark voorsien.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Hulpbronne soos landbougrond is beperk.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Ryk mense het geen geleentheidskoste nie.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t9" data-a="b" data-marks="1"
+    data-why="Net 'n toename in potensiële produksie skuif die kurwe uit. Werklose hulpbronne in gebruik neem beweeg jou vanaf 'n punt binne die kurwe ná die kurwe toe &mdash; die kurwe self skuif nie.">
+    <label class="q">9. Watter een van die volgende is korrek? <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die keuse tussen vrye goedere word op die PMK aangedui.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Toename in potensiële produksie skuif die PMK na regs.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die gebruik van hulpbronne wat vroeër werkloos was, skuif die PMK na regs.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Daling in die vraag na goedere en dienste skuif die PMK inwaarts.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t10" data-a="d" data-marks="1"
+    data-why="Keuse en geleentheidskoste ontstaan uit skaarsheid. As hulpbronne onbeperk was, sou daar niks wees om oor te kies nie. Onbeperkte behoeftes maak die probleem erger, nie beter nie.">
+    <label class="q">10. Die ekonomiese probleme van keuse en geleentheidskoste sou opgelos wees as:
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>behoeftes onbeperk is.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>die ekonomie as 'n bevelstelsel georganiseer word.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>rykdom gelyk verdeel word.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>hulpbronne onbeperk is.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <h3>Afdeling B &mdash; Vraag 11 <span style="font-weight:400;color:var(--ink-soft)">(10 punte)</span></h3>
+
+  <p>Die grafiek toon die produksie van BMW X3&rsquo;s en bottels Pinotage-wyn in Suid-Afrika
+  in 'n jaar.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="bmwsvg" viewBox="0 0 640 400" role="img"
+      aria-label="Produksiemoontlikheidskurwe: BMW X3 teenoor bottels Pinotage"></svg>
+  </div>
+
+  <div class="numq test" data-field="t11_1" data-a="3000" data-marks="1"
+    data-why="Punt A, op die vertikale as: 3 000 voertuie as alle hulpbronne na motors gaan.">
+    <label class="q">11.1 Wat is die maksimum aantal BMW-voertuie wat geproduseer kan word?
+      <span class="mk">(1)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq test" data-field="t11_2" data-a="60000" data-marks="1"
+    data-why="Punt B, op die horisontale as: 60 000 bottels as alle hulpbronne na wyn gaan.">
+    <label class="q">11.2 Wat is die maksimum produksie van Pinotage? <span class="mk">(1)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq test" data-field="t11_3" data-a="800" data-marks="1"
+    data-why="Van A (3 000 BMW&rsquo;s) na C (2 200 BMW&rsquo;s): 800 minder BMW&rsquo;s word geproduseer. Dit is die geleentheidskoste van die ekstra wyn.">
+    <label class="q">11.3 As ons van punt A na punt C skuif, wat is die geleentheidskoste van
+      die ekstra wynproduksie? <span class="mk">(1) &mdash; aantal BMW&rsquo;s</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <label class="q">11.4 As ons van punt D na punt C beweeg, hoeveel wyn word opgeoffer, en vir
+    hoeveel ekstra motors? <span class="mk">(2)</span></label>
+  <div class="numq test" data-field="t11_4a" data-a="7000" data-marks="1"
+    data-why="D is by 57 000 bottels, C by 50 000. Dus word 7 000 bottels opgeoffer.">
+    <input type="number" inputmode="numeric" placeholder="Bottels wyn opgeoffer">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+  <div class="numq test" data-field="t11_4b" data-a="700" data-marks="1"
+    data-why="D is by 1 500 BMW&rsquo;s, C by 2 200. Dus 700 ekstra motors.">
+    <input type="number" inputmode="numeric" placeholder="Ekstra BMW&rsquo;s" style="margin-top:7px">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <label class="q">11.5 By punt E is produksie ondoeltreffend. As hulpbronne optimaal benut
+    word: hoeveel meer wyn kan geproduseer word sonder om motors in te boet, en hoeveel meer
+    motors sonder om wyn op te offer? <span class="mk">(2)</span></label>
+  <div class="numq test" data-field="t11_5a" data-a="7000" data-marks="1"
+    data-why="Hou BMW&rsquo;s konstant op 1 500 en beweeg van E (50 000) na D (57 000): 7 000 bottels meer.">
+    <input type="number" inputmode="numeric" placeholder="Ekstra bottels wyn (BMW&rsquo;s konstant)">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+  <div class="numq test" data-field="t11_5b" data-a="700" data-marks="1"
+    data-why="Hou Pinotage konstant op 50 000 en beweeg van E (1 500) na C (2 200): 700 BMW&rsquo;s meer.">
+    <input type="number" inputmode="numeric" placeholder="Ekstra BMW&rsquo;s (wyn konstant)" style="margin-top:7px">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <label class="q">11.6 Wat sou dit moontlik maak om by punt F te produseer? <span class="mk">(3)</span></label>
+
+  <div class="mcq test" data-field="t11_6a" data-a="b" data-marks="1"
+    data-why="F l&ecirc; buite die kurwe. Enige punt buite die PMK is onbereikbaar met die hulpbronne en tegnologie wat nou beskikbaar is. Om hulpbronne te verskuif (a) beweeg jou net l&aacute;ngs die kurwe.">
+    <label class="q">11.6.1 Punt F l&ecirc; buite die kurwe. Wat s&ecirc; dit oor punt F <i>vandag</i>?
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Dit is bereikbaar as hulpbronne van wyn na motors verskuif word.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Dit is onbereikbaar met die huidige hulpbronne en tegnologie.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Dit is bereikbaar, maar ondoeltreffend.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dit is die doeltreffendste punt op die grafiek.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t11_6b" data-a="c" data-marks="1"
+    data-why="Die kurwe self moet uitwaarts skuif &mdash; dit is ekonomiese groei. Beter benutting (d) bring jou net van 'n punt b&iacute;nne die kurwe (soos E) tot &oacute;p die kurwe; dit kan jou nie verby die kurwe neem nie.">
+    <label class="q">11.6.2 Wat moet met die PMK gebeur voordat F bereik kan word?
+      <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die ekonomie moet langs die kurwe beweeg, van C na D.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die kurwe moet na links skuif.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die kurwe moet na regs (uitwaarts) skuif.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Niks &mdash; hulpbronne moet net beter benut word.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq test" data-field="t11_6c" data-a="b" data-marks="1"
+    data-why="Die kurwe skuif as die ekonomie m&eacute;&eacute;r kan produseer met die beskikbare produksiefaktore: beter tegnologie, innovasie, beter bestuur, of meer hulpbronne. 'n Prys (a) verander nie die produksiekapasiteit nie; (c) bring E na die kurwe; (d) is 'n beweging l&aacute;ngs die kurwe.">
+    <label class="q">11.6.3 Wat sou die kurwe s&oacute; laat skuif? <span class="mk">(1)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>'n Styging in die prys van BMW&rsquo;s.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Verbetering in tegnologie of produktiwiteit.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Werklose hulpbronne wat weer in gebruik geneem word.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Verskuiwing van hulpbronne uit wynbou na motorvervaardiging.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <h3>Afdeling C &mdash; Vraag 12 <span style="font-weight:400;color:var(--ink-soft)">(5 punte)</span></h3>
+
+  <div class="readbox">
+    <p>Jan het tot onlangs in die sekuriteitsbedryf gewerk en R20 000 per maand huis toe geneem.
+    Net voor die twee-pot-stelsel in werking getree het, het hy bedank om toegang tot sy pensioen
+    te kry. Hy het R800 000 ontvang en 'n tuindienstebesigheid begin. Hy kon 'n bakkie koop vir
+    R200 000. Hy het drie dagloners wat R25 per uur betaal word vir 7 ure per dag se werk
+    (net weeksdae). Die tuinwerktoerusting was altesaam R60 000, maar dit het hy gefinansier en
+    betaal R3 000 per maand af. Daar was nie plek om die besigheid van die huis af te bedryf nie,
+    maar hy huur 'n motorhuis by sy swaer vir R2 500. Die lopende uitgawes aan brandstof en sy
+    selfoon is nog R2 000. Hy het al 'n redelike klomp kli&euml;nte en die omset is R30 000 per
+    maand.</p>
+  </div>
+
+  <div class="numq test" data-field="t12_1" data-a="18000" data-marks="3"
+    data-why="Rente R3 000 + lone R10 500 (R25 &times; 7 &times; 5 &times; 4 &times; 3) + huur R2 500 + insette R2 000 = R18 000, sonder sy eie salaris.">
+    <label class="q">12.1 Wat is Jan se rekeningkundige koste? <span class="mk">(3) &mdash; R</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq test" data-field="t12_2" data-a="12000" data-marks="1"
+    data-why="R30 000 &minus; R18 000 = R12 000.">
+    <label class="q">12.2 Watter salaris kan hy bekostig om homself te betaal?
+      <span class="mk">(1) &mdash; R</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq test" data-field="t12_3" data-a="8000" data-marks="1"
+    data-why="R20 000 &minus; R12 000 = R8 000. Dit is die deel van sy ou salaris wat die nuwe besigheid nog nie kan opmaak nie.">
+    <label class="q">12.3 Wat is die geleentheidskoste om hierdie groot verandering te maak?
+      <span class="mk">(1) &mdash; R</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div style="margin-top:28px;padding-top:18px;border-top:1px solid var(--line)">
+    <p><b>Klaar?</b> Kyk gou oor. N&aacute; indiening kan jy niks verander nie.</p>
+    <button class="act" id="submitbtn" style="width:100%;padding:14px">Dien in en merk</button>
+    <p class="locknote" id="submitnote"></p>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn" id="afterSubmit" disabled>Gaan voort na terugvoer</button></div>
+</section>
+
+<!-- ============ 10 ============ -->
+<section class="step" data-title="Terugvoer en uitvoer" data-tag="afsluit" data-min="6">
+  <div class="stephead"><span class="stepnum">10</span>
+    <span class="steptitle">Terugvoer en uitvoer</span>
+    <span class="steptag">afsluit</span><span class="stepmin">6 min</span></div>
+
+  <div id="scorehost"></div>
+
+  <h3>Jou raaiskote uit stap 01</h3>
+  <div id="predhost"></div>
+
+  <h3>Jou e-Klas-kode</h3>
+  <p>Sleutel hierdie kode presies so in by die aktiwiteit <b>&ldquo;e-Klas toets 1 &mdash;
+  kode&rdquo;</b> op e-Klas. Dit bevat jou studentenommer en jou punt.</p>
+  <div class="codebox" id="codebox">&mdash;</div>
+  <button class="ghost" id="copycode">Kopieer kode</button>
+
+  <h3>Laai jou werk af</h3>
+  <p>Laai 'n afskrif van alles wat jy ingevul het af, en hou dit. As jou dosent vra vir jou
+  Graad 8-verduideliking of jou toetsantwoorde, is dit hier in.</p>
+  <button class="act" id="exportbtn">Laai my werk af</button>
+  <button class="ghost" id="showexport">Wys as teks</button>
+  <textarea id="exportbox" readonly></textarea>
+
+  <div class="note" style="margin-top:26px"><b>Volgende:</b> Leereenheid 2 &mdash; Vraag en
+  aanbod. Dit is die grootste eenheid van die vyf, so begin vroeg.</div>
+
+  <p style="margin-top:26px"><button class="ghost" id="resetbtn"
+    style="border-color:var(--bad);color:var(--bad)">Begin heeltemal oor</button></p>
+  <p class="locknote">Dit vee alles op hierdie toestel uit, ook jou toetspunt.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button><span></span></div>
+</section>
+</main>
+</div>
+
+<script>
+/* ===================================================================
+   AEKN121 lab shell — shared engine.
+
+   Every unit's index.html loads this, then its own unit.js, which must:
+     AROS.config({ ... });      // before anything else
+     ... unit-specific charts, hooks ...
+     AROS.init();               // last line
+
+   The shell owns: local storage, step navigation, the table of contents,
+   plain field binding, and the four declarative widgets:
+
+     .mcq     data-field, data-a, data-why      add .test to defer the reveal
+     .numq    data-field, data-a, data-why      add .test to defer the reveal
+     .txtq    data-field                        free text, never auto-marked
+     .sorter  data-field, data-bins="A|B"       rows carry data-a and data-why
+                                                data-noreveal="1" keeps it silent
+
+   Nothing here is unit-specific. If you find yourself adding a unit's
+   content to this file, it belongs in that unit's unit.js instead.
+   =================================================================== */
+window.AROS = (function(){
+"use strict";
+
+var cfg = {
+  key:null, schema:1, codePrefix:null, codeSalt:null,
+  predictions:[], lockStep:null
+};
+var state = {schemaVersion:1, fields:{}, done:{}, step:0, extra:{}};
+var resultHooks = [], exportHooks = [], stepHooks = [];
+var steps = [], total = 0;
+
+/* ---------------- storage ---------------- */
+function load(){
+  try{
+    var raw = localStorage.getItem(cfg.key);
+    if(!raw) return;
+    var o = JSON.parse(raw);
+    if(o && o.schemaVersion === cfg.schema){
+      state.fields = o.fields || {};
+      state.done   = o.done   || {};
+      state.step   = o.step   || 0;
+      state.extra  = o.extra  || {};
+    }
+  }catch(e){}
+}
+var saveTimer=null, flagEl=null, flagTimer=null;
+function save(){
+  try{
+    state.schemaVersion = cfg.schema;
+    localStorage.setItem(cfg.key, JSON.stringify(state));
+    if(flagEl){
+      flagEl.classList.add("on");
+      clearTimeout(flagTimer);
+      flagTimer=setTimeout(function(){ flagEl.classList.remove("on"); },1200);
+    }
+  }catch(e){}
+}
+function queueSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(save,350); }
+function get(f){ return state.fields[f]; }
+function set(f,v){ state.fields[f]=v; queueSave(); }
+function getExtra(k){ return state.extra[k]; }
+function setExtra(k,v){ state.extra[k]=v; queueSave(); }
+
+/* ---------------- steps ---------------- */
+function doneCount(){ var n=0; for(var k in state.done){ if(state.done[k]) n++; } return n; }
+function pctDone(){ return total ? Math.round(doneCount()/total*100) : 0; }
+function showStep(i,scroll){
+  i = Math.max(0, Math.min(total-1, i));
+  steps.forEach(function(s,n){ s.classList.toggle("active", n===i); });
+  state.step = i; queueSave(); updateProgress();
+  if(scroll !== false) window.scrollTo(0,0);
+  stepHooks.forEach(function(fn){ try{ fn(i); }catch(e){} });
+}
+function updateProgress(){
+  var fill=document.getElementById("progfill"), txt=document.getElementById("progtext");
+  if(fill) fill.style.width = pctDone()+"%";
+  if(txt) txt.textContent = "Stap "+(state.step+1)+" van "+total+" · "+pctDone()+"% voltooi";
+}
+
+/* ---------------- table of contents ---------------- */
+function wireTOC(){
+  var toc=document.getElementById("toc"), inner=document.getElementById("tocinner");
+  var btn=document.getElementById("tocbtn");
+  if(!toc||!inner||!btn) return;
+  btn.addEventListener("click",function(){
+    inner.innerHTML="";
+    steps.forEach(function(s,n){
+      var b=document.createElement("button"); b.className="tocitem"; b.type="button";
+      b.innerHTML='<span class="n">'+String(n).padStart(2,"0")+'</span><span>'+
+        s.dataset.title+'</span>'+(state.done[n]?'<span class="dn">&#10003;</span>':'');
+      b.addEventListener("click",function(){ toc.classList.remove("open"); showStep(n); });
+      inner.appendChild(b);
+    });
+    toc.classList.add("open");
+  });
+  toc.addEventListener("click",function(e){ if(e.target===toc) toc.classList.remove("open"); });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape") toc.classList.remove("open");
+  });
+}
+
+/* ---------------- plain fields ---------------- */
+function wireFields(){
+  [].forEach.call(document.querySelectorAll("[data-field]"),function(el){
+    if(el.tagName!=="INPUT" && el.tagName!=="TEXTAREA") return;
+    if(el.type==="range") return;
+    if(el.closest(".mcq,.numq,.txtq")) return;   /* those wire themselves */
+    var f=el.dataset.field, v=get(f);
+    if(v!=null) el.value=v;
+    el.addEventListener("input",function(){ set(f,el.value); });
+  });
+}
+
+/* ---------------- widget: multiple choice ---------------- */
+function wireMCQ(box){
+  var f=box.dataset.field, ans=box.dataset.a, why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var opts=[].slice.call(box.querySelectorAll(".opt")), fb=box.querySelector(".fb");
+  function paint(reveal){
+    var cur=get(f);
+    opts.forEach(function(o){
+      o.classList.remove("picked","right","wrong");
+      if(o.dataset.v===cur) o.classList.add("picked");
+      if(reveal){
+        if(o.dataset.v===ans) o.classList.add("right");
+        else if(o.dataset.v===cur) o.classList.add("wrong");
+        o.classList.add("locked");
+      }
+    });
+    if(reveal && cur!=null && fb){
+      var ok=cur===ans;
+      fb.className="fb show "+(ok?"ok":"no");
+      fb.querySelector(".verdict").textContent = ok?"Korrek":"Nie reg nie";
+      fb.querySelector(".why").innerHTML = why;
+    }
+  }
+  opts.forEach(function(o){
+    o.setAttribute("tabindex","0");
+    function pick(){
+      if(box.__locked) return;
+      if(!deferred && get(f)!=null) return;   /* practice: one shot */
+      if(deferred && box.__submitted) return;
+      set(f,o.dataset.v);
+      paint(!deferred);
+    }
+    o.addEventListener("click",pick);
+    o.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }
+    });
+  });
+  box.__paint=paint;
+  box.__correct=function(){ return get(f)===ans; };
+  box.__answered=function(){ var v=get(f); return v!=null && v!==""; };
+  paint(deferred ? !!box.__submitted : get(f)!=null);
+}
+
+/* ---------------- widget: numeric ---------------- */
+function wireNum(box){
+  var f=box.dataset.field, ans=parseFloat(box.dataset.a), why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var inp=box.querySelector("input"), fb=box.querySelector(".fb");
+  if(!inp) return;
+  inp.dataset.field=f;
+  var v=get(f); if(v!=null) inp.value=v;
+  function value(){ return parseFloat(String(get(f)||"").replace(/[\s,R]/g,"")); }
+  function correct(){ var c=value(); return !isNaN(c) && Math.abs(c-ans)<0.5; }
+  function paint(reveal){
+    if(!reveal || !fb) return;
+    if(deferred) inp.disabled=true;
+    if(isNaN(value())) return;
+    var ok=correct();
+    fb.className="fb show "+(ok?"ok":"no");
+    fb.querySelector(".verdict").textContent =
+      ok ? "Korrek" : ("Nie reg nie — die antwoord is "+fmt(ans));
+    fb.querySelector(".why").innerHTML = why;
+  }
+  inp.addEventListener("input",function(){ set(f,inp.value); });
+  inp.addEventListener("blur",function(){ if(!deferred && inp.value!=="") paint(true); });
+  box.__paint=paint;
+  box.__correct=correct;
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  if(deferred && box.__submitted) paint(true);
+  else if(!deferred && v!=null && v!=="") paint(true);
+}
+
+/* ---------------- widget: free text ---------------- */
+function wireTxt(box){
+  var f=box.dataset.field, ta=box.querySelector("textarea");
+  if(!ta) return;
+  ta.dataset.field=f;
+  var v=get(f); if(v!=null) ta.value=v;
+  ta.addEventListener("input",function(){ set(f,ta.value); });
+  box.__correct=function(){ return null; };            /* never auto-marked */
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  box.__paint=function(reveal){ if(reveal) ta.disabled=true; };
+}
+
+/* ---------------- widget: sorter ---------------- */
+function wireSorter(box){
+  var base=box.dataset.field, bins=box.dataset.bins.split("|");
+  var noreveal=box.dataset.noreveal==="1";
+  var rows=[].slice.call(box.querySelectorAll(".sortrow"));
+  rows.forEach(function(r,i){
+    var f=base+"_"+i;
+    var picks=document.createElement("div"); picks.className="picks";
+    bins.forEach(function(b){
+      var btn=document.createElement("button"); btn.type="button"; btn.textContent=b;
+      btn.addEventListener("click",function(){
+        if(box.__locked) return;
+        set(f,b); repaint();
+      });
+      picks.appendChild(btn);
+    });
+    r.appendChild(picks);
+    if(r.dataset.why){
+      var w=document.createElement("div"); w.className="why";
+      w.innerHTML=r.dataset.why; r.appendChild(w);
+    }
+    r.__f=f;
+  });
+  function repaint(){
+    var reveal = !noreveal && rows.every(function(r){ return get(r.__f)!=null; });
+    rows.forEach(function(r){
+      var cur=get(r.__f);
+      [].forEach.call(r.querySelectorAll(".picks button"),function(b){
+        b.classList.toggle("sel", b.textContent===cur);
+      });
+      r.classList.remove("right","wrong","reveal");
+      if(reveal) r.classList.add(cur===r.dataset.a ? "right" : "wrong","reveal");
+    });
+    if(reveal) box.__locked=true;
+  }
+  box.__rows=rows;
+  box.__lock=function(){ box.__locked=true; };
+  box.__repaint=repaint;
+  repaint();
+}
+
+function lockPredictions(){
+  var s=document.querySelector('.sorter[data-field="voorspel"]');
+  if(s) s.__lock();
+  [].forEach.call(document.querySelectorAll("[data-lock-with-predictions]"),function(el){
+    el.disabled=true;
+  });
+}
+
+/* ---------------- helpers ---------------- */
+function svgEl(tag,attrs){
+  var e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(var k in attrs) e.setAttribute(k,attrs[k]);
+  return e;
+}
+function fmt(n){
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+}
+/* Deterministic 4-character check, mirrored by AROS/verifieer_kodes.py.
+   Alphabet excludes I, O, 0 and 1 so a handwritten code stays readable. */
+function checkCode(nr,value){
+  var s=String(nr||"")+"|"+value+"|"+cfg.codeSalt, h=0;
+  for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  var A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out="";
+  for(var j=0;j<4;j++){ out+=A[h%32]; h=Math.floor(h/32); }
+  return out;
+}
+function codeValue(){
+  return (typeof cfg.codeValue==="function") ? cfg.codeValue() : pctDone();
+}
+function buildCode(){
+  var nr=(get("studentenr")||"").replace(/\s/g,"");
+  var v=codeValue();
+  return cfg.codePrefix+"-"+(nr||"0000")+"-"+v+"-"+checkCode(nr,v);
+}
+
+/* ---------------- results ---------------- */
+function renderPredictions(){
+  var ph=document.getElementById("predhost");
+  if(!ph || !cfg.predictions.length) return;
+  ph.innerHTML="";
+  var wrong=0, answered=0;
+  cfg.predictions.forEach(function(p,i){
+    var mine=get("voorspel_"+i), ok=mine===p[1];
+    if(mine){ answered++; if(!ok) wrong++; }
+    var d=document.createElement("div");
+    d.className="sortrow "+(mine?(ok?"right":"wrong"):"");
+    d.innerHTML='<div class="txt">'+p[0]+'<br><span style="font-family:var(--mono);'+
+      'font-size:12.5px;opacity:.8">jy: '+(mine||"—")+' &middot; antwoord: '+p[1]+
+      '</span></div><div class="why" style="display:block">'+p[2]+'</div>';
+    ph.appendChild(d);
+  });
+  var s=document.createElement("p"); s.className="hint";
+  s.textContent = answered===0
+    ? "Jy het nie in stap 01 geraai nie, so daar is niks om mee te vergelyk nie."
+    : wrong===0
+      ? "Jy het al "+answered+" reg geraai voordat jy begin het."
+      : "Jy het "+wrong+" van die "+answered+" verkeerd geraai. Daardie is die idees wat verskil "+
+        "van wat jy gedink het — en dus die idees om te onderrig.";
+  ph.appendChild(s);
+}
+function renderResults(){
+  resultHooks.forEach(function(fn){ try{ fn(); }catch(e){} });
+  renderPredictions();
+  var cb=document.getElementById("codebox");
+  if(cb) cb.textContent=buildCode();
+}
+
+/* ---------------- export ---------------- */
+function buildExport(){
+  var L=[];
+  L.push("AEKN121 — "+(cfg.exportTitle||document.title)+" — UITVOER");
+  L.push("AROS · Inleiding tot Ekonomie");
+  L.push("Uitgevoer: "+new Date().toLocaleString("af-ZA"));
+  L.push("");
+  L.push("Naam:            "+(get("naam")||"—"));
+  L.push("Studentenommer:  "+(get("studentenr")||"—"));
+  L.push("Kode:            "+buildCode());
+  L.push("Voltooi:         "+pctDone()+"%");
+  L.push("");
+  exportHooks.forEach(function(fn){
+    try{
+      var lines=fn();
+      if(lines && lines.length) L=L.concat(lines,[""]);
+    }catch(e){}
+  });
+  if(cfg.predictions.length){
+    L.push("--- STAP 01: VOORSPELLINGS ---");
+    cfg.predictions.forEach(function(p,i){
+      L.push("  "+(get("voorspel_"+i)||"—")+" (antwoord: "+p[1]+")  — "+p[0]);
+    });
+    L.push("");
+  }
+  return L.join("\n");
+}
+function wireExport(){
+  var eb=document.getElementById("exportbtn");
+  var sb=document.getElementById("showexport");
+  var box=document.getElementById("exportbox");
+  var cc=document.getElementById("copycode");
+  var rb=document.getElementById("resetbtn");
+  if(eb) eb.addEventListener("click",function(){
+    var txt=buildExport();
+    var nr=(get("studentenr")||"student").replace(/[^0-9A-Za-z]/g,"");
+    try{
+      var blob=new Blob([txt],{type:"text/plain;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="AEKN121_"+cfg.codePrefix+"_"+nr+".txt";
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+    }catch(e){
+      if(box){ box.style.display="block"; box.value=txt; box.select(); }
+    }
+  });
+  if(sb && box) sb.addEventListener("click",function(){
+    box.style.display = box.style.display==="none" ? "block" : "none";
+    box.value=buildExport();
+  });
+  if(cc) cc.addEventListener("click",function(){
+    var c=buildCode(), btn=this;
+    function done(){
+      btn.textContent="Gekopieer";
+      setTimeout(function(){ btn.textContent="Kopieer kode"; },1500);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(c).then(done,function(){ window.prompt("Kopieer:",c); });
+    } else window.prompt("Kopieer:",c);
+  });
+  if(rb) rb.addEventListener("click",function(){
+    if(!window.confirm("Vee alles uit en begin oor? Dit kan nie ongedaan gemaak word nie.")) return;
+    try{ localStorage.removeItem(cfg.key); }catch(e){}
+    location.reload();
+  });
+}
+
+/* ---------------- init ---------------- */
+function init(){
+  /* state was already loaded by config(); a second load() here would discard
+     anything the unit's own setup wrote while it was building its charts. */
+  flagEl=document.getElementById("saveflag");
+  steps=[].slice.call(document.querySelectorAll(".step"));
+  total=steps.length;
+
+  wireFields();
+  [].forEach.call(document.querySelectorAll(".mcq"),wireMCQ);
+  [].forEach.call(document.querySelectorAll(".numq"),wireNum);
+  [].forEach.call(document.querySelectorAll(".txtq"),wireTxt);
+  [].forEach.call(document.querySelectorAll(".sorter"),wireSorter);
+  wireTOC();
+  wireExport();
+
+  document.addEventListener("click",function(e){
+    var b=e.target.closest(".nextbtn,.prevbtn");
+    if(!b||b.disabled) return;
+    if(b.classList.contains("nextbtn")){
+      state.done[state.step]=true;
+      if(cfg.lockStep!=null && state.step===cfg.lockStep) lockPredictions();
+      showStep(state.step+1);
+    } else showStep(state.step-1);
+  });
+
+  if(cfg.lockStep!=null && state.done[cfg.lockStep]) lockPredictions();
+  stepHooks.push(function(i){ if(i===total-1) renderResults(); });
+
+  showStep(state.step,false);
+  updateProgress();
+  if(state.step===total-1) renderResults();
+}
+
+return {
+  /* config() loads saved state immediately, because a unit's chart setup runs
+     between config() and init() and needs to restore its own slider and
+     placement values. */
+  config:function(o){
+    for(var k in o) cfg[k]=o[k];
+    if(o.schema) state.schemaVersion=o.schema;
+    if(cfg.key) load();
+  },
+  init:init,
+  get:get, set:set, save:save, getExtra:getExtra, setExtra:setExtra,
+  svgEl:svgEl, fmt:fmt,
+  buildCode:buildCode, checkCode:checkCode,
+  doneCount:doneCount, pctDone:pctDone, showStep:showStep,
+  totalSteps:function(){ return total; },
+  lockPredictions:lockPredictions,
+  renderResults:renderResults,
+  onResults:function(fn){ resultHooks.push(fn); },
+  onExport:function(fn){ exportHooks.push(fn); },
+  onStep:function(fn){ stepHooks.push(fn); }
+};
+})();
+
+
+/* ==== unit ==== */
+/* Leereenheid 1 — Wat is Ekonomie?
+   Unit-specific: the Mars PMK, the BMW/Pinotage exam figure, and the graded
+   e-Klas toets 1 (all 25 marks auto-marked; Q11.6 is three 1-mark MCQs). */
+
+AROS.config({
+  key:"aros_aekn121_le1_v1",
+  schema:2,
+  codePrefix:"LE1",
+  codeSalt:"AEKN121LE1",
+  exportTitle:"LEEREENHEID 1",
+  lockStep:1,
+  /* The code carries the auto-marked score, not completion. */
+  codeValue:function(){ return AROS.getExtra("score")==null ? 0 : AROS.getExtra("score"); },
+  predictions:[
+   ["Ekonomie is 'n sosiale wetenskap.","Waar",
+    "Dit bestudeer menslike keuses — presies wat 'n sosiale wetenskap doen."],
+   ["Ekonomie gaan in wese oor geld.","Onwaar",
+    "Geld is 'n maatstaf. Die vak gaan oor keuses onder skaarsheid."],
+   ["Geld is 'n produksiefaktor.","Onwaar",
+    "Kapitaal is mensgemaakte hulpbronne wat in produksie gebruik word — die bakoond, nie die geld waarmee jy dit koop nie."],
+   ["Geleentheidskoste word altyd in rand gemeet.","Onwaar",
+    "Dit is die waarde van die naasbeste alternatief. Dit kan tyd wees, of kg piesangs."],
+   ["Wanneer werklose hulpbronne weer in gebruik geneem word, skuif die PMK na regs.","Onwaar",
+    "Jy beweeg van 'n punt bínne die kurwe ná die kurwe toe. Die kurwe self skuif nie."],
+   ["Normatiewe stellings het 'n plek in ekonomiese beleidvorming.","Waar",
+    "Dit is waar nuwe idees ontstaan — wat dan deur positiewe ekonomie gestaaf moet word."]
+  ]
+});
+
+var svgEl=AROS.svgEl, fmt=AROS.fmt;
+
+/* ---------- Abigail se geleentheidskoste ---------- */
+(function(){
+  var rng=document.getElementById("ab_ure"); if(!rng) return;
+  var saved=AROS.get("abigail_ure"); if(saved) rng.value=saved;
+  function paint(){
+    var x=parseInt(rng.value,10);
+    document.getElementById("ab_ure_lbl").textContent=x;
+    document.getElementById("ab_out").innerHTML=
+      "Geleentheidskoste = R40 &times; "+x+" = <b>R"+(40*x)+"</b>";
+    AROS.set("abigail_ure",rng.value);
+  }
+  rng.addEventListener("input",paint); paint();
+})();
+
+/* ---------- Mars PMK ---------- */
+function frontierY(pts,x){
+  for(var i=0;i<pts.length-1;i++){
+    var a=pts[i],b=pts[i+1];
+    if(x>=a[0]&&x<=b[0]){
+      if(b[0]===a[0]) return Math.max(a[1],b[1]);
+      return a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]);
+    }
+  }
+  return x<pts[0][0]?pts[0][1]:0;
+}
+(function(){
+  var svg=document.getElementById("marsvg"); if(!svg) return;
+  var X0=72,X1=600,Y0=350,Y1=34, CMAX=60, BMAX=200;
+  function sx(c){ return X0+(c/CMAX)*(X1-X0); }
+  function sy(b){ return Y0-(b/BMAX)*(Y0-Y1); }
+  function ix(px){ return (px-X0)/(X1-X0)*CMAX; }
+  function iy(py){ return (Y0-py)/(Y0-Y1)*BMAX; }
+  /* Tabel 1, Leesbundel bl. 11 — (koffie, piesangs) in duisende kg */
+  var BASE=[[0,140],[20,130],[35,80],[40,0]];
+  var SETS={
+    base:{pts:BASE,label:"Oorspronklike PMK"},
+    ban:{pts:BASE.map(function(p){return [p[0],p[1]*1.3];}),
+         label:"Beter tegniek vir piesangs — die kurwe draai boontoe. Die maksimum koffie bly presies dieselfde (40 000 kg), want niks aan koffieproduksie het verander nie."},
+    cof:{pts:BASE.map(function(p){return [p[0]*1.3,p[1]];}),
+         label:"Beter tegniek vir koffie — die kurwe draai na regs. Die maksimum piesangs bly 140 000 kg."},
+    both:{pts:BASE.map(function(p){return [p[0]*1.3,p[1]*1.3];}),
+         label:"Ekonomiese groei — meer hulpbronne of hoër produktiwiteit. Die hele kurwe skuif uitwaarts: méér koffie én méér piesangs."}
+  };
+  var mode="base";
+  var stat=document.getElementById("mars_static");
+  stat.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y1-4,x2:X0,y2:Y0}));
+  stat.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y0,x2:X1+8,y2:Y0}));
+  [0,10,20,30,40,50,60].forEach(function(c){
+    var t=svgEl("text",{class:"axlbl",x:sx(c),y:Y0+18,"text-anchor":"middle"});
+    t.textContent=c===0?"0":fmt(c*1000); stat.appendChild(t);
+  });
+  [50,100,150,200].forEach(function(b){
+    var t=svgEl("text",{class:"axlbl",x:X0-8,y:sy(b)+4,"text-anchor":"end"});
+    t.textContent=fmt(b*1000); stat.appendChild(t);
+  });
+  var an=svgEl("text",{class:"axname",x:X1+8,y:Y0+34,"text-anchor":"end"});
+  an.textContent="Koffie (kg per dag)"; stat.appendChild(an);
+  var bn=svgEl("text",{class:"axname",x:X0-6,y:Y1-12,"text-anchor":"start"});
+  bn.textContent="Piesangs (kg per dag)"; stat.appendChild(bn);
+
+  var curve=document.getElementById("mars_curve");
+  var curve2=document.getElementById("mars_curve2");
+  var ptg=document.getElementById("mars_pts");
+  function pathOf(pts){
+    return pts.map(function(p,i){ return (i?"L":"M")+sx(p[0])+" "+sy(p[1]); }).join(" ");
+  }
+  function draw(){
+    var pts=SETS[mode].pts;
+    curve.setAttribute("d",pathOf(pts));
+    if(mode==="base"){ curve2.style.display="none"; }
+    else { curve2.style.display=""; curve2.setAttribute("d",pathOf(BASE)); }
+    ptg.innerHTML="";
+    var names=["A","B","C","D"];
+    pts.forEach(function(p,i){
+      ptg.appendChild(svgEl("circle",{class:"pt",cx:sx(p[0]),cy:sy(p[1]),r:5}));
+      var t=svgEl("text",{class:"ptlbl",x:sx(p[0])+(i===3?-6:9),y:sy(p[1])-9,
+        "text-anchor":i===3?"end":"start"});
+      t.textContent=names[i]; ptg.appendChild(t);
+    });
+    if(mode==="base"){
+      [[20,80,"E"],[35,130,"F"]].forEach(function(q){
+        ptg.appendChild(svgEl("circle",{class:"pt",cx:sx(q[0]),cy:sy(q[1]),r:4,
+          style:"fill:var(--note)"}));
+        var t=svgEl("text",{class:"ptlbl",x:sx(q[0])+9,y:sy(q[1])+5});
+        t.textContent=q[2]; ptg.appendChild(t);
+      });
+    }
+    document.getElementById("mars_verdict").textContent=SETS[mode].label;
+  }
+  draw();
+
+  var probe=document.getElementById("mars_probe");
+  function tap(ev){
+    var r=svg.getBoundingClientRect();
+    if(!r.width||!r.height) return;   /* step not visible yet — nothing to map onto */
+    var pt=(ev.touches&&ev.touches[0])||ev;
+    var px=(pt.clientX-r.left)/r.width*640, py=(pt.clientY-r.top)/r.height*400;
+    if(px<X0-6||px>X1+10||py>Y0+6||py<Y1-10) return;
+    var c=Math.max(0,ix(px)), b=Math.max(0,iy(py));
+    var pts=SETS[mode].pts, fb=frontierY(pts,c);
+    probe.style.display="";
+    document.getElementById("mars_pc").setAttribute("cx",sx(c));
+    document.getElementById("mars_pc").setAttribute("cy",sy(b));
+    var lx=document.getElementById("mars_pl_x");
+    lx.setAttribute("x1",X0); lx.setAttribute("y1",sy(b));
+    lx.setAttribute("x2",sx(c)); lx.setAttribute("y2",sy(b));
+    var ly=document.getElementById("mars_pl_y");
+    ly.setAttribute("x1",sx(c)); ly.setAttribute("y1",Y0);
+    ly.setAttribute("x2",sx(c)); ly.setAttribute("y2",sy(b));
+    var msg="<b>"+fmt(c*1000)+" kg koffie</b> en <b>"+fmt(b*1000)+" kg piesangs</b>. ";
+    var tol=BMAX*0.02;
+    if(c>pts[pts.length-1][0]+0.4){
+      msg+="Dit is <b>onbereikbaar</b> — daar is nie genoeg hulpbronne vir soveel koffie nie.";
+    } else if(b>fb+tol){
+      msg+="Dit is <b>onbereikbaar</b>. Om hier te produseer moet die kurwe eers uitskuif — meer hulpbronne, of beter tegnologie.";
+    } else if(b<fb-tol){
+      msg+="Dit is <b>ondoeltreffend</b>. Hulpbronne staan ledig: Mars kan tot "+
+        fmt(fb*1000)+" kg piesangs hê sonder om één kg koffie op te gee.";
+    } else {
+      msg+="Dit is <b>doeltreffend</b> — op die kurwe. Meer van die een beteken hier minder van die ander.";
+    }
+    document.getElementById("mars_verdict").innerHTML=msg;
+  }
+  svg.addEventListener("click",tap);
+  svg.addEventListener("touchstart",function(e){ tap(e); },{passive:true});
+
+  [].forEach.call(document.querySelectorAll("[data-shift]"),function(b){
+    b.addEventListener("click",function(){
+      [].forEach.call(document.querySelectorAll("[data-shift]"),function(x){
+        x.classList.remove("sel"); });
+      b.classList.add("sel"); mode=b.dataset.shift;
+      probe.style.display="none"; draw();
+    });
+  });
+
+  var NAMED={A:[0,140],B:[20,130],C:[35,80],D:[40,0]};
+  function move(){
+    var f=document.getElementById("mv_from").value, t=document.getElementById("mv_to").value;
+    var out=document.getElementById("mv_out");
+    if(f===t){ out.textContent="Kies twee verskillende punte."; return; }
+    var a=NAMED[f], b=NAMED[t];
+    var dc=(b[0]-a[0])*1000, db=(b[1]-a[1])*1000, gain,lose,gu,lu;
+    if(dc>0){ gain=dc; gu="kg koffie"; lose=-db; lu="kg piesangs"; }
+    else { gain=db; gu="kg piesangs"; lose=-dc; lu="kg koffie"; }
+    var per=lose/gain;
+    var perTxt=(per<1?per.toFixed(2):per.toFixed(1)).replace(".",",");
+    out.innerHTML="Van <b>"+f+"</b> na <b>"+t+"</b>: Mars kry <b>"+fmt(gain)+" "+gu+
+      "</b> by, en gee <b>"+fmt(lose)+" "+lu+"</b> op.<br>Die geleentheidskoste is dus <b>"+
+      perTxt+" "+lu+" per kg "+gu.replace("kg ","")+"</b>.";
+  }
+  document.getElementById("mv_from").addEventListener("change",move);
+  document.getElementById("mv_to").addEventListener("change",move);
+  move();
+})();
+
+/* ---------- BMW / Pinotage figure for the test ---------- */
+(function(){
+  var svg=document.getElementById("bmwsvg"); if(!svg) return;
+  var X0=86,X1=596,Y0=344,Y1=40, PMAX=68000, VMAX=3600;
+  function sx(p){ return X0+(p/PMAX)*(X1-X0); }
+  function sy(v){ return Y0-(v/VMAX)*(Y0-Y1); }
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y1-6,x2:X0,y2:Y0}));
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y0,x2:X1+10,y2:Y0}));
+  var P={A:[0,3000],C:[50000,2200],D:[57000,1500],B:[60000,0],
+         E:[50000,1500],F:[60000,3000]};
+  var d="M"+sx(0)+" "+sy(3000)+
+        " C"+sx(22000)+" "+sy(2950)+" "+sx(41000)+" "+sy(2620)+" "+sx(50000)+" "+sy(2200)+
+        " C"+sx(54500)+" "+sy(1980)+" "+sx(56600)+" "+sy(1760)+" "+sx(57000)+" "+sy(1500)+
+        " C"+sx(57900)+" "+sy(900)+" "+sx(59000)+" "+sy(380)+" "+sx(60000)+" "+sy(0);
+  svg.appendChild(svgEl("path",{class:"curve",d:d}));
+  [[sx(0),sy(3000),sx(60000),sy(3000)],
+   [sx(60000),sy(3000),sx(60000),sy(0)],
+   [X0,sy(2200),sx(50000),sy(2200)],
+   [X0,sy(1500),sx(57000),sy(1500)],
+   [sx(50000),Y0,sx(50000),sy(2200)],
+   [sx(57000),Y0,sx(57000),sy(1500)]].forEach(function(l){
+    svg.appendChild(svgEl("line",{class:"helper",x1:l[0],y1:l[1],x2:l[2],y2:l[3]}));
+  });
+  var off={A:[-4,-12,"end"],B:[10,-4,"start"],C:[11,-4,"start"],
+           D:[11,6,"start"],E:[-9,-8,"end"],F:[11,-4,"start"]};
+  Object.keys(P).forEach(function(k){
+    var p=P[k], o=off[k];
+    svg.appendChild(svgEl("circle",{cx:sx(p[0]),cy:sy(p[1]),r:5,
+      style:(k==="E"||k==="F")?"fill:var(--note)":"fill:var(--accent)"}));
+    var t=svgEl("text",{class:"ptlbl",x:sx(p[0])+o[0],y:sy(p[1])+o[1],"text-anchor":o[2]});
+    t.textContent=k; svg.appendChild(t);
+  });
+  [[0,"0"],[50000,"50 000"],[57000,"57 000"],[60000,"60 000"]].forEach(function(t,i){
+    var e=svgEl("text",{class:"axlbl",x:sx(t[0]),y:Y0+(i===2?32:18),"text-anchor":"middle"});
+    e.textContent=t[1]; svg.appendChild(e);
+  });
+  [[1500,"1 500"],[2200,"2 200"],[3000,"3 000"]].forEach(function(t){
+    var e=svgEl("text",{class:"axlbl",x:X0-9,y:sy(t[0])+4,"text-anchor":"end"});
+    e.textContent=t[1]; svg.appendChild(e);
+  });
+  var a1=svgEl("text",{class:"axname",x:X1+10,y:Y0+50,"text-anchor":"end"});
+  a1.textContent="Bottels Pinotage per jaar"; svg.appendChild(a1);
+  var a2=svgEl("text",{class:"axname",x:X0-8,y:Y1-16,"text-anchor":"start"});
+  a2.textContent="BMW X3 per jaar"; svg.appendChild(a2);
+})();
+
+/* ---------- e-Klas toets 1 ---------- */
+var TESTQ=[].slice.call(document.querySelectorAll(".mcq.test,.numq.test"));
+function autoMarks(){
+  var got=0,max=0;
+  TESTQ.forEach(function(b){
+    var m=parseInt(b.dataset.marks||"1",10);
+    max+=m;
+    if(b.__correct && b.__correct()) got+=m;
+  });
+  return {got:got,max:max};
+}
+function submitted(){ return !!AROS.getExtra("submitted"); }
+function revealTest(){
+  TESTQ.forEach(function(b){
+    b.__submitted=true; b.__locked=true;
+    if(b.__paint) b.__paint(true);
+    var inp=b.querySelector("input"); if(inp) inp.disabled=true;
+    var ta=b.querySelector("textarea"); if(ta) ta.disabled=true;
+  });
+}
+function noteText(score,max){
+  return "Ingedien en gemerk: "+score+" uit "+max+".";
+}
+(function(){
+  var btn=document.getElementById("submitbtn"); if(!btn) return;
+  var after=document.getElementById("afterSubmit");
+  var note=document.getElementById("submitnote");
+  if(submitted()){
+    revealTest();
+    btn.disabled=true;
+    if(after) after.disabled=false;
+    note.textContent=noteText(AROS.getExtra("score"),autoMarks().max);
+  }
+  btn.addEventListener("click",function(){
+    if(submitted()) return;
+    var open=TESTQ.filter(function(b){ return !(b.__answered && b.__answered()); }).length;
+    var msg = open
+      ? open+" vrae is nog oop. Dien jy in soos dit is? Jy kan daarna niks verander nie."
+      : "Dien in en merk? Jy kan daarna niks verander nie.";
+    if(!window.confirm(msg)) return;
+    var r=autoMarks();
+    AROS.setExtra("submitted",true);
+    AROS.setExtra("score",r.got);
+    AROS.save();
+    revealTest();
+    btn.disabled=true;
+    if(after) after.disabled=false;
+    note.textContent=noteText(r.got,r.max);
+    AROS.renderResults();
+  });
+})();
+
+AROS.onResults(function(){
+  var host=document.getElementById("scorehost"); if(!host) return;
+  var r=autoMarks(), sc=AROS.getExtra("score");
+  if(!submitted() || sc==null){
+    host.innerHTML='<div class="note">Jy het nog nie e-Klas toets 1 ingedien nie. '+
+      'Gaan terug na stap 09.</div>';
+  } else {
+    host.innerHTML='<div class="scorecard"><div class="big">'+sc+' / '+r.max+'</div>'+
+      '<div class="cap">e-Klas toets 1 &middot; outomaties gemerk</div></div>';
+  }
+});
+
+AROS.onExport(function(){
+  var L=[], r=autoMarks();
+  L.push("E-KLAS TOETS 1");
+  L.push("  Ingedien:            "+(submitted()?"ja":"NEE"));
+  L.push("  Punt:                "+(AROS.getExtra("score")==null?"—":AROS.getExtra("score"))+" / "+r.max);
+  L.push("");
+  L.push("--- ANTWOORDE OP DIE TOETS ---");
+  TESTQ.forEach(function(b){
+    var f=b.dataset.field, v=AROS.get(f);
+    L.push("  "+f.replace(/^t/,"")+": "+(v==null||v===""?"—":v)+"   "+
+      (submitted() ? (b.__correct()?"[reg]":"[verkeerd — "+b.dataset.a+"]") : ""));
+  });
+  return L;
+});
+
+AROS.onExport(function(){
+  return ["--- OEFENWERK ---",
+    "  Sosiale wetenskap (MCQ):        "+(AROS.get("m_sosiaal")||"—"),
+    "  PMK-skuif (MCQ):                "+(AROS.get("m_pmk")||"—"),
+    "  Jan se loonrekening:            "+(AROS.get("jan_loon")||"—"),
+    "  Jan se rekeningkundige koste:   "+(AROS.get("jan_rek")||"—"),
+    "  Jan se salaris:                 "+(AROS.get("jan_sal")||"—"),
+    "  Jan se geleentheidskoste:       "+(AROS.get("jan_gk")||"—"),
+    "",
+    "--- STAP 04: EIE STELLINGS ---",
+    AROS.get("eie_stelling")||"[geen antwoord]",
+    "",
+    "--- STAP 08: VERDUIDELIKING VIR GRAAD 8 ---",
+    AROS.get("lesplan")||"[geen antwoord]",
+    "",
+    "--- STAP 08: VRAAG VIR DIE KLAS ---",
+    AROS.get("klasvraag")||"[geen antwoord]"];
+});
+
+AROS.init();
+</script>
+</body>
+</html>
