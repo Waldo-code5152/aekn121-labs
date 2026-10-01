@@ -297,8 +297,9 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
   wat jy intik word op hierdie toestel gestoor, en jy kan later terugkom waar jy opgehou het.
   Reken op ongeveer <b>90 minute</b> in totaal.</p>
 
-  <p>Aan die einde skryf jy <b>e-Klas toets 1</b> (25 punte, 20% van jou deelnamepunt)
-  hier binne-in. Jy kry dadelik jou punt en 'n kode om op e-Klas in te sleutel.</p>
+  <p>Aan die einde is daar 'n <b>oefentoets</b> van 25 punte, in dieselfde styl as
+  <b>e-Klas toets 1</b>. Dit tel nie punte nie, maar jy kry dadelik terugvoer.
+  Die regte e-Klas toets 1 skryf jy <b>op e-Klas self</b>.</p>
 
   <div class="note"><b>Werk dit op jou selfoon?</b> Ja. Hou dit regop.
   Die grafieke werk met 'n tik.</div>
@@ -308,7 +309,7 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
 
   <label class="q" for="f_nr">Jou studentenommer</label>
   <input type="text" id="f_nr" data-field="studentenr" inputmode="numeric" autocomplete="off">
-  <p class="hint">Dit gaan in jou toetskode in. Maak seker dit is reg.</p>
+  <p class="hint">Dit gaan in jou kode en jou afgelaaide werk in. Maak seker dit is reg.</p>
 
   <div class="nav"><span></span><button class="act nextbtn">Merk klaar en gaan voort</button></div>
 </section>
@@ -841,15 +842,19 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
 </section>
 
 <!-- ============ 09 ============ -->
-<section class="step" data-title="e-Klas toets 1" data-tag="assessering" data-min="20">
+<section class="step" data-title="Oefentoets" data-tag="oefening" data-min="20">
   <div class="stephead"><span class="stepnum">09</span>
-    <span class="steptitle">e-Klas toets 1</span>
-    <span class="steptag">assessering &middot; 25 punte</span><span class="stepmin">20 min</span></div>
+    <span class="steptitle">Oefentoets</span>
+    <span class="steptag">oefening &middot; tel nie punte nie</span><span class="stepmin">20 min</span></div>
 
-  <p class="lead">Hierdie toets tel <b>25 punte</b>, en dra <b>20%</b> van jou deelnamepunt by.</p>
+  <p class="lead">Hierdie is 'n <b>oefentoets</b>. Dit tel <b>nie</b> vir jou deelnamepunt nie.</p>
+
+  <div class="note"><b>Die regte e-Klas toets 1</b> (25 punte, 20% van jou deelnamepunt)
+  skryf jy <b>op e-Klas</b>, nie hier nie. Hierdie oefentoets dek dieselfde werk, so doen dit
+  eers en kyk waar jy nog sukkel.</div>
 
   <p>Beantwoord alles, en druk dan <b>Dien in en merk</b> heel onder. Jy kan nie na indiening
-  verander nie. Al 25 punte word onmiddellik gemerk, en jou kode dra jou punt.</p>
+  verander nie. Al 25 punte word onmiddellik gemerk, met terugvoer by elke vraag.</p>
 
   <h3>Afdeling A &mdash; Veelkeusevrae <span style="font-weight:400;color:var(--ink-soft)">(10 punte)</span></h3>
 
@@ -1136,15 +1141,15 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
   <h3>Jou raaiskote uit stap 01</h3>
   <div id="predhost"></div>
 
-  <h3>Jou e-Klas-kode</h3>
-  <p>Sleutel hierdie kode presies so in by die aktiwiteit <b>&ldquo;e-Klas toets 1 &mdash;
-  kode&rdquo;</b> op e-Klas. Dit bevat jou studentenommer en jou punt.</p>
+  <h3>Jou oefenkode</h3>
+  <p>Hierdie kode bevat jou studentenommer en jou oefenpunt. Jy hoef dit <b>nie</b> op
+  e-Klas in te sleutel nie, tensy jou dosent daarvoor vra.</p>
   <div class="codebox" id="codebox">&mdash;</div>
   <button class="ghost" id="copycode">Kopieer kode</button>
 
   <h3>Laai jou werk af</h3>
   <p>Laai 'n afskrif van alles wat jy ingevul het af, en hou dit. As jou dosent vra vir jou
-  Graad 8-verduideliking of jou toetsantwoorde, is dit hier in.</p>
+  Graad 8-verduideliking of jou oefentoetsantwoorde, is dit hier in.</p>
   <button class="act" id="exportbtn">Laai my werk af</button>
   <button class="ghost" id="showexport">Wys as teks</button>
   <textarea id="exportbox" readonly></textarea>
@@ -1154,7 +1159,7 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
 
   <p style="margin-top:26px"><button class="ghost" id="resetbtn"
     style="border-color:var(--bad);color:var(--bad)">Begin heeltemal oor</button></p>
-  <p class="locknote">Dit vee alles op hierdie toestel uit, ook jou toetspunt.</p>
+  <p class="locknote">Dit vee alles op hierdie toestel uit, ook jou oefentoetspunt.</p>
 
   <div class="nav"><button class="ghost prevbtn">Vorige</button><span></span></div>
 </section>
@@ -1595,8 +1600,9 @@ return {
 
 /* ==== unit ==== */
 /* Leereenheid 1 — Wat is Ekonomie?
-   Unit-specific: the Mars PMK, the BMW/Pinotage exam figure, and the graded
-   e-Klas toets 1 (all 25 marks auto-marked; Q11.6 is three 1-mark MCQs). */
+   Unit-specific: the Mars PMK, the BMW/Pinotage exam figure, and the practice
+   test (all 25 marks auto-marked; Q11.6 is three 1-mark MCQs). Since 2026-10-01 the
+   real e-Klas toets 1 runs natively on Moodle (see moodle/); this one counts for nothing. */
 
 AROS.config({
   key:"aros_aekn121_le1_v1",
@@ -1826,7 +1832,7 @@ function frontierY(pts,x){
   a2.textContent="BMW X3 per jaar"; svg.appendChild(a2);
 })();
 
-/* ---------- e-Klas toets 1 ---------- */
+/* ---------- oefentoets (was e-Klas toets 1) ---------- */
 var TESTQ=[].slice.call(document.querySelectorAll(".mcq.test,.numq.test"));
 function autoMarks(){
   var got=0,max=0;
@@ -1882,21 +1888,21 @@ AROS.onResults(function(){
   var host=document.getElementById("scorehost"); if(!host) return;
   var r=autoMarks(), sc=AROS.getExtra("score");
   if(!submitted() || sc==null){
-    host.innerHTML='<div class="note">Jy het nog nie e-Klas toets 1 ingedien nie. '+
+    host.innerHTML='<div class="note">Jy het nog nie die oefentoets ingedien nie. '+
       'Gaan terug na stap 09.</div>';
   } else {
     host.innerHTML='<div class="scorecard"><div class="big">'+sc+' / '+r.max+'</div>'+
-      '<div class="cap">e-Klas toets 1 &middot; outomaties gemerk</div></div>';
+      '<div class="cap">Oefentoets &middot; tel nie punte nie</div></div>';
   }
 });
 
 AROS.onExport(function(){
   var L=[], r=autoMarks();
-  L.push("E-KLAS TOETS 1");
+  L.push("OEFENTOETS (tel nie punte nie)");
   L.push("  Ingedien:            "+(submitted()?"ja":"NEE"));
   L.push("  Punt:                "+(AROS.getExtra("score")==null?"—":AROS.getExtra("score"))+" / "+r.max);
   L.push("");
-  L.push("--- ANTWOORDE OP DIE TOETS ---");
+  L.push("--- ANTWOORDE OP DIE OEFENTOETS ---");
   TESTQ.forEach(function(b){
     var f=b.dataset.field, v=AROS.get(f);
     L.push("  "+f.replace(/^t/,"")+": "+(v==null||v===""?"—":v)+"   "+
