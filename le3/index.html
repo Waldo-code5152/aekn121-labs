@@ -479,7 +479,7 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
   bevelsekonomie</b> regs. Tik op die lyn om elke ekonomie te plaas.</p>
 
   <div class="chartwrap">
-    <svg class="chart" id="spectrum" viewBox="0 0 640 300" role="img"
+    <svg class="chart" id="spectrum" viewBox="0 0 640 330" role="img"
       aria-label="'n As van suiwer markekonomie tot suiwer bevelsekonomie"></svg>
   </div>
   <div class="verdictbox" id="spec_verdict">Kies hieronder watter ekonomie jy wil plaas.</div>
@@ -1375,9 +1375,11 @@ var svgEl=AROS.svgEl;
   svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:AXIS,x2:X1,y2:AXIS}));
   [[X0,"Suiwer","markekonomie"],[X1,"Suiwer","bevelsekonomie"]].forEach(function(e,i){
     svg.appendChild(svgEl("line",{class:"axis",x1:e[0],y1:AXIS-10,x2:e[0],y2:AXIS+10}));
-    var a=svgEl("text",{class:"axname",x:e[0],y:AXIS-34,"text-anchor":i?"end":"start"});
+    /* Kept well clear of AXIS-15, where a placed marker's label sits: at <=520px
+       .axname goes to 17px and these collided with Nieu-Seeland and Noord-Korea. */
+    var a=svgEl("text",{class:"axname",x:e[0],y:AXIS-56,"text-anchor":i?"end":"start"});
     a.textContent=e[1];
-    var b=svgEl("text",{class:"axname",x:e[0],y:AXIS-18,"text-anchor":i?"end":"start"});
+    var b=svgEl("text",{class:"axname",x:e[0],y:AXIS-40,"text-anchor":i?"end":"start"});
     b.textContent=e[2];
     svg.appendChild(a); svg.appendChild(b);
   });
@@ -1413,7 +1415,7 @@ var svgEl=AROS.svgEl;
       var g=svgEl("g",{});
       g.appendChild(svgEl("circle",{class:"marker"+(e.id===current?" cur":""),
         cx:x,cy:y,r:7}));
-      var t=svgEl("text",{class:"markerlbl",x:x,y:y-13,"text-anchor":"middle"});
+      var t=svgEl("text",{class:"markerlbl",x:x,y:onTrad?y+22:y-13,"text-anchor":"middle"});
       t.textContent=e.name;
       g.appendChild(t); placedG.appendChild(g);
     });
