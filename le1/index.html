@@ -1567,11 +1567,15 @@ function init(){
   });
 
   if(cfg.lockStep!=null && state.done[cfg.lockStep]) lockPredictions();
-  stepHooks.push(function(i){ if(i===total-1) renderResults(); });
+  /* The last step has no "next" button, so it can never be ticked off the way the others
+     are — without this, 100% voltooi is unreachable and a completion code tops out at 90. */
+  stepHooks.push(function(i){
+    if(i===total-1){ state.done[i]=true; queueSave(); updateProgress(); renderResults(); }
+  });
 
   showStep(state.step,false);
   updateProgress();
-  if(state.step===total-1) renderResults();
+  if(state.step===total-1){ state.done[state.step]=true; queueSave(); updateProgress(); renderResults(); }
 }
 
 return {

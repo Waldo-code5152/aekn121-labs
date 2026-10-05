@@ -1,0 +1,1682 @@
+<!doctype html>
+<html lang="af">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Leereenheid 2 &mdash; Vraag en Aanbod</title>
+<style>
+/* ===================================================================
+   AEKN121 lab shell — shared across every Leereenheid.
+   Do not put unit-specific styling here; use the unit's own unit.css.
+   =================================================================== */
+:root{
+  --paper:#fbfaf7; --panel:#ffffff; --ink:#1c1c1a; --ink-soft:#54524d;
+  --line:#ddd9d0; --line-soft:#eeeae2;
+  --accent:#7a3b1f; --accent-soft:#f4ece6;
+  --good:#2f6b3d; --good-soft:#eaf3ec;
+  --bad:#9a2f2f; --bad-soft:#f8ecec;
+  --note:#3a5a7a; --note-soft:#eaf0f6;
+  --demand:#7a3b1f; --supply:#2f5f6b;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --serif:Cambria,Georgia,"Times New Roman",serif;
+  --sans:Calibri,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+/* Dark tokens declared twice on purpose: the media query covers the default
+   "system" state, the [data-theme] rule covers a host that stamps an explicit
+   choice on the root element. The :not() guard lets an explicit light choice
+   beat a dark OS. */
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+ }
+}
+:root[data-theme="dark"]{
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px 120px}
+
+/* ---------- masthead + progress ---------- */
+header.mast{border-bottom:2px solid var(--ink);padding:22px 0 12px}
+.mast .code{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.mast h1{font-family:var(--serif);font-size:26px;line-height:1.2;margin:6px 0 2px;font-weight:700}
+.mast .sub{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:17px}
+.progwrap{position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:8px 0 9px}
+.progbar{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden}
+.progfill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+.progtext{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:5px;letter-spacing:.04em}
+.saveflag{opacity:0;transition:opacity .4s;color:var(--good)}
+.saveflag.on{opacity:1}
+#tocbtn{background:none;border:0;color:inherit;font-family:var(--mono);font-size:11px;
+  cursor:pointer;padding:0 0 0 12px;letter-spacing:.04em;opacity:.75}
+
+/* ---------- steps ---------- */
+.step{display:none;padding-top:26px}
+.step.active{display:block}
+.stephead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:18px}
+.stepnum{font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:700}
+.steptitle{font-family:var(--serif);font-size:22px;font-weight:700;flex:1 1 auto;line-height:1.2}
+.steptag{font-style:italic;color:var(--ink-soft);font-size:14px;font-family:var(--serif)}
+.stepmin{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+
+/* ---------- prose ---------- */
+h3{font-family:var(--serif);font-size:19px;margin:26px 0 8px;font-weight:700}
+h4{font-family:var(--sans);font-size:15px;margin:20px 0 6px;font-weight:700}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:22px}
+li{margin-bottom:5px}
+.lead{font-family:var(--serif);font-size:19px;line-height:1.55}
+.scripture{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:14px 16px;margin:0 0 18px;font-family:var(--serif);font-style:italic}
+.scripture .ref{display:block;font-style:normal;font-family:var(--mono);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:8px}
+.def{border:1px solid var(--accent);border-left-width:4px;background:var(--panel);
+  padding:13px 15px;margin:0 0 16px;font-family:var(--serif);font-size:18px}
+.def strong{font-family:var(--sans);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:5px;font-weight:700}
+.note{border-left:3px solid var(--note);background:var(--note-soft);
+  padding:12px 15px;margin:0 0 16px;font-size:15px}
+.note b{color:var(--note)}
+.readbox{background:var(--panel);border:1px solid var(--line);
+  padding:16px 18px;margin:0 0 18px;border-radius:3px}
+.readbox .src{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+.hint{font-size:14px;color:var(--ink-soft);margin:5px 0 0;font-style:italic}
+
+/* ---------- forms ---------- */
+label.q{display:block;font-weight:700;margin:18px 0 7px;font-size:16px}
+label.q .mk{font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+  font-weight:400;margin-left:6px}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font-family:inherit;font-size:16px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--ink)}
+textarea{min-height:92px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled,textarea:disabled,select:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible,.opt:focus-visible,.tocitem:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- multiple choice ---------- */
+.opts{display:flex;flex-direction:column;gap:7px;margin:8px 0 4px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:11px 13px;cursor:pointer;
+  font-size:16px;line-height:1.45;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt .lt{font-family:var(--mono);font-weight:700;flex:0 0 auto}
+.opt.locked{cursor:default}
+.fb{margin-top:10px;padding:11px 14px;border-radius:3px;font-size:15px;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:var(--good-soft);border-left:3px solid var(--good)}
+.fb.no{background:var(--bad-soft);border-left:3px solid var(--bad)}
+.fb .verdict{font-weight:700;display:block;margin-bottom:4px}
+.fb.ok .verdict{color:var(--good)}
+.fb.no .verdict{color:var(--bad)}
+
+/* ---------- buttons ---------- */
+button.act{font-family:var(--sans);font-size:15px;font-weight:700;padding:10px 20px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:3px;cursor:pointer}
+button.act:hover{filter:brightness(1.08)}
+button.ghost{font-family:var(--sans);font-size:15px;padding:10px 20px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+button.ghost:hover{border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- sorter ---------- */
+.sorter{margin:14px 0 6px}
+.sortrow{display:flex;gap:9px;align-items:center;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
+.sortrow .txt{flex:1 1 190px;font-size:15.5px;line-height:1.4}
+.sortrow .picks{display:flex;gap:5px;flex-wrap:wrap}
+.sortrow .picks button{font-family:var(--sans);font-size:13px;padding:6px 12px;
+  border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+  border-radius:3px;cursor:pointer;white-space:nowrap}
+.sortrow .picks button.sel{border-color:var(--accent);background:var(--accent-soft);
+  color:var(--accent);font-weight:700}
+.sortrow.right{border-color:var(--good);background:var(--good-soft)}
+.sortrow.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.sortrow .why{flex:1 1 100%;font-size:14px;color:var(--ink-soft);
+  font-style:italic;margin-top:4px;display:none}
+.sortrow.reveal .why{display:block}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:var(--line-soft);font-weight:700;font-size:14px}
+td.num,th.num{text-align:right;font-family:var(--mono);font-size:14px;
+  font-variant-numeric:tabular-nums}
+tr.eq td{background:var(--accent-soft);font-weight:700}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 16px}
+.scroll table{margin:0;min-width:420px}
+
+/* ---------- navigation ---------- */
+.nav{display:flex;gap:10px;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--line);margin-top:34px;padding-top:16px;flex-wrap:wrap}
+
+/* ---------- charts (generic frame; curve styling lives in unit.css) ---------- */
+.chartwrap{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:10px;margin:0 0 14px}
+svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
+.chart .axis{stroke:currentColor;stroke-width:2;fill:none}
+.chart .helper{stroke:currentColor;stroke-width:1;stroke-dasharray:4 3;opacity:.45}
+.chart .axlbl{font-family:var(--sans);font-size:12px;fill:currentColor;opacity:.7;
+  font-variant-numeric:tabular-nums}
+.chart .axname{font-family:var(--sans);font-size:13px;fill:currentColor;font-weight:700}
+.chart .ptlbl{font-family:var(--mono);font-size:14px;fill:currentColor;font-weight:700}
+.verdictbox{font-size:15px;padding:11px 14px;border-radius:3px;margin:0 0 12px;
+  background:var(--note-soft);border-left:3px solid var(--note);min-height:22px}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.ctrls button{font-family:var(--sans);font-size:14px;padding:8px 14px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+.ctrls button.sel{border-color:var(--note);background:var(--note-soft);
+  color:var(--note);font-weight:700}
+.slider{margin:0 0 12px}
+.slider input[type=range]{width:100%;accent-color:var(--accent)}
+.slider .val{font-family:var(--mono);font-size:19px;color:var(--accent);font-weight:700}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:22px;height:3px;display:inline-block;border-radius:2px}
+
+/* ---------- results + export ---------- */
+.scorecard{border:2px solid var(--accent);border-radius:3px;padding:18px;
+  margin:0 0 20px;background:var(--panel);text-align:center}
+.scorecard .big{font-family:var(--serif);font-size:42px;font-weight:700;
+  color:var(--accent);line-height:1}
+.scorecard .cap{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+.codebox{font-family:var(--mono);font-size:19px;letter-spacing:.14em;
+  background:var(--accent-soft);border:1px dashed var(--accent);color:var(--accent);
+  padding:14px;text-align:center;border-radius:3px;margin:0 0 8px;
+  user-select:all;word-break:break-all;font-weight:700}
+.locknote{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+  letter-spacing:.05em;margin:6px 0 0}
+#exportbox{display:none;margin-top:12px;min-height:230px;
+  font-family:var(--mono);font-size:12.5px}
+
+/* ---------- table of contents ---------- */
+.toc{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;
+  padding:40px 18px;overflow-y:auto}
+.toc.open{display:block}
+.toc .inner{max-width:520px;margin:0 auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:4px;padding:8px}
+.tocitem{display:flex;width:100%;gap:11px;align-items:baseline;text-align:left;
+  background:transparent;border:0;border-bottom:1px solid var(--line-soft);
+  padding:12px 10px;cursor:pointer;color:var(--ink);font-family:var(--sans);font-size:15px}
+.tocitem:last-child{border-bottom:0}
+.tocitem:hover{background:var(--accent-soft)}
+.tocitem .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700}
+.tocitem .dn{margin-left:auto;color:var(--good);font-family:var(--mono);font-size:12px}
+
+/* ---------- small screens ---------- */
+@media (max-width:520px){
+  body{font-size:16px}
+  .mast h1{font-size:22px}
+  .steptitle{font-size:19px}
+  .wrap{padding:0 14px 110px}
+  .nav button{flex:1 1 100%}
+  /* the SVG scales down with the viewport, so scale its type back up */
+  .chart .axlbl{font-size:16px}
+  .chart .axname{font-size:17px}
+  .chart .ptlbl{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+@media print{
+  .progwrap,.nav,.ctrls,.toc{display:none!important}
+  .step{display:block!important;page-break-after:always}
+}
+
+
+/* ---- unit-specific ---- */
+/* Leereenheid 2 — vraag-en-aanbodmark */
+.chart .dcurve{stroke:var(--demand);stroke-width:2.5;fill:none}
+.chart .scurve{stroke:var(--supply);stroke-width:2.5;fill:none}
+.chart .ghost{stroke-width:2;fill:none;stroke-dasharray:6 4;opacity:.5}
+.chart .priceline{stroke:var(--ink);stroke-width:2;stroke-dasharray:7 4;opacity:.8}
+.chart .gapbar{stroke-width:9;opacity:.8;stroke-linecap:butt}
+.chart .clbl{font-family:var(--mono);font-size:15px;font-weight:700}
+.chart .eqpt{fill:var(--good)}
+.chart .eqlbl{font-family:var(--mono);font-size:13px;fill:currentColor;font-weight:700}
+@media (max-width:520px){
+  .chart .clbl{font-size:19px}
+  .chart .eqlbl{font-size:17px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="code">AEKN121 &middot; Inleiding tot Ekonomie &middot; AROS</div>
+  <h1>Leereenheid 2 &mdash; Vraag en Aanbod</h1>
+  <div class="sub">Werk in jou eie tyd hierdeur. Jou antwoorde word outomaties gestoor.</div>
+</header>
+
+<div class="progwrap">
+  <div class="progbar"><div class="progfill" id="progfill"></div></div>
+  <div class="progtext">
+    <span id="progtext">&nbsp;</span>
+    <span><span class="saveflag" id="saveflag">gestoor</span>
+      <button id="tocbtn" type="button">inhoud &#9662;</button></span>
+  </div>
+</div>
+
+<div class="toc" id="toc"><div class="inner" id="tocinner"></div></div>
+
+<main id="steps">
+<!-- ============ 00 ============ -->
+<section class="step" data-title="Begin" data-tag="alleen" data-min="4">
+  <div class="stephead"><span class="stepnum">00</span>
+    <span class="steptitle">Begin hier</span>
+    <span class="steptag">alleen</span><span class="stepmin">4 min</span></div>
+
+  <p class="lead">Leereenheid 2 is die grootste eenheid van die vyf. Neem dit stukkie vir
+  stukkie.</p>
+
+  <p>Reken op ongeveer <b>110 minute</b> in totaal. Jy hoef dit <b>nie</b> in een sitting te
+  doen nie &mdash; alles wat jy intik word op hierdie toestel gestoor, en jy kan later terugkom
+  waar jy opgehou het. 'n Natuurlike breekpunt is n&aacute; stap 04.</p>
+
+  <div class="note"><b>Let op &mdash; hierdie eenheid het nie sy eie e-Klas toets nie.</b>
+  Leereenheid 2 word in die <b>Kwartaaltoets</b> geassesseer, saam met Leereenhede 1 en 3.
+  Stap 08 hier is dus <b>oefening, nie 'n assessering nie</b> &mdash; maar dit is die beste
+  voorspelling van wat die Kwartaaltoets gaan vra, want die vrae kom uit dieselfde poel.</div>
+
+  <p>Vraag en aanbod is die enkele nuttigste stuk gereedskap in die hele vak. As jy net
+  &eacute;&eacute;n ding uit AEKN121 onthou, laat dit hierdie wees.</p>
+
+  <label class="q" for="f_naam">Jou naam en van</label>
+  <input type="text" id="f_naam" data-field="naam" autocomplete="name">
+
+  <label class="q" for="f_nr">Jou studentenommer</label>
+  <input type="text" id="f_nr" data-field="studentenr" inputmode="numeric" autocomplete="off">
+
+  <div class="nav"><span></span><button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="step" data-title="Voorspel" data-tag="alleen" data-min="6">
+  <div class="stephead"><span class="stepnum">01</span>
+    <span class="steptitle">Voorspel eers</span>
+    <span class="steptag">alleen</span><span class="stepmin">6 min</span></div>
+
+  <p class="lead">Ses stellings. S&ecirc; net of elkeen waar of onwaar is, voordat jy iets
+  lees.</p>
+
+  <p>Jy kry nie nou terugvoer nie. Aan die einde wys ons jou wat jy geraai het en wat die
+  antwoord is. Vier van die ses toets presies die onderskeid waarop die meeste punte in hierdie
+  eenheid verloor word.</p>
+
+  <div class="sorter" data-field="voorspel" data-bins="Waar|Onwaar" data-noreveal="1">
+    <div class="sortrow" data-a="Onwaar"><div class="txt">As die prys van koffie styg, skuif die vraagkurwe na links.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">'n Verandering in verbruikers se inkomste laat die vraagkurwe skuif.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Teen 'n prys bo die ewewigsprys ontstaan daar 'n tekort.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">As die aanbod afneem, styg die ewewigsprys.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Die aanbodkurwe skuif wanneer die prys van die produk self verander.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">Vir 'n minderwaardige produk neem die vraag af wanneer inkomste styg.</div></div>
+  </div>
+
+  <label class="q" for="f_gr89">Watter een van die ses sal jou Graad 8- of 9-leerders die
+  moeilikste vind? Hoekom?</label>
+  <textarea id="f_gr89" data-field="gr89_voorspel" data-lock-with-predictions></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en sluit my raaiskote</button></div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="step" data-title="Vraag" data-tag="lees en doen" data-min="14">
+  <div class="stephead"><span class="stepnum">02</span>
+    <span class="steptitle">Vraag</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">14 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 18</div>
+    <p>Onthou uit Leereenheid 1: huishoudings besit die produksiefaktore en verkoop hulle in die
+    <b>faktormark</b> teen huur, salarisse, rente en wins. Besighede koop daardie faktore,
+    kombineer hulle, en verkoop die goedere en dienste aan huishoudings in die
+    <b>goederemark</b> (Mohr et al., 2015:60).</p>
+    <p>In hierdie eenheid kyk ons na die goederemark. Huishoudings is die <b>verbruikers</b>
+    wat 'n vraag het; besighede is die <b>verskaffers</b> wat die aanbod genereer.</p>
+  </div>
+
+  <div class="def"><strong>Die Wet van Vraag</strong>
+  Daar is 'n <b>negatiewe</b> verhouding tussen die prys en die hoeveelheid gevra
+  (Clifford, 2014a). Word die prys laer, styg die hoeveelheid gevra &mdash; en andersom.</div>
+
+  <p>&ldquo;Vraag&rdquo; verwys na die hoeveelheid goedere of dienste wat potensi&euml;le kopers
+  <b>gewillig &eacute;n in staat</b> is om te koop (Mohr et al., 2015:61). Albei dele tel: om
+  iets te begeer sonder om dit te kan bekostig, is nie vraag nie.</p>
+
+  <h3>Die vraag na wegneemkoffie</h3>
+
+  <div class="scroll"><table>
+    <tr><th>Prys</th><th class="num">Hoeveelheid gevra</th></tr>
+    <tr><td>R35</td><td class="num">10</td></tr>
+    <tr><td>R25</td><td class="num">20</td></tr>
+    <tr><td>R17</td><td class="num">30</td></tr>
+    <tr><td>R10</td><td class="num">40</td></tr>
+    <tr><td>R5</td><td class="num">50</td></tr>
+  </table></div>
+  <p class="hint">Tabel 2, Leesbundel bl. 19.</p>
+
+  <p>Skuif die prys en kyk wat met die hoeveelheid gevra gebeur. Let op waar die kolletjie
+  beweeg: <b>langs</b> die kurwe, nooit weg daarvan nie.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="dchart" viewBox="0 0 640 400" role="img"
+      aria-label="Die vraagkurwe vir wegneemkoffie"></svg>
+  </div>
+  <div class="slider">
+    <label class="q" style="margin-top:0" for="dprice">Prys: <span class="val" id="dprice_lbl">R17</span></label>
+    <input type="range" id="dprice" min="5" max="35" step="1" value="17">
+  </div>
+  <div class="verdictbox" id="dverdict"></div>
+
+  <h3>Waarom loop die kurwe afwaarts?</h3>
+  <p>Drie redes (Clifford, 2014a):</p>
+  <ul>
+    <li><b>Die vervangingseffek</b> &mdash; word 'n produk duurder, koop verbruikers meer van
+    die substitute wat nou relatief goedkoper is.</li>
+    <li><b>Die inkomste-effek</b> &mdash; prysveranderinge be&iuml;nvloed die koopkrag van
+    verbruikers se inkomste.</li>
+    <li><b>Die Wet van Dalende Grensnut</b> &mdash; namate jy meer van 'n produk verbruik, kry
+    jy al minder nut (bevrediging) uit elke volgende eenheid.</li>
+  </ul>
+
+  <div class="note"><b>Hier is grensnut op sy regte plek.</b> As jy Leereenheid 1 gedoen het,
+  het jy 'n opmerking gesien dat die Leesbundel die Wet van Dalende Grensnut verkeerdelik gebruik
+  om die vorm van die PMK te verklaar. H&iacute;er is dit wel korrek: grensnut gaan oor die
+  bevrediging van 'n <i>verbruiker</i>, en dit is presies waaroor 'n vraagkurwe gaan.
+  Dieselfde wet, die regte plek. Dit is 'n goeie voorbeeld om vir jou eie leerders te gebruik:
+  die naam van 'n wet beteken niks as jy nie weet waarop dit van toepassing is nie.</div>
+
+  <div class="mcq" data-field="m_vraag" data-a="b"
+    data-why="Vraag is wat kopers gewillig én in staat is om te koop. Begeerte sonder koopkrag is nie vraag nie — en dit is presies waarom armoede 'n ekonomiese probleem is en nie net 'n gebrek aan begeerte nie.">
+    <label class="q">Wat maak 'n begeerte 'n <i>vraag</i>? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Dat die produk beskikbaar is.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Dat die koper gewillig én in staat is om te betaal.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Dat die prys laag genoeg is.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dat die koper die produk nodig het.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="step" data-title="Wat skuif die vraag?" data-tag="doen" data-min="12">
+  <div class="stephead"><span class="stepnum">03</span>
+    <span class="steptitle">Wat laat die vraagkurwe skuif?</span>
+    <span class="steptag">doen</span><span class="stepmin">12 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 20&ndash;21</div>
+    <p>Vyf determinante laat die hele vraagkurwe skuif (Clifford, 2014a):</p>
+    <ul>
+      <li>verbruikers se voorkeure</li>
+      <li>die aantal verbruikers</li>
+      <li>die prys van verwante produkte (substitute of komplemente)</li>
+      <li>verbruikers se inkomste</li>
+      <li>verbruikers se verwagtinge</li>
+    </ul>
+    <p>Is die vraag by elke prys <b>meer</b> as voorheen, skuif die kurwe na <b>regs</b>. Is dit
+    minder, skuif dit na <b>links</b>.</p>
+  </div>
+
+  <div class="note"><b>Spelling wat punte kos.</b> Dit is <b>komplement&ecirc;re</b> produkte,
+  nie &ldquo;komplimente&ecirc;re&rdquo; nie. 'n Kompliment is 'n vriendelike woord; 'n
+  komplement is iets wat aanvul. Die Leesbundel gebruik deurgaans die verkeerde spelling
+  &mdash; moenie dit oorskryf nie.</div>
+
+  <h3>Substitute of komplemente?</h3>
+  <p>Substitute bevredig dieselfde behoefte en kan mekaar vervang. Komplemente word saam
+  gebruik (Jan, 2019).</p>
+
+  <div class="sorter" data-field="subkomp" data-bins="Substitute|Komplemente">
+    <div class="sortrow" data-a="Substitute" data-why="Albei versoet — die een kan die ander vervang."><div class="txt">Heuning en suiker</div></div>
+    <div class="sortrow" data-a="Komplemente" data-why="Word saam gebruik."><div class="txt">Brood en botter</div></div>
+    <div class="sortrow" data-a="Komplemente" data-why="Saam in een toebroodjie. Hierdie een kom in die toets terug."><div class="txt">Ham en kaas</div></div>
+    <div class="sortrow" data-a="Substitute" data-why="Twee warm drankies wat dieselfde behoefte bevredig."><div class="txt">Tee en koffie</div></div>
+    <div class="sortrow" data-a="Komplemente" data-why="'n Motor sonder petrol is nutteloos."><div class="txt">Motors en petrol</div></div>
+    <div class="sortrow" data-a="Substitute" data-why="Twee handelsmerke van dieselfde produk."><div class="txt">Frisco en Douwe Egberts</div></div>
+  </div>
+
+  <h3>Normaal, luuks of minderwaardig?</h3>
+  <p>Die tipe produk bepaal wat met die vraag gebeur wanneer inkomste verander
+  (Pettinger, 2019).</p>
+
+  <div class="scroll"><table>
+    <tr><th>Tipe</th><th>Wanneer inkomste styg&hellip;</th></tr>
+    <tr><td><b>Normaal</b></td><td>neem die vraag toe</td></tr>
+    <tr><td><b>Luuks</b></td><td>neem die vraag eksponensieel toe</td></tr>
+    <tr><td><b>Minderwaardig</b></td><td>neem die vraag <b>af</b></td></tr>
+  </table></div>
+
+  <div class="sorter" data-field="produktipe" data-bins="Normaal|Luuks|Minderwaardig">
+    <div class="sortrow" data-a="Normaal" data-why="Meer inkomste, meer sjokolade — maar nie eksponensieel meer nie."><div class="txt">Cadbury-sjokolade</div></div>
+    <div class="sortrow" data-a="Luuks" data-why="Die vraag hierna spring wanneer inkomste styg."><div class="txt">'n Sportmotor</div></div>
+    <div class="sortrow" data-a="Minderwaardig" data-why="Word jy ryker, koop jy die duurder koffie eerder."><div class="txt">Frisco-koffie, teenoor Douwe Egberts</div></div>
+    <div class="sortrow" data-a="Minderwaardig" data-why="Huismerke word laat staan sodra mense dit kan bekostig."><div class="txt">Huismerk-hawermout</div></div>
+    <div class="sortrow" data-a="Luuks" data-why="Een van die eerste dinge wat bygevoeg word wanneer inkomste sterk styg."><div class="txt">'n Oorsese vakansie</div></div>
+    <div class="sortrow" data-a="Normaal" data-why="Meer inkomste, meer klere — 'n gewone normale produk."><div class="txt">Nuwe klere</div></div>
+  </div>
+
+  <div class="note"><b>Dit is relatief, nie 'n eienskap van die produk nie.</b> Niks is
+  &ldquo;inherent&rdquo; minderwaardig nie. Dieselfde blikkie boontjies kan vir een huishouding
+  normaal wees en vir 'n ander minderwaardig. Dit hang af van wie koop en teen watter
+  inkomste. Vir 'n Graad 8-klas is dit die maklikste plek om te wys dat ekonomie oor
+  <i>mense</i> gaan en nie oor dinge nie.</div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="step" data-title="Aanbod" data-tag="lees en doen" data-min="12">
+  <div class="stephead"><span class="stepnum">04</span>
+    <span class="steptitle">Aanbod</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">12 min</span></div>
+
+  <div class="def"><strong>Die Wet van Aanbod</strong>
+  Daar is 'n <b>positiewe</b> verhouding tussen die prys en die hoeveelheid aangebied
+  (Clifford, 2014b). Word die prys ho&euml;r, bied produsente meer aan om munt te slaan uit
+  daardie prys.</div>
+
+  <div class="scroll"><table>
+    <tr><th>Prys</th><th class="num">Hoeveelheid aangebied</th></tr>
+    <tr><td>R35</td><td class="num">50</td></tr>
+    <tr><td>R25</td><td class="num">40</td></tr>
+    <tr><td>R17</td><td class="num">30</td></tr>
+    <tr><td>R10</td><td class="num">20</td></tr>
+    <tr><td>R5</td><td class="num">10</td></tr>
+  </table></div>
+  <p class="hint">Tabel 5, Leesbundel bl. 24.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="schart" viewBox="0 0 640 400" role="img"
+      aria-label="Die aanbodkurwe vir wegneemkoffie"></svg>
+  </div>
+  <div class="slider">
+    <label class="q" style="margin-top:0" for="sprice">Prys: <span class="val" id="sprice_lbl">R17</span></label>
+    <input type="range" id="sprice" min="5" max="35" step="1" value="17">
+  </div>
+  <div class="verdictbox" id="sverdict"></div>
+
+  <h3>Wat laat die aanbodkurwe skuif?</h3>
+  <p>Vyf faktore (Clifford, 2014b):</p>
+  <ul>
+    <li>die prys van hulpbronne</li>
+    <li>die aantal produsente</li>
+    <li>tegnologie</li>
+    <li>belastings en subsidies</li>
+    <li>produsente se verwagtinge</li>
+  </ul>
+
+  <p>Word koffiebone duurder, raak dit duurder om wegneemkoffie te maak, en die aanbodkurwe
+  skuif na <b>links</b>.</p>
+
+  <div class="note"><b>Wees versigtig met die Leesbundel se eie woorde hier.</b> Op bl. 24 staan
+  daar dat as die prys styg, &ldquo;sal die aanbod van die produk toeneem&rdquo;. Streng gesproke
+  is dit verkeerd, en dit is die presiese fout wat die toets toets. 'n Prysverandering van die
+  produk self laat die <b>hoeveelheid aangebied</b> verander &mdash; 'n beweging l&aacute;ngs die
+  kurwe. Die <b>aanbod</b> (die hele kurwe) skuif net wanneer een van die vyf faktore hierbo
+  verander. Stap 05 gaan hieroor.</div>
+
+  <h3>Vraag of aanbod?</h3>
+  <p>Tien verskuiwers deurmekaar. Sorteer hulle.</p>
+
+  <div class="sorter" data-field="watskuif" data-bins="Vraag|Aanbod">
+    <div class="sortrow" data-a="Vraag" data-why="Smaak en mode werk op die kopers se kant."><div class="txt">Verbruikers se voorkeure</div></div>
+    <div class="sortrow" data-a="Aanbod" data-why="Beter tegnologie maak produksie goedkoper — aanbod skuif regs."><div class="txt">Tegnologie</div></div>
+    <div class="sortrow" data-a="Vraag" data-why="Meer kopers, meer vraag by elke prys."><div class="txt">Die aantal verbruikers</div></div>
+    <div class="sortrow" data-a="Aanbod" data-why="Duurder insette maak produksie duurder — aanbod skuif links."><div class="txt">Die prys van hulpbronne</div></div>
+    <div class="sortrow" data-a="Vraag" data-why="Inkomste bepaal wat kopers kan bekostig."><div class="txt">Verbruikers se inkomste</div></div>
+    <div class="sortrow" data-a="Aanbod" data-why="Belasting druk aanbod links, 'n subsidie druk dit regs."><div class="txt">Belastings en subsidies</div></div>
+    <div class="sortrow" data-a="Vraag" data-why="Die prys van 'n substituut of komplement werk deur die kopers."><div class="txt">Die prys van verwante produkte</div></div>
+    <div class="sortrow" data-a="Aanbod" data-why="Meer produsente, meer aanbod by elke prys."><div class="txt">Die aantal produsente</div></div>
+    <div class="sortrow" data-a="Vraag" data-why="Verwag jy 'n prysstyging, koop jy nou — vraag skuif regs."><div class="txt">Verbruikers se verwagtinge</div></div>
+    <div class="sortrow" data-a="Aanbod" data-why="Verwag 'n produsent 'n hoër prys later, hou hy nou terug."><div class="txt">Produsente se verwagtinge</div></div>
+  </div>
+
+  <p class="hint">Let op die simmetrie: albei lyste het vyf items, en drie daarvan is
+  spie&euml;lbeelde (aantal, verwagtinge, en 'n prys elders). Dit is die maklikste manier om
+  hulle te onthou.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="step" data-title="Beweging of verskuiwing?" data-tag="doen" data-min="12">
+  <div class="stephead"><span class="stepnum">05</span>
+    <span class="steptitle">Beweging of verskuiwing?</span>
+    <span class="steptag">doen</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Dit is die onderskeid waarop die meeste punte in hierdie eenheid verloor
+  word. Vyf van die tien toetsvrae in stap 08 draai daarom.</p>
+
+  <div class="def"><strong>Die reël, in een sin</strong>
+  Verander die prys van die produk <b>self</b>, beweeg jy <b>langs</b> die kurwe. Verander
+  enigiets <b>anders</b>, <b>skuif</b> die hele kurwe.</div>
+
+  <div class="scroll"><table>
+    <tr><th></th><th>Beweging langs die kurwe</th><th>Verskuiwing van die kurwe</th></tr>
+    <tr><th>Veroorsaak deur</th><td>die prys van die produk self</td>
+      <td>enige van die vyf determinante</td></tr>
+    <tr><th>Ons noem dit</th><td>'n verandering in die <b>hoeveelheid</b> gevra of aangebied</td>
+      <td>'n verandering in <b>vraag</b> of <b>aanbod</b></td></tr>
+    <tr><th>Op die grafiek</th><td>dieselfde kurwe, 'n ander punt</td>
+      <td>'n nuwe kurwe, links of regs</td></tr>
+  </table></div>
+
+  <div class="note"><b>Die taal is die toets.</b> &ldquo;Hoeveelheid gevra&rdquo; en
+  &ldquo;vraag&rdquo; is nie sinonieme nie. Wanneer 'n vraag die woorde presies gebruik, gebruik
+  dit hulle om jou te toets. Lees stadig.</div>
+
+  <p>Agt gebeure in die koffiemark. Beweging of verskuiwing?</p>
+
+  <div class="sorter" data-field="bewversk" data-bins="Beweging|Verskuiwing">
+    <div class="sortrow" data-a="Beweging" data-why="Die prys van die produk self het verander — beweging langs die vraagkurwe."><div class="txt">Die prys van wegneemkoffie styg van R17 na R25</div></div>
+    <div class="sortrow" data-a="Verskuiwing" data-why="Die prys van 'n hulpbron. Die aanbodkurwe skuif na links."><div class="txt">Koffiebone raak duurder</div></div>
+    <div class="sortrow" data-a="Verskuiwing" data-why="Inkomste is 'n vraagdeterminant. Die vraagkurwe skuif na regs."><div class="txt">Verbruikers se inkomste styg</div></div>
+    <div class="sortrow" data-a="Verskuiwing" data-why="Die prys van 'n substituut. Goedkoper tee laat die vraag ná koffie na links skuif."><div class="txt">Die prys van tee daal</div></div>
+    <div class="sortrow" data-a="Verskuiwing" data-why="Die aantal produsente. Die aanbodkurwe skuif na regs."><div class="txt">'n Nuwe koffiewinkel maak in die dorp oop</div></div>
+    <div class="sortrow" data-a="Beweging" data-why="Weer die produk se eie prys — beweging, nie verskuiwing nie."><div class="txt">Die prys van wegneemkoffie daal van R17 na R10</div></div>
+    <div class="sortrow" data-a="Verskuiwing" data-why="Belasting is 'n aanboddeterminant. Die aanbodkurwe skuif na links."><div class="txt">Die regering hef 'n belasting op koffie</div></div>
+    <div class="sortrow" data-a="Verskuiwing" data-why="Voorkeure. Die vraagkurwe skuif na regs."><div class="txt">Koffie raak skielik mode onder studente</div></div>
+  </div>
+
+  <div class="mcq" data-field="m_bew" data-a="c"
+    data-why="Die hoeveelheid gevra verander wanneer die prys verander — dit is 'n beweging langs die kurwe. Teen die ewewigsprys is daar per definisie geen oormaatvraag nie, en 'n verandering in die produk se eie prys verander nie die aanbod nie, net die hoeveelheid aangebied.">
+    <label class="q">Watter een van die volgende is korrek? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>As die hoeveelheid gevra verander, skuif die hele vraagkurwe.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Daar kan 'n oormaatvraag wees teen die ewewigsprys.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>As die hoeveelheid gevra verander, is dit 'n beweging langs die vraagkurwe.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>As die prys van die produk verander, verander die aanbod.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="step" data-title="Die mark" data-tag="doen" data-min="18">
+  <div class="stephead"><span class="stepnum">06</span>
+    <span class="steptitle">Die mark: ewewig, surplus en tekort</span>
+    <span class="steptag">doen</span><span class="stepmin">18 min</span></div>
+
+  <p class="lead">Sit die twee kurwes op een grafiek en die hele ding kom tot lewe.</p>
+
+  <div class="scroll"><table>
+    <tr><th>Prys</th><th class="num">Aanbod</th><th class="num">Vraag</th></tr>
+    <tr><td>R35</td><td class="num">50</td><td class="num">10</td></tr>
+    <tr><td>R25</td><td class="num">40</td><td class="num">20</td></tr>
+    <tr class="eq"><td>R17</td><td class="num">30</td><td class="num">30</td></tr>
+    <tr><td>R10</td><td class="num">20</td><td class="num">40</td></tr>
+    <tr><td>R5</td><td class="num">10</td><td class="num">50</td></tr>
+  </table></div>
+  <p class="hint">Tabel 8, Leesbundel bl. 28. Die uitgelig­te ry is die ewewig.</p>
+
+  <div class="def"><strong>Markewewig</strong>
+  Markewewig is waar die hoeveelheid gevra presies gelyk is aan die hoeveelheid aangebied
+  (Clifford, 2014b). Vir wegneemkoffie is dit by <b>R17</b> en <b>30 eenhede</b>.</div>
+
+  <h3>Skuif die prys rond</h3>
+  <p>Trek die prys op en af. Kyk wat met die gaping tussen die twee kurwes gebeur.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="mchart" viewBox="0 0 640 400" role="img"
+      aria-label="Die mark vir wegneemkoffie: vraag, aanbod en ewewig"></svg>
+  </div>
+  <div class="legend">
+    <span><i style="background:var(--demand)"></i>Vraag</span>
+    <span><i style="background:var(--supply)"></i>Aanbod</span>
+    <span><i style="background:var(--good)"></i>Ewewig</span>
+  </div>
+  <div class="slider">
+    <label class="q" style="margin-top:0" for="mprice">Prys: <span class="val" id="mprice_lbl">R17</span></label>
+    <input type="range" id="mprice" min="5" max="35" step="1" value="17">
+  </div>
+  <div class="verdictbox" id="mverdict"></div>
+
+  <h3>Nou skuif 'n kurwe</h3>
+  <p>Elke knoppie is 'n gebeurtenis uit die Leesbundel. Die ou kurwe bly gestippel agter sodat
+  jy die skuif kan sien. Let op wat met <b>albei</b> die ewewigsprys en die
+  ewewigshoeveelheid gebeur.</p>
+
+  <div class="ctrls">
+    <button data-shift="base" class="sel">Basismark</button>
+    <button data-shift="dem">Substituut word duurder</button>
+    <button data-shift="sup">Koffiebone word duurder</button>
+  </div>
+  <div class="verdictbox" id="shiftverdict">Basismark: ewewig by R17 en 30 eenhede.</div>
+
+  <div class="note"><b>Die twee patrone om te onthou.</b> Vraag styg &rarr; prys <b>op</b>,
+  hoeveelheid <b>op</b>. Aanbod daal &rarr; prys <b>op</b>, hoeveelheid <b>af</b>. Die prys doen
+  in albei gevalle dieselfde ding; die hoeveelheid is wat hulle uitmekaar hou. As jy net die prys
+  sien beweeg, weet jy nog nie watter kurwe geskuif het nie.</div>
+
+  <div class="numq" data-field="eq_surplus" data-a="40"
+    data-why="Teen R35 is die hoeveelheid aangebied 50 en die hoeveelheid gevra 10. Die surplus is 50 − 10 = 40 eenhede.">
+    <label class="q">Teen 'n prys van R35: hoe groot is die surplus? <span class="mk">(eenhede)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="numq" data-field="eq_tekort" data-a="40"
+    data-why="Teen R5 is die hoeveelheid gevra 50 en die hoeveelheid aangebied 10. Die tekort is 50 − 10 = 40 eenhede. Let op dat dit dieselfde getal is as die surplus by R35 — toeval van hierdie spesifieke tabel, nie 'n reël nie.">
+    <label class="q">Teen 'n prys van R5: hoe groot is die tekort? <span class="mk">(eenhede)</span></label>
+    <input type="number" inputmode="numeric">
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section class="step" data-title="Leer dit vir Graad 8 en 9" data-tag="onderwyser" data-min="12">
+  <div class="stephead"><span class="stepnum">07</span>
+    <span class="steptitle">Leer dit vir Graad 8 en 9</span>
+    <span class="steptag">onderwyser</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Vraag en aanbod is die eerste regte gr&aacute;fiek wat jou leerders in
+  Ekonomie sien. Hoe jy dit die eerste keer teken, bly by hulle.</p>
+
+  <h3>Drie wanbegrippe wat leerders inbring</h3>
+  <div class="scroll"><table>
+    <tr><th>Wat die leerder dink</th><th>Waarom dit vashaak</th></tr>
+    <tr><td>&ldquo;Die prys word deur die winkel besluit.&rdquo;</td>
+      <td>Hulle het nog nooit 'n prys sien ontstaan nie — net pryse sien staan. Die idee dat 'n
+      prys 'n <i>uitkoms</i> is en nie 'n besluit nie, is die hele les.</td></tr>
+    <tr><td>&ldquo;As die prys styg, koop mense minder, dus daal die vraag.&rdquo;</td>
+      <td>Die alledaagse Afrikaans en die ekonomiese Afrikaans stem hier nie ooreen nie. In
+      gewone taal is dit 'n heeltemal redelike sin. In die vak is dit verkeerd.</td></tr>
+    <tr><td>&ldquo;Die kurwes is die werklikheid.&rdquo;</td>
+      <td>Hulle behandel die grafiek as 'n foto. Dit is 'n model — 'n vereenvoudiging wat
+      &eacute;&eacute;n ding op 'n slag laat verander.</td></tr>
+  </table></div>
+
+  <h3>Wat werk in 'n Graad 8-klas</h3>
+  <ul>
+    <li><b>Hou 'n regte veiling.</b> Vyf minute, een sjokolade, en laat hulle bie. Skryf die
+    pryse op die bord soos dit klim. Hulle sien 'n prys ontstaan. Daarna teken jy die grafiek en
+    dit beteken iets.</li>
+    <li><b>Wys die tekort voordat jy dit noem.</b> Vra: wat gebeur as die snoepie
+    worsbroodjies teen R2 verkoop? Elke kind weet die antwoord — die ry is te lank en die kos is
+    op. Dis 'n tekort. Die woord kom n&aacute; die ervaring.</li>
+    <li><b>Skei die twee sinne fisies.</b> Skryf &ldquo;hoeveelheid gevra&rdquo; en
+    &ldquo;vraag&rdquo; op twee verskillende plekke op die bord en hou hulle daar vir die hele
+    les. Wys elke keer met jou hand: langs, of skuif.</li>
+    <li><b>Laat hulle die gebeurtenis speel.</b> Twee leerders hou die punte van 'n toutjie
+    &mdash; dit is die kurwe. Lees 'n gebeurtenis voor. Hulle moet besluit of hulle langs die tou
+    beweeg of die hele tou opskuif. Dit klink laf en dit werk.</li>
+  </ul>
+
+  <div class="note"><b>Vergelyk met jou raaiskoot.</b> In stap 01 het jy gesê watter stelling
+  jou leerders die moeilikste sou vind. Kyk of jy nou dieselfde sou antwoord.</div>
+
+  <label class="q" for="f_lesplan">Beskryf 'n aktiwiteit van vyf minute waarmee jy die verskil
+  tussen <b>beweging</b> en <b>verskuiwing</b> aan 'n Graad 8-klas sou wys. Geen definisies
+  nie &mdash; net wat jy en hulle sou d&oacute;en.</label>
+  <textarea id="f_lesplan" data-field="lesplan" style="min-height:150px"></textarea>
+  <p class="hint">Dit tel nie punte nie, maar dit gaan in jou uitvoer in en jou dosent lees dit.</p>
+
+  <label class="q" for="f_vraag">Watter een vraag oor Leereenheid 2 wil jy in die klas
+  bespreek?</label>
+  <textarea id="f_vraag" data-field="klasvraag" style="min-height:70px"></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section class="step" data-title="Toets jouself" data-tag="oefening" data-min="15">
+  <div class="stephead"><span class="stepnum">08</span>
+    <span class="steptitle">Toets jouself</span>
+    <span class="steptag">oefening &middot; tel nie punte nie</span><span class="stepmin">15 min</span></div>
+
+  <div class="note"><b>Dit is oefening, nie 'n assessering nie.</b> Leereenheid 2 het nie sy eie
+  e-Klas toets nie &mdash; dit word in die <b>Kwartaaltoets</b> geassesseer, saam met
+  Leereenhede 1 en 3. Hierdie tien vrae kom egter uit dieselfde poel as die Kwartaaltoets, so
+  dit is die naaste ding aan 'n voorskou wat jy gaan kry.</div>
+
+  <p>Jy kry terugvoer sodra jy 'n vraag beantwoord. Neem jou tyd en lees die verduidelikings
+  &mdash; hulle is die punt van die oefening, nie die telling nie.</p>
+
+  <div class="mcq quiz" data-field="q1" data-a="d"
+    data-why="Die hoeveelheid gevra verander weens 'n prysverandering: 'n beweging langs die kurwe. Die kurwe skuif net weens die vyf determinante. Teen die ewewigsprys is daar per definisie geen oormaatvraag nie. En 'n verandering in die produk se eie prys verander die hoeveelheid aangebied, nie die aanbod nie.">
+    <label class="q">1. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>As die hoeveelheid gevra verander, skuif die hele vraagkurwe.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Daar kan 'n oormaatvraag wees teen die ewewigsprys.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>As die prys van die produk verander, verander die aanbod.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>As die hoeveelheid gevra verander, is dit 'n beweging langs die vraagkurwe.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q2" data-a="b"
+    data-why="Onder die ewewigsprys is die hoeveelheid gevra groter as die hoeveelheid aangebied — 'n oormaatvraag, oftewel 'n tekort. Ewewig word herstel deurdat die prys <b>styg</b>, nie daal nie.">
+    <label class="q">2. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Teen pryse onder die ewewigsprys is daar 'n oormaataanbod.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Teen pryse onder die ewewigsprys is daar 'n oormaatvraag.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Teen pryse onder die ewewigsprys word ewewig herstel deur die prys te verlaag.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Teen pryse onder die ewewigsprys het smake en voorkeure verander.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q3" data-a="a"
+    data-why="Voorkeure is 'n vraagdeterminant, dus neem die vraag toe en die kurwe skuif regs. Opsie b verwar verskuiwing met beweging; c verwar vraag met aanbod; en d is verkeerd omdat die ewewigsprys juis styg.">
+    <label class="q">3. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>As iets meer in die mode kom, neem die vraag daarna toe.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>As iets uit die mode gaan, neem die hoeveelheid gevra af.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>As iets meer in die mode kom, sal die aanbod toeneem.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Die ewewigsprys sal onveranderd bly.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q4" data-a="c"
+    data-why="Die prys van 'n verwante produk is 'n vraagdeterminant. Word botter duurder, skuif verbruikers oor na margarien: die vraag ná margarien neem toe en die kurwe skuif na regs. Let op dat dit die vráág is wat skuif, nie die aanbod nie — die margarienfabriek se koste het glad nie verander nie.">
+    <label class="q">4. Botter en margarien is substitute. As die prys van botter styg, wat
+      gebeur in die mark vir margarien?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die hoeveelheid margarien gevra neem af.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die aanbod van margarien neem toe.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die vraag na margarien neem toe — die kurwe skuif na regs.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Niks nie — die twee markte is van mekaar onafhanklik.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q5" data-a="b"
+    data-why="Dit is die definisie van 'n normale produk. Vir 'n minderwaardige produk werk dit andersom: val inkomste, neem die vraag daarna toe — mense skuif terug na die goedkoper weergawe.">
+    <label class="q">5. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>As inkomste afneem, neem die vraag na minderwaardige produkte af.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>As inkomste toeneem, neem die vraag na normale produkte toe.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Jy koop meer van 'n minderwaardige produk as jou inkomste toeneem.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Daar is nie iets soos 'n minderwaardige produk nie.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q6" data-a="d"
+    data-why="Te veel reën beskadig die oes, dus daal die aanbod. Opsie a het dit agterstevoor: daal die aanbod, <b>styg</b> die prys. Opsie b verwar weer hoeveelheid gevra met vraag.">
+    <label class="q">6. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>As die aanbod afneem, sal pryse daal.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>As pryse daal, sal die vraag toeneem.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Al die opsies is korrek.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Te veel goeie reën kan die aanbod van sojabone laat afneem.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q7" data-a="c"
+    data-why="Tegnologie is 'n aanboddeterminant, dus skuif die hele kurwe na regs. Opsie d is nie heeltemal onwaar nie — die ewewigshoeveelheid styg wel — maar dit is die slordige manier om dit te sê, en die toets soek die kurwetaal. Opsie a noem verskuiwers maar plak hulle op &lsquo;hoeveelheid aangebied&rsquo;, en b is bloot verkeerd: die hoeveelheid aangebied hang van die prys af, nie van die vraag nie.">
+    <label class="q">7. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die hoeveelheid aangebied hang af van arbeidskoste, natuurrampe en tegnologie.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die hoeveelheid aangebied hang af van die vraag.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Kunsmatige intelligensie gaan die aanbodkurwe na regs skuif.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Kunsmatige intelligensie gaan die hoeveelheid aangebied laat toeneem.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q8" data-a="a"
+    data-why="Ham en kaas word saam in een toebroodjie geëet — komplemente in verbruik. Word ham duurder, daal die vraag ná kaas ook.">
+    <label class="q">8. Watter een van die volgende stellings is korrek oor ham en kaas?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Ham en kaas is komplemente in verbruik.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Ham en kaas is neweprodukte.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Ham en kaas is substitute in produksie.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Ham en kaas is substitute vir brood.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q9" data-a="d"
+    data-why="'n Staking laat die aanbod daal, dus styg die ewewigsprys. Belasting laat die aanbod óók daal, so die prys styg — b het dit agterstevoor. 'n Subsidie laat die aanbod tóéneem, nie afneem nie. En inkomste werk op die vraag, nie op die aanbod nie.">
+    <label class="q">9. Watter een van die volgende stellings is korrek oor die mark vir
+      lemoene?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Belasting op sitrusverkope gaan die ewewigsprys verlaag.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Subsidie aan boere gaan die aanbod laat afneem.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>'n Styging in verbruikers se inkomste gaan die aanbod verhoog.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Staking in die bedryf gaan die ewewigsprys verhoog.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q10" data-a="b"
+    data-why="Inkomste is 'n vraagdeterminant, dus neem die vraag toe. Opsie a moes gesê het die hoeveelheid aangebied neem toe; c moes gesê het die hoeveelheid gevra neem toe; en d moes gesê het die vraag neem toe, want bevolkingsgroei skuif die hele kurwe. Al drie foute is dieselfde fout.">
+    <label class="q">10. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>As pryse styg, neem die aanbod toe.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>As inkomste styg, neem die vraag toe.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>As pryse daal, neem die vraag af.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>As die bevolking groei, neem die hoeveelheid gevra toe.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 09 ============ -->
+<section class="step" data-title="Terugvoer en uitvoer" data-tag="afsluit" data-min="5">
+  <div class="stephead"><span class="stepnum">09</span>
+    <span class="steptitle">Terugvoer en uitvoer</span>
+    <span class="steptag">afsluit</span><span class="stepmin">5 min</span></div>
+
+  <div id="scorehost"></div>
+
+  <h3>Jou raaiskote uit stap 01</h3>
+  <div id="predhost"></div>
+
+  <h3>Jou voltooiingskode</h3>
+  <p>Hierdie kode bevat jou studentenommer en hoeveel van die eenheid jy voltooi het. Dit is
+  <b>nie</b> 'n punt nie &mdash; al jou assessering gebeur op e-Klas. Jy hoef dit nie nou
+  iewers in te sleutel nie; hou dit net, want jou dosent kan later daarvoor vra om te sien
+  wie die eenhede gebruik.</p>
+  <div class="codebox" id="codebox">&mdash;</div>
+  <button class="ghost" id="copycode">Kopieer kode</button>
+
+  <h3>Laai jou werk af</h3>
+  <p>Laai 'n afskrif van alles wat jy ingevul het af &mdash; jou antwoorde, die
+  ewewigsberekeninge en jou oefenvrae. Dit is jou eie opsomming om mee te leer wanneer die
+  Kwartaaltoets kom.</p>
+  <button class="act" id="exportbtn">Laai my werk af</button>
+  <button class="ghost" id="showexport">Wys as teks</button>
+  <textarea id="exportbox" readonly></textarea>
+
+  <div class="note" style="margin-top:26px"><b>Volgende:</b> Leereenheid 3 &mdash; Ekonomiese
+  sisteme. Onthou dat die <b>Kwartaaltoets Leereenhede 1 tot 3 dek</b>. Hierdie eenheid en die
+  volgende een is dus saam die helfte van daardie toets.</div>
+
+  <p style="margin-top:26px"><button class="ghost" id="resetbtn"
+    style="border-color:var(--bad);color:var(--bad)">Begin heeltemal oor</button></p>
+  <p class="locknote">Dit vee alles op hierdie toestel uit.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button><span></span></div>
+</section>
+</main>
+</div>
+
+<script>
+/* ===================================================================
+   AEKN121 lab shell — shared engine.
+
+   Every unit's index.html loads this, then its own unit.js, which must:
+     AROS.config({ ... });      // before anything else
+     ... unit-specific charts, hooks ...
+     AROS.init();               // last line
+
+   The shell owns: local storage, step navigation, the table of contents,
+   plain field binding, and the four declarative widgets:
+
+     .mcq     data-field, data-a, data-why      add .test to defer the reveal
+     .numq    data-field, data-a, data-why      add .test to defer the reveal
+     .txtq    data-field                        free text, never auto-marked
+     .sorter  data-field, data-bins="A|B"       rows carry data-a and data-why
+                                                data-noreveal="1" keeps it silent
+
+   Nothing here is unit-specific. If you find yourself adding a unit's
+   content to this file, it belongs in that unit's unit.js instead.
+   =================================================================== */
+window.AROS = (function(){
+"use strict";
+
+var cfg = {
+  key:null, schema:1, codePrefix:null, codeSalt:null,
+  predictions:[], lockStep:null
+};
+var state = {schemaVersion:1, fields:{}, done:{}, step:0, extra:{}};
+var resultHooks = [], exportHooks = [], stepHooks = [];
+var steps = [], total = 0;
+
+/* ---------------- storage ---------------- */
+function load(){
+  try{
+    var raw = localStorage.getItem(cfg.key);
+    if(!raw) return;
+    var o = JSON.parse(raw);
+    if(o && o.schemaVersion === cfg.schema){
+      state.fields = o.fields || {};
+      state.done   = o.done   || {};
+      state.step   = o.step   || 0;
+      state.extra  = o.extra  || {};
+    }
+  }catch(e){}
+}
+var saveTimer=null, flagEl=null, flagTimer=null;
+function save(){
+  try{
+    state.schemaVersion = cfg.schema;
+    localStorage.setItem(cfg.key, JSON.stringify(state));
+    if(flagEl){
+      flagEl.classList.add("on");
+      clearTimeout(flagTimer);
+      flagTimer=setTimeout(function(){ flagEl.classList.remove("on"); },1200);
+    }
+  }catch(e){}
+}
+function queueSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(save,350); }
+function get(f){ return state.fields[f]; }
+function set(f,v){ state.fields[f]=v; queueSave(); }
+function getExtra(k){ return state.extra[k]; }
+function setExtra(k,v){ state.extra[k]=v; queueSave(); }
+
+/* ---------------- steps ---------------- */
+function doneCount(){ var n=0; for(var k in state.done){ if(state.done[k]) n++; } return n; }
+function pctDone(){ return total ? Math.round(doneCount()/total*100) : 0; }
+function showStep(i,scroll){
+  i = Math.max(0, Math.min(total-1, i));
+  steps.forEach(function(s,n){ s.classList.toggle("active", n===i); });
+  state.step = i; queueSave(); updateProgress();
+  if(scroll !== false) window.scrollTo(0,0);
+  stepHooks.forEach(function(fn){ try{ fn(i); }catch(e){} });
+}
+function updateProgress(){
+  var fill=document.getElementById("progfill"), txt=document.getElementById("progtext");
+  if(fill) fill.style.width = pctDone()+"%";
+  if(txt) txt.textContent = "Stap "+(state.step+1)+" van "+total+" · "+pctDone()+"% voltooi";
+}
+
+/* ---------------- table of contents ---------------- */
+function wireTOC(){
+  var toc=document.getElementById("toc"), inner=document.getElementById("tocinner");
+  var btn=document.getElementById("tocbtn");
+  if(!toc||!inner||!btn) return;
+  btn.addEventListener("click",function(){
+    inner.innerHTML="";
+    steps.forEach(function(s,n){
+      var b=document.createElement("button"); b.className="tocitem"; b.type="button";
+      b.innerHTML='<span class="n">'+String(n).padStart(2,"0")+'</span><span>'+
+        s.dataset.title+'</span>'+(state.done[n]?'<span class="dn">&#10003;</span>':'');
+      b.addEventListener("click",function(){ toc.classList.remove("open"); showStep(n); });
+      inner.appendChild(b);
+    });
+    toc.classList.add("open");
+  });
+  toc.addEventListener("click",function(e){ if(e.target===toc) toc.classList.remove("open"); });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape") toc.classList.remove("open");
+  });
+}
+
+/* ---------------- plain fields ---------------- */
+function wireFields(){
+  [].forEach.call(document.querySelectorAll("[data-field]"),function(el){
+    if(el.tagName!=="INPUT" && el.tagName!=="TEXTAREA") return;
+    if(el.type==="range") return;
+    if(el.closest(".mcq,.numq,.txtq")) return;   /* those wire themselves */
+    var f=el.dataset.field, v=get(f);
+    if(v!=null) el.value=v;
+    el.addEventListener("input",function(){ set(f,el.value); });
+  });
+}
+
+/* ---------------- widget: multiple choice ---------------- */
+function wireMCQ(box){
+  var f=box.dataset.field, ans=box.dataset.a, why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var opts=[].slice.call(box.querySelectorAll(".opt")), fb=box.querySelector(".fb");
+  function paint(reveal){
+    var cur=get(f);
+    opts.forEach(function(o){
+      o.classList.remove("picked","right","wrong");
+      if(o.dataset.v===cur) o.classList.add("picked");
+      if(reveal){
+        if(o.dataset.v===ans) o.classList.add("right");
+        else if(o.dataset.v===cur) o.classList.add("wrong");
+        o.classList.add("locked");
+      }
+    });
+    if(reveal && cur!=null && fb){
+      var ok=cur===ans;
+      fb.className="fb show "+(ok?"ok":"no");
+      fb.querySelector(".verdict").textContent = ok?"Korrek":"Nie reg nie";
+      fb.querySelector(".why").innerHTML = why;
+    }
+  }
+  opts.forEach(function(o){
+    o.setAttribute("tabindex","0");
+    function pick(){
+      if(box.__locked) return;
+      if(!deferred && get(f)!=null) return;   /* practice: one shot */
+      if(deferred && box.__submitted) return;
+      set(f,o.dataset.v);
+      paint(!deferred);
+    }
+    o.addEventListener("click",pick);
+    o.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }
+    });
+  });
+  box.__paint=paint;
+  box.__correct=function(){ return get(f)===ans; };
+  box.__answered=function(){ var v=get(f); return v!=null && v!==""; };
+  paint(deferred ? !!box.__submitted : get(f)!=null);
+}
+
+/* ---------------- widget: numeric ---------------- */
+function wireNum(box){
+  var f=box.dataset.field, ans=parseFloat(box.dataset.a), why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var inp=box.querySelector("input"), fb=box.querySelector(".fb");
+  if(!inp) return;
+  inp.dataset.field=f;
+  var v=get(f); if(v!=null) inp.value=v;
+  function value(){ return parseFloat(String(get(f)||"").replace(/[\s,R]/g,"")); }
+  function correct(){ var c=value(); return !isNaN(c) && Math.abs(c-ans)<0.5; }
+  function paint(reveal){
+    if(!reveal || !fb) return;
+    if(deferred) inp.disabled=true;
+    if(isNaN(value())) return;
+    var ok=correct();
+    fb.className="fb show "+(ok?"ok":"no");
+    fb.querySelector(".verdict").textContent =
+      ok ? "Korrek" : ("Nie reg nie — die antwoord is "+fmt(ans));
+    fb.querySelector(".why").innerHTML = why;
+  }
+  inp.addEventListener("input",function(){ set(f,inp.value); });
+  inp.addEventListener("blur",function(){ if(!deferred && inp.value!=="") paint(true); });
+  box.__paint=paint;
+  box.__correct=correct;
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  if(deferred && box.__submitted) paint(true);
+  else if(!deferred && v!=null && v!=="") paint(true);
+}
+
+/* ---------------- widget: free text ---------------- */
+function wireTxt(box){
+  var f=box.dataset.field, ta=box.querySelector("textarea");
+  if(!ta) return;
+  ta.dataset.field=f;
+  var v=get(f); if(v!=null) ta.value=v;
+  ta.addEventListener("input",function(){ set(f,ta.value); });
+  box.__correct=function(){ return null; };            /* never auto-marked */
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  box.__paint=function(reveal){ if(reveal) ta.disabled=true; };
+}
+
+/* ---------------- widget: sorter ---------------- */
+function wireSorter(box){
+  var base=box.dataset.field, bins=box.dataset.bins.split("|");
+  var noreveal=box.dataset.noreveal==="1";
+  var rows=[].slice.call(box.querySelectorAll(".sortrow"));
+  rows.forEach(function(r,i){
+    var f=base+"_"+i;
+    var picks=document.createElement("div"); picks.className="picks";
+    bins.forEach(function(b){
+      var btn=document.createElement("button"); btn.type="button"; btn.textContent=b;
+      btn.addEventListener("click",function(){
+        if(box.__locked) return;
+        set(f,b); repaint();
+      });
+      picks.appendChild(btn);
+    });
+    r.appendChild(picks);
+    if(r.dataset.why){
+      var w=document.createElement("div"); w.className="why";
+      w.innerHTML=r.dataset.why; r.appendChild(w);
+    }
+    r.__f=f;
+  });
+  function repaint(){
+    var reveal = !noreveal && rows.every(function(r){ return get(r.__f)!=null; });
+    rows.forEach(function(r){
+      var cur=get(r.__f);
+      [].forEach.call(r.querySelectorAll(".picks button"),function(b){
+        b.classList.toggle("sel", b.textContent===cur);
+      });
+      r.classList.remove("right","wrong","reveal");
+      if(reveal) r.classList.add(cur===r.dataset.a ? "right" : "wrong","reveal");
+    });
+    if(reveal) box.__locked=true;
+  }
+  box.__rows=rows;
+  box.__lock=function(){ box.__locked=true; };
+  box.__repaint=repaint;
+  repaint();
+}
+
+function lockPredictions(){
+  var s=document.querySelector('.sorter[data-field="voorspel"]');
+  if(s) s.__lock();
+  [].forEach.call(document.querySelectorAll("[data-lock-with-predictions]"),function(el){
+    el.disabled=true;
+  });
+}
+
+/* ---------------- helpers ---------------- */
+function svgEl(tag,attrs){
+  var e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(var k in attrs) e.setAttribute(k,attrs[k]);
+  return e;
+}
+function fmt(n){
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+}
+/* Deterministic 4-character check, mirrored by AROS/verifieer_kodes.py.
+   Alphabet excludes I, O, 0 and 1 so a handwritten code stays readable. */
+function checkCode(nr,value){
+  var s=String(nr||"")+"|"+value+"|"+cfg.codeSalt, h=0;
+  for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  var A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out="";
+  for(var j=0;j<4;j++){ out+=A[h%32]; h=Math.floor(h/32); }
+  return out;
+}
+function codeValue(){
+  return (typeof cfg.codeValue==="function") ? cfg.codeValue() : pctDone();
+}
+function buildCode(){
+  var nr=(get("studentenr")||"").replace(/\s/g,"");
+  var v=codeValue();
+  return cfg.codePrefix+"-"+(nr||"0000")+"-"+v+"-"+checkCode(nr,v);
+}
+
+/* ---------------- results ---------------- */
+function renderPredictions(){
+  var ph=document.getElementById("predhost");
+  if(!ph || !cfg.predictions.length) return;
+  ph.innerHTML="";
+  var wrong=0, answered=0;
+  cfg.predictions.forEach(function(p,i){
+    var mine=get("voorspel_"+i), ok=mine===p[1];
+    if(mine){ answered++; if(!ok) wrong++; }
+    var d=document.createElement("div");
+    d.className="sortrow "+(mine?(ok?"right":"wrong"):"");
+    d.innerHTML='<div class="txt">'+p[0]+'<br><span style="font-family:var(--mono);'+
+      'font-size:12.5px;opacity:.8">jy: '+(mine||"—")+' &middot; antwoord: '+p[1]+
+      '</span></div><div class="why" style="display:block">'+p[2]+'</div>';
+    ph.appendChild(d);
+  });
+  var s=document.createElement("p"); s.className="hint";
+  s.textContent = answered===0
+    ? "Jy het nie in stap 01 geraai nie, so daar is niks om mee te vergelyk nie."
+    : wrong===0
+      ? "Jy het al "+answered+" reg geraai voordat jy begin het."
+      : "Jy het "+wrong+" van die "+answered+" verkeerd geraai. Daardie is die idees wat verskil "+
+        "van wat jy gedink het — en dus die idees om te onderrig.";
+  ph.appendChild(s);
+}
+function renderResults(){
+  resultHooks.forEach(function(fn){ try{ fn(); }catch(e){} });
+  renderPredictions();
+  var cb=document.getElementById("codebox");
+  if(cb) cb.textContent=buildCode();
+}
+
+/* ---------------- export ---------------- */
+function buildExport(){
+  var L=[];
+  L.push("AEKN121 — "+(cfg.exportTitle||document.title)+" — UITVOER");
+  L.push("AROS · Inleiding tot Ekonomie");
+  L.push("Uitgevoer: "+new Date().toLocaleString("af-ZA"));
+  L.push("");
+  L.push("Naam:            "+(get("naam")||"—"));
+  L.push("Studentenommer:  "+(get("studentenr")||"—"));
+  L.push("Kode:            "+buildCode());
+  L.push("Voltooi:         "+pctDone()+"%");
+  L.push("");
+  exportHooks.forEach(function(fn){
+    try{
+      var lines=fn();
+      if(lines && lines.length) L=L.concat(lines,[""]);
+    }catch(e){}
+  });
+  if(cfg.predictions.length){
+    L.push("--- STAP 01: VOORSPELLINGS ---");
+    cfg.predictions.forEach(function(p,i){
+      L.push("  "+(get("voorspel_"+i)||"—")+" (antwoord: "+p[1]+")  — "+p[0]);
+    });
+    L.push("");
+  }
+  return L.join("\n");
+}
+function wireExport(){
+  var eb=document.getElementById("exportbtn");
+  var sb=document.getElementById("showexport");
+  var box=document.getElementById("exportbox");
+  var cc=document.getElementById("copycode");
+  var rb=document.getElementById("resetbtn");
+  if(eb) eb.addEventListener("click",function(){
+    var txt=buildExport();
+    var nr=(get("studentenr")||"student").replace(/[^0-9A-Za-z]/g,"");
+    try{
+      var blob=new Blob([txt],{type:"text/plain;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="AEKN121_"+cfg.codePrefix+"_"+nr+".txt";
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+    }catch(e){
+      if(box){ box.style.display="block"; box.value=txt; box.select(); }
+    }
+  });
+  if(sb && box) sb.addEventListener("click",function(){
+    box.style.display = box.style.display==="none" ? "block" : "none";
+    box.value=buildExport();
+  });
+  if(cc) cc.addEventListener("click",function(){
+    var c=buildCode(), btn=this;
+    function done(){
+      btn.textContent="Gekopieer";
+      setTimeout(function(){ btn.textContent="Kopieer kode"; },1500);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(c).then(done,function(){ window.prompt("Kopieer:",c); });
+    } else window.prompt("Kopieer:",c);
+  });
+  if(rb) rb.addEventListener("click",function(){
+    if(!window.confirm("Vee alles uit en begin oor? Dit kan nie ongedaan gemaak word nie.")) return;
+    try{ localStorage.removeItem(cfg.key); }catch(e){}
+    location.reload();
+  });
+}
+
+/* ---------------- init ---------------- */
+function init(){
+  /* state was already loaded by config(); a second load() here would discard
+     anything the unit's own setup wrote while it was building its charts. */
+  flagEl=document.getElementById("saveflag");
+  steps=[].slice.call(document.querySelectorAll(".step"));
+  total=steps.length;
+
+  wireFields();
+  [].forEach.call(document.querySelectorAll(".mcq"),wireMCQ);
+  [].forEach.call(document.querySelectorAll(".numq"),wireNum);
+  [].forEach.call(document.querySelectorAll(".txtq"),wireTxt);
+  [].forEach.call(document.querySelectorAll(".sorter"),wireSorter);
+  wireTOC();
+  wireExport();
+
+  document.addEventListener("click",function(e){
+    var b=e.target.closest(".nextbtn,.prevbtn");
+    if(!b||b.disabled) return;
+    if(b.classList.contains("nextbtn")){
+      state.done[state.step]=true;
+      if(cfg.lockStep!=null && state.step===cfg.lockStep) lockPredictions();
+      showStep(state.step+1);
+    } else showStep(state.step-1);
+  });
+
+  if(cfg.lockStep!=null && state.done[cfg.lockStep]) lockPredictions();
+  /* The last step has no "next" button, so it can never be ticked off the way the others
+     are — without this, 100% voltooi is unreachable and a completion code tops out at 90. */
+  stepHooks.push(function(i){
+    if(i===total-1){ state.done[i]=true; queueSave(); updateProgress(); renderResults(); }
+  });
+
+  showStep(state.step,false);
+  updateProgress();
+  if(state.step===total-1){ state.done[state.step]=true; queueSave(); updateProgress(); renderResults(); }
+}
+
+return {
+  /* config() loads saved state immediately, because a unit's chart setup runs
+     between config() and init() and needs to restore its own slider and
+     placement values. */
+  config:function(o){
+    for(var k in o) cfg[k]=o[k];
+    if(o.schema) state.schemaVersion=o.schema;
+    if(cfg.key) load();
+  },
+  init:init,
+  get:get, set:set, save:save, getExtra:getExtra, setExtra:setExtra,
+  svgEl:svgEl, fmt:fmt,
+  buildCode:buildCode, checkCode:checkCode,
+  doneCount:doneCount, pctDone:pctDone, showStep:showStep,
+  totalSteps:function(){ return total; },
+  lockPredictions:lockPredictions,
+  renderResults:renderResults,
+  onResults:function(fn){ resultHooks.push(fn); },
+  onExport:function(fn){ exportHooks.push(fn); },
+  onStep:function(fn){ stepHooks.push(fn); }
+};
+})();
+
+
+/* ==== unit ==== */
+/* Leereenheid 2 — Vraag en Aanbod
+   Unit-specific: the three takeaway-coffee charts and the formative quiz.
+   LE2 has no summative test of its own — it is assessed in the Kwartaaltoets —
+   so the code carries percent complete, not a mark. AROS declined lab-based assessment
+   (2026-10-01): all assessment runs on e-Klas, and the code is kept only so the user can
+   later check whether students actually use the resource. */
+
+AROS.config({
+  key:"aros_aekn121_le2_v1",
+  schema:1,
+  codePrefix:"LE2",
+  codeSalt:"AEKN121LE2",
+  exportTitle:"LEEREENHEID 2: VRAAG EN AANBOD",
+  lockStep:1,
+  predictions:[
+   ["As die prys van koffie styg, skuif die vraagkurwe na links.","Onwaar",
+    "Die produk se eie prys laat jou langs die kurwe beweeg. Die kurwe skuif nie."],
+   ["'n Verandering in verbruikers se inkomste laat die vraagkurwe skuif.","Waar",
+    "Inkomste is een van die vyf vraagdeterminante."],
+   ["Teen 'n prys bo die ewewigsprys ontstaan daar 'n tekort.","Onwaar",
+    "Bo die ewewigsprys is daar 'n surplus. Tekorte kom onder die ewewigsprys voor."],
+   ["As die aanbod afneem, styg die ewewigsprys.","Waar",
+    "Aanbod links: prys op, hoeveelheid af."],
+   ["Die aanbodkurwe skuif wanneer die prys van die produk self verander.","Onwaar",
+    "Dan verander die hoeveelheid aangebied — 'n beweging. Die kurwe skuif net weens die vyf aanbodfaktore."],
+   ["Vir 'n minderwaardige produk neem die vraag af wanneer inkomste styg.","Waar",
+    "Dit is presies wat 'minderwaardig' beteken: word mense ryker, koop hulle minder daarvan."]
+  ]
+});
+
+var svgEl=AROS.svgEl;
+
+/* Leesbundel Tabelle 2, 5, 6 en 8 — die wegneemkoffiemark.
+   Prys hoog -> laag; Qd styg, Qs daal. */
+var P   = [35, 25, 17, 10,  5];
+var QD  = [10, 20, 30, 40, 50];
+var QS  = [50, 40, 30, 20, 10];
+var QD2 = [15, 25, 35, 45, 55];   /* Tabel 3: substituut duurder -> vraag regs */
+var QS2 = [40, 30, 20, 10,  5];   /* Tabel 6: insetprys styg -> aanbod links  */
+
+/* Linear interpolation of Q at price p across the schedule (P descending). */
+function qAt(Qarr,p){
+  if(p>=P[0]) return Qarr[0];
+  if(p<=P[P.length-1]) return Qarr[P.length-1];
+  for(var i=0;i<P.length-1;i++){
+    if(p<=P[i]&&p>=P[i+1]){
+      var t=(P[i]-p)/(P[i]-P[i+1]);
+      return Qarr[i]+(Qarr[i+1]-Qarr[i])*t;
+    }
+  }
+  return Qarr[Qarr.length-1];
+}
+/* Where demand meets supply, by bisection on (Qd - Qs). Computed, never hardcoded. */
+function equilibrium(dArr,sArr){
+  var lo=P[P.length-1], hi=P[0];
+  function gap(p){ return qAt(dArr,p)-qAt(sArr,p); }
+  for(var i=0;i<60;i++){
+    var mid=(lo+hi)/2;
+    if(gap(mid)>0) lo=mid; else hi=mid;
+  }
+  var p=(lo+hi)/2;
+  return {p:p, q:(qAt(dArr,p)+qAt(sArr,p))/2};
+}
+function money(v){
+  return "R"+(Math.abs(v-Math.round(v))<0.05?Math.round(v):v.toFixed(2).replace(".",","));
+}
+function units(v){
+  return (Math.abs(v-Math.round(v))<0.05?Math.round(v):v.toFixed(1).replace(".",","));
+}
+
+var QMAX=60, PMAX=40, X0=74, X1=596, Y0=344, Y1=34;
+function sx(q){ return X0+(q/QMAX)*(X1-X0); }
+function sy(p){ return Y0-(p/PMAX)*(Y0-Y1); }
+function pathFor(Qarr){
+  var pts=[];
+  for(var i=P.length-1;i>=0;i--) pts.push([Qarr[i],P[i]]);
+  return pts.map(function(pt,i){ return (i?"L":"M")+sx(pt[0])+" "+sy(pt[1]); }).join(" ");
+}
+function drawFrame(svg){
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y1-6,x2:X0,y2:Y0}));
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y0,x2:X1+10,y2:Y0}));
+  [0,10,20,30,40,50,60].forEach(function(q){
+    var t=svgEl("text",{class:"axlbl",x:sx(q),y:Y0+18,"text-anchor":"middle"});
+    t.textContent=q; svg.appendChild(t);
+  });
+  [5,10,17,25,35].forEach(function(p){
+    var t=svgEl("text",{class:"axlbl",x:X0-8,y:sy(p)+4,"text-anchor":"end"});
+    t.textContent="R"+p; svg.appendChild(t);
+  });
+  var a1=svgEl("text",{class:"axname",x:X1+10,y:Y0+38,"text-anchor":"end"});
+  a1.textContent="Hoeveelheid (eenhede)"; svg.appendChild(a1);
+  var a2=svgEl("text",{class:"axname",x:X0-10,y:Y1-14,"text-anchor":"start"});
+  a2.textContent="Prys"; svg.appendChild(a2);
+}
+
+/* ---- one-curve chart, used for demand (step 02) and supply (step 04) ---- */
+function singleCurve(o){
+  var svg=document.getElementById(o.svg); if(!svg) return;
+  drawFrame(svg);
+  svg.appendChild(svgEl("path",{class:o.cls,d:pathFor(o.data)}));
+  var lbl=svgEl("text",{class:"clbl",x:sx(52),y:sy(o.labelP),fill:o.colour});
+  lbl.textContent=o.label; svg.appendChild(lbl);
+  var hx=svgEl("line",{class:"helper"}), hy=svgEl("line",{class:"helper"});
+  svg.appendChild(hx); svg.appendChild(hy);
+  var dot=svgEl("circle",{r:7,fill:o.colour,stroke:"var(--panel)","stroke-width":2});
+  svg.appendChild(dot);
+  var rng=document.getElementById(o.range);
+  var saved=AROS.get(o.field); if(saved) rng.value=saved;
+  function paint(){
+    var p=+rng.value, q=qAt(o.data,p);
+    document.getElementById(o.lbl).textContent="R"+p;
+    dot.setAttribute("cx",sx(q)); dot.setAttribute("cy",sy(p));
+    hx.setAttribute("x1",X0); hx.setAttribute("y1",sy(p));
+    hx.setAttribute("x2",sx(q)); hx.setAttribute("y2",sy(p));
+    hy.setAttribute("x1",sx(q)); hy.setAttribute("y1",Y0);
+    hy.setAttribute("x2",sx(q)); hy.setAttribute("y2",sy(p));
+    document.getElementById(o.verdict).innerHTML=o.say(p,q);
+    AROS.set(o.field,rng.value);
+  }
+  rng.addEventListener("input",paint); paint();
+}
+
+singleCurve({
+  svg:"dchart", cls:"dcurve", data:QD, colour:"var(--demand)", label:"V", labelP:4,
+  range:"dprice", lbl:"dprice_lbl", verdict:"dverdict", field:"dprice_pos",
+  say:function(p,q){
+    return "Teen <b>R"+p+"</b> is die hoeveelheid gevra <b>"+units(q)+" eenhede</b>. "+
+      (p>17?"Duurder as die ewewigsprys, dus word minder gevra.":
+       p<17?"Goedkoper as die ewewigsprys, dus word meer gevra.":
+       "Dit is die ewewigsprys.")+
+      " Die kolletjie het langs die kurwe beweeg — die kurwe self het nie geskuif nie.";
+  }
+});
+
+singleCurve({
+  svg:"schart", cls:"scurve", data:QS, colour:"var(--supply)", label:"A", labelP:34,
+  range:"sprice", lbl:"sprice_lbl", verdict:"sverdict", field:"sprice_pos",
+  say:function(p,q){
+    return "Teen <b>R"+p+"</b> is die hoeveelheid aangebied <b>"+units(q)+" eenhede</b>. "+
+      "Hoër prys, meer aanbod — dit is die Wet van Aanbod. "+
+      "Let op: dit is 'n beweging <b>langs</b> die kurwe, nie 'n verandering in aanbod nie.";
+  }
+});
+
+/* ---- step 06: the whole market ---- */
+(function(){
+  var svg=document.getElementById("mchart"); if(!svg) return;
+  drawFrame(svg);
+  var ghostD=svgEl("path",{class:"ghost",stroke:"var(--demand)",d:"",style:"display:none"});
+  var ghostS=svgEl("path",{class:"ghost",stroke:"var(--supply)",d:"",style:"display:none"});
+  svg.appendChild(ghostD); svg.appendChild(ghostS);
+  var dPath=svgEl("path",{class:"dcurve",d:pathFor(QD)});
+  var sPath=svgEl("path",{class:"scurve",d:pathFor(QS)});
+  svg.appendChild(dPath); svg.appendChild(sPath);
+  var dLbl=svgEl("text",{class:"clbl",fill:"var(--demand)"}); dLbl.textContent="V";
+  var sLbl=svgEl("text",{class:"clbl",fill:"var(--supply)"}); sLbl.textContent="A";
+  svg.appendChild(dLbl); svg.appendChild(sLbl);
+  var gap=svgEl("line",{class:"gapbar",style:"display:none"});
+  svg.appendChild(gap);
+  var pline=svgEl("line",{class:"priceline"});
+  svg.appendChild(pline);
+  var eqPt=svgEl("circle",{class:"eqpt",r:7,stroke:"var(--panel)","stroke-width":2});
+  var eqLbl=svgEl("text",{class:"eqlbl"}); eqLbl.textContent="E";
+  svg.appendChild(eqPt); svg.appendChild(eqLbl);
+  var dDot=svgEl("circle",{r:6,fill:"var(--demand)"});
+  var sDot=svgEl("circle",{r:6,fill:"var(--supply)"});
+  svg.appendChild(dDot); svg.appendChild(sDot);
+
+  var MODES={
+    base:{d:QD, s:QS,  label:"Basismark"},
+    dem :{d:QD2,s:QS,  label:"Die prys van 'n substituut styg"},
+    sup :{d:QD, s:QS2, label:"Koffiebone word duurder"}
+  };
+  var mode="base";
+  var rng=document.getElementById("mprice");
+  var savedP=AROS.get("mprice_pos"); if(savedP) rng.value=savedP;
+  var savedM=AROS.get("mmode"); if(savedM&&MODES[savedM]) mode=savedM;
+
+  function paint(){
+    var M=MODES[mode], p=+rng.value;
+    var qd=qAt(M.d,p), qs=qAt(M.s,p), eq=equilibrium(M.d,M.s);
+    dPath.setAttribute("d",pathFor(M.d));
+    sPath.setAttribute("d",pathFor(M.s));
+    dLbl.setAttribute("x",sx(Math.min(M.d[4]+2,QMAX-4))); dLbl.setAttribute("y",sy(4));
+    sLbl.setAttribute("x",sx(Math.min(M.s[0]+2,QMAX-4))); sLbl.setAttribute("y",sy(34));
+    if(mode==="base"){ ghostD.style.display="none"; ghostS.style.display="none"; }
+    else{
+      ghostD.style.display=""; ghostS.style.display="";
+      ghostD.setAttribute("d",pathFor(QD)); ghostS.setAttribute("d",pathFor(QS));
+    }
+    pline.setAttribute("x1",X0); pline.setAttribute("y1",sy(p));
+    pline.setAttribute("x2",X1); pline.setAttribute("y2",sy(p));
+    dDot.setAttribute("cx",sx(qd)); dDot.setAttribute("cy",sy(p));
+    sDot.setAttribute("cx",sx(qs)); sDot.setAttribute("cy",sy(p));
+    eqPt.setAttribute("cx",sx(eq.q)); eqPt.setAttribute("cy",sy(eq.p));
+    eqLbl.setAttribute("x",sx(eq.q)+12); eqLbl.setAttribute("y",sy(eq.p)-10);
+    document.getElementById("mprice_lbl").textContent="R"+p;
+
+    var diff=qs-qd, msg;
+    if(Math.abs(diff)<0.6){
+      gap.style.display="none";
+      msg="Teen <b>R"+p+"</b> is die hoeveelheid gevra en die hoeveelheid aangebied albei <b>"+
+        units(qd)+"</b>. Die mark is in <b>ewewig</b>. Niks druk die prys op of af nie.";
+    } else if(diff>0){
+      gap.style.display=""; gap.setAttribute("stroke","var(--bad)");
+      gap.setAttribute("x1",sx(qd)); gap.setAttribute("y1",sy(p));
+      gap.setAttribute("x2",sx(qs)); gap.setAttribute("y2",sy(p));
+      msg="Teen <b>R"+p+"</b> word <b>"+units(qs)+"</b> aangebied maar net <b>"+units(qd)+
+        "</b> gevra. Dit is 'n <b>surplus van "+units(diff)+" eenhede</b> — onverkoopte koffie. "+
+        "Verkopers sak die prys, en die mark gly terug na ewewig.";
+    } else {
+      gap.style.display=""; gap.setAttribute("stroke","var(--note)");
+      gap.setAttribute("x1",sx(qs)); gap.setAttribute("y1",sy(p));
+      gap.setAttribute("x2",sx(qd)); gap.setAttribute("y2",sy(p));
+      msg="Teen <b>R"+p+"</b> word <b>"+units(qd)+"</b> gevra maar net <b>"+units(qs)+
+        "</b> aangebied. Dit is 'n <b>tekort van "+units(-diff)+" eenhede</b> — die rakke is leeg. "+
+        "Kopers bie die prys op, en die mark gly terug na ewewig.";
+    }
+    document.getElementById("mverdict").innerHTML=msg;
+
+    var base=equilibrium(QD,QS), sv;
+    if(mode==="base"){
+      sv="<b>Basismark.</b> Ewewig by <b>"+money(base.p)+"</b> en <b>"+units(base.q)+" eenhede</b>.";
+    } else {
+      var dp=eq.p-base.p, dq=eq.q-base.q;
+      sv="<b>"+M.label+".</b> Die "+(mode==="dem"?"vraagkurwe skuif na <b>regs</b>":
+          "aanbodkurwe skuif na <b>links</b>")+
+         ". Ewewig beweeg van "+money(base.p)+" en "+units(base.q)+" eenhede na <b>"+
+         money(eq.p)+"</b> en <b>"+units(eq.q)+" eenhede</b>: die prys "+
+         (dp>0?"<b>styg</b>":"<b>daal</b>")+" en die hoeveelheid "+
+         (dq>0?"<b>styg</b>":"<b>daal</b>")+
+         (mode==="dem"?". Albei beweeg saam — dit is die handtekening van 'n vraagskuif."
+                      :". Hulle beweeg teenoor mekaar — dit is die handtekening van 'n aanbodskuif.");
+    }
+    document.getElementById("shiftverdict").innerHTML=sv;
+    AROS.set("mprice_pos",rng.value); AROS.set("mmode",mode);
+  }
+  rng.addEventListener("input",paint);
+  [].forEach.call(document.querySelectorAll("[data-shift]"),function(b){
+    b.classList.toggle("sel",b.dataset.shift===mode);
+    b.addEventListener("click",function(){
+      [].forEach.call(document.querySelectorAll("[data-shift]"),function(x){
+        x.classList.remove("sel"); });
+      b.classList.add("sel"); mode=b.dataset.shift; paint();
+    });
+  });
+  paint();
+})();
+
+/* ---------- formative quiz ---------- */
+var QUIZ=[].slice.call(document.querySelectorAll(".mcq.quiz"));
+function quizScore(){
+  var got=0,ans=0;
+  QUIZ.forEach(function(b){
+    if(b.__answered()){ ans++; if(b.__correct()) got++; }
+  });
+  return {got:got, answered:ans, max:QUIZ.length};
+}
+
+AROS.onResults(function(){
+  var host=document.getElementById("scorehost"); if(!host) return;
+  var q=quizScore();
+  host.innerHTML='<div class="scorecard"><div class="big">'+q.got+' / '+q.max+'</div>'+
+    '<div class="cap">oefenvrae reg &middot; tel nie punte nie</div></div>'+
+    (q.answered<q.max
+      ? '<div class="note">Jy het '+(q.max-q.answered)+' van die oefenvrae nog nie beantwoord nie. '+
+        'Gaan terug na stap 08 as jy wil.</div>'
+      : '<p>Al tien beantwoord. Onthou dat hierdie vrae uit dieselfde poel as die '+
+        '<b>Kwartaaltoets</b> kom.</p>');
+});
+
+AROS.onExport(function(){
+  var L=[], q=quizScore();
+  L.push("OEFENVRAE (stap 08) — tel nie punte nie");
+  L.push("  Reg: "+q.got+" / "+q.max+"   (beantwoord: "+q.answered+")");
+  QUIZ.forEach(function(b,i){
+    var v=AROS.get(b.dataset.field);
+    L.push("  "+(i+1)+": "+(v||"—")+"   "+
+      (v?(b.__correct()?"[reg]":"[verkeerd — "+b.dataset.a+"]"):""));
+  });
+  return L;
+});
+
+AROS.onExport(function(){
+  return ["--- STAP 06: EWEWIGSBEREKENINGE ---",
+    "  Surplus teen R35: "+(AROS.get("eq_surplus")||"—")+"   (antwoord: 40)",
+    "  Tekort teen R5:   "+(AROS.get("eq_tekort")||"—")+"   (antwoord: 40)",
+    "",
+    "--- STAP 07: AKTIWITEIT VIR GRAAD 8 ---",
+    AROS.get("lesplan")||"[geen antwoord]",
+    "",
+    "--- STAP 07: VRAAG VIR DIE KLAS ---",
+    AROS.get("klasvraag")||"[geen antwoord]"];
+});
+
+AROS.init();
+</script>
+</body>
+</html>
