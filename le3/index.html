@@ -1,0 +1,1570 @@
+<!doctype html>
+<html lang="af">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Leereenheid 3 &mdash; Ekonomiese Sisteme</title>
+<style>
+/* ===================================================================
+   AEKN121 lab shell — shared across every Leereenheid.
+   Do not put unit-specific styling here; use the unit's own unit.css.
+   =================================================================== */
+:root{
+  --paper:#fbfaf7; --panel:#ffffff; --ink:#1c1c1a; --ink-soft:#54524d;
+  --line:#ddd9d0; --line-soft:#eeeae2;
+  --accent:#7a3b1f; --accent-soft:#f4ece6;
+  --good:#2f6b3d; --good-soft:#eaf3ec;
+  --bad:#9a2f2f; --bad-soft:#f8ecec;
+  --note:#3a5a7a; --note-soft:#eaf0f6;
+  --demand:#7a3b1f; --supply:#2f5f6b;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --serif:Cambria,Georgia,"Times New Roman",serif;
+  --sans:Calibri,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+/* Dark tokens declared twice on purpose: the media query covers the default
+   "system" state, the [data-theme] rule covers a host that stamps an explicit
+   choice on the root element. The :not() guard lets an explicit light choice
+   beat a dark OS. */
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+ }
+}
+:root[data-theme="dark"]{
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px 120px}
+
+/* ---------- masthead + progress ---------- */
+header.mast{border-bottom:2px solid var(--ink);padding:22px 0 12px}
+.mast .code{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.mast h1{font-family:var(--serif);font-size:26px;line-height:1.2;margin:6px 0 2px;font-weight:700}
+.mast .sub{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:17px}
+.progwrap{position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:8px 0 9px}
+.progbar{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden}
+.progfill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+.progtext{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:5px;letter-spacing:.04em}
+.saveflag{opacity:0;transition:opacity .4s;color:var(--good)}
+.saveflag.on{opacity:1}
+#tocbtn{background:none;border:0;color:inherit;font-family:var(--mono);font-size:11px;
+  cursor:pointer;padding:0 0 0 12px;letter-spacing:.04em;opacity:.75}
+
+/* ---------- steps ---------- */
+.step{display:none;padding-top:26px}
+.step.active{display:block}
+.stephead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:18px}
+.stepnum{font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:700}
+.steptitle{font-family:var(--serif);font-size:22px;font-weight:700;flex:1 1 auto;line-height:1.2}
+.steptag{font-style:italic;color:var(--ink-soft);font-size:14px;font-family:var(--serif)}
+.stepmin{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+
+/* ---------- prose ---------- */
+h3{font-family:var(--serif);font-size:19px;margin:26px 0 8px;font-weight:700}
+h4{font-family:var(--sans);font-size:15px;margin:20px 0 6px;font-weight:700}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:22px}
+li{margin-bottom:5px}
+.lead{font-family:var(--serif);font-size:19px;line-height:1.55}
+.scripture{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:14px 16px;margin:0 0 18px;font-family:var(--serif);font-style:italic}
+.scripture .ref{display:block;font-style:normal;font-family:var(--mono);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:8px}
+.def{border:1px solid var(--accent);border-left-width:4px;background:var(--panel);
+  padding:13px 15px;margin:0 0 16px;font-family:var(--serif);font-size:18px}
+.def strong{font-family:var(--sans);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:5px;font-weight:700}
+.note{border-left:3px solid var(--note);background:var(--note-soft);
+  padding:12px 15px;margin:0 0 16px;font-size:15px}
+.note b{color:var(--note)}
+.readbox{background:var(--panel);border:1px solid var(--line);
+  padding:16px 18px;margin:0 0 18px;border-radius:3px}
+.readbox .src{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+.hint{font-size:14px;color:var(--ink-soft);margin:5px 0 0;font-style:italic}
+
+/* ---------- forms ---------- */
+label.q{display:block;font-weight:700;margin:18px 0 7px;font-size:16px}
+label.q .mk{font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+  font-weight:400;margin-left:6px}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font-family:inherit;font-size:16px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--ink)}
+textarea{min-height:92px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled,textarea:disabled,select:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible,.opt:focus-visible,.tocitem:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- multiple choice ---------- */
+.opts{display:flex;flex-direction:column;gap:7px;margin:8px 0 4px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:11px 13px;cursor:pointer;
+  font-size:16px;line-height:1.45;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt .lt{font-family:var(--mono);font-weight:700;flex:0 0 auto}
+.opt.locked{cursor:default}
+.fb{margin-top:10px;padding:11px 14px;border-radius:3px;font-size:15px;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:var(--good-soft);border-left:3px solid var(--good)}
+.fb.no{background:var(--bad-soft);border-left:3px solid var(--bad)}
+.fb .verdict{font-weight:700;display:block;margin-bottom:4px}
+.fb.ok .verdict{color:var(--good)}
+.fb.no .verdict{color:var(--bad)}
+
+/* ---------- buttons ---------- */
+button.act{font-family:var(--sans);font-size:15px;font-weight:700;padding:10px 20px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:3px;cursor:pointer}
+button.act:hover{filter:brightness(1.08)}
+button.ghost{font-family:var(--sans);font-size:15px;padding:10px 20px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+button.ghost:hover{border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- sorter ---------- */
+.sorter{margin:14px 0 6px}
+.sortrow{display:flex;gap:9px;align-items:center;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
+.sortrow .txt{flex:1 1 190px;font-size:15.5px;line-height:1.4}
+.sortrow .picks{display:flex;gap:5px;flex-wrap:wrap}
+.sortrow .picks button{font-family:var(--sans);font-size:13px;padding:6px 12px;
+  border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+  border-radius:3px;cursor:pointer;white-space:nowrap}
+.sortrow .picks button.sel{border-color:var(--accent);background:var(--accent-soft);
+  color:var(--accent);font-weight:700}
+.sortrow.right{border-color:var(--good);background:var(--good-soft)}
+.sortrow.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.sortrow .why{flex:1 1 100%;font-size:14px;color:var(--ink-soft);
+  font-style:italic;margin-top:4px;display:none}
+.sortrow.reveal .why{display:block}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:var(--line-soft);font-weight:700;font-size:14px}
+td.num,th.num{text-align:right;font-family:var(--mono);font-size:14px;
+  font-variant-numeric:tabular-nums}
+tr.eq td{background:var(--accent-soft);font-weight:700}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 16px}
+.scroll table{margin:0;min-width:420px}
+
+/* ---------- navigation ---------- */
+.nav{display:flex;gap:10px;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--line);margin-top:34px;padding-top:16px;flex-wrap:wrap}
+
+/* ---------- charts (generic frame; curve styling lives in unit.css) ---------- */
+.chartwrap{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:10px;margin:0 0 14px}
+svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
+.chart .axis{stroke:currentColor;stroke-width:2;fill:none}
+.chart .helper{stroke:currentColor;stroke-width:1;stroke-dasharray:4 3;opacity:.45}
+.chart .axlbl{font-family:var(--sans);font-size:12px;fill:currentColor;opacity:.7;
+  font-variant-numeric:tabular-nums}
+.chart .axname{font-family:var(--sans);font-size:13px;fill:currentColor;font-weight:700}
+.chart .ptlbl{font-family:var(--mono);font-size:14px;fill:currentColor;font-weight:700}
+.verdictbox{font-size:15px;padding:11px 14px;border-radius:3px;margin:0 0 12px;
+  background:var(--note-soft);border-left:3px solid var(--note);min-height:22px}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.ctrls button{font-family:var(--sans);font-size:14px;padding:8px 14px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+.ctrls button.sel{border-color:var(--note);background:var(--note-soft);
+  color:var(--note);font-weight:700}
+.slider{margin:0 0 12px}
+.slider input[type=range]{width:100%;accent-color:var(--accent)}
+.slider .val{font-family:var(--mono);font-size:19px;color:var(--accent);font-weight:700}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:22px;height:3px;display:inline-block;border-radius:2px}
+
+/* ---------- results + export ---------- */
+.scorecard{border:2px solid var(--accent);border-radius:3px;padding:18px;
+  margin:0 0 20px;background:var(--panel);text-align:center}
+.scorecard .big{font-family:var(--serif);font-size:42px;font-weight:700;
+  color:var(--accent);line-height:1}
+.scorecard .cap{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+.codebox{font-family:var(--mono);font-size:19px;letter-spacing:.14em;
+  background:var(--accent-soft);border:1px dashed var(--accent);color:var(--accent);
+  padding:14px;text-align:center;border-radius:3px;margin:0 0 8px;
+  user-select:all;word-break:break-all;font-weight:700}
+.locknote{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+  letter-spacing:.05em;margin:6px 0 0}
+#exportbox{display:none;margin-top:12px;min-height:230px;
+  font-family:var(--mono);font-size:12.5px}
+
+/* ---------- table of contents ---------- */
+.toc{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;
+  padding:40px 18px;overflow-y:auto}
+.toc.open{display:block}
+.toc .inner{max-width:520px;margin:0 auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:4px;padding:8px}
+.tocitem{display:flex;width:100%;gap:11px;align-items:baseline;text-align:left;
+  background:transparent;border:0;border-bottom:1px solid var(--line-soft);
+  padding:12px 10px;cursor:pointer;color:var(--ink);font-family:var(--sans);font-size:15px}
+.tocitem:last-child{border-bottom:0}
+.tocitem:hover{background:var(--accent-soft)}
+.tocitem .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700}
+.tocitem .dn{margin-left:auto;color:var(--good);font-family:var(--mono);font-size:12px}
+
+/* ---------- small screens ---------- */
+@media (max-width:520px){
+  body{font-size:16px}
+  .mast h1{font-size:22px}
+  .steptitle{font-size:19px}
+  .wrap{padding:0 14px 110px}
+  .nav button{flex:1 1 100%}
+  /* the SVG scales down with the viewport, so scale its type back up */
+  .chart .axlbl{font-size:16px}
+  .chart .axname{font-size:17px}
+  .chart .ptlbl{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+@media print{
+  .progwrap,.nav,.ctrls,.toc{display:none!important}
+  .step{display:block!important;page-break-after:always}
+}
+
+
+/* ---- unit-specific ---- */
+/* Leereenheid 3 — die mark-tot-bevel spektrum */
+.chart .tradzone{fill:var(--accent-soft);stroke:var(--accent);
+  stroke-width:1;stroke-dasharray:5 4}
+.chart .marker{fill:var(--note);stroke:var(--panel);stroke-width:2}
+.chart .marker.cur{fill:var(--accent)}
+.chart .markerlbl{font-family:var(--sans);font-size:13px;fill:currentColor;font-weight:700}
+.chart .band{fill:var(--good);opacity:.16}
+.chart .answer{fill:none;stroke:var(--good);stroke-width:3}
+@media (max-width:520px){
+  .chart .markerlbl{font-size:16px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="code">AEKN121 &middot; Inleiding tot Ekonomie &middot; AROS</div>
+  <h1>Leereenheid 3 &mdash; Ekonomiese Sisteme</h1>
+  <div class="sub">Werk in jou eie tyd hierdeur. Jou antwoorde word outomaties gestoor.</div>
+</header>
+
+<div class="progwrap">
+  <div class="progbar"><div class="progfill" id="progfill"></div></div>
+  <div class="progtext">
+    <span id="progtext">&nbsp;</span>
+    <span><span class="saveflag" id="saveflag">gestoor</span>
+      <button id="tocbtn" type="button">inhoud &#9662;</button></span>
+  </div>
+</div>
+
+<div class="toc" id="toc"><div class="inner" id="tocinner"></div></div>
+
+<main id="steps">
+<!-- ============ 00 ============ -->
+<section class="step" data-title="Begin" data-tag="alleen" data-min="4">
+  <div class="stephead"><span class="stepnum">00</span>
+    <span class="steptitle">Begin hier</span>
+    <span class="steptag">alleen</span><span class="stepmin">4 min</span></div>
+
+  <p class="lead">Leereenhede 1 en 2 het gevra <i>hoe</i> keuses gemaak word. Leereenheid 3
+  vra <i>wie</i> kies &mdash; en volgens watter re&euml;ls.</p>
+
+  <p>Reken op ongeveer <b>100 minute</b>. Jy hoef dit nie in een sitting te doen nie; alles
+  word op hierdie toestel gestoor. 'n Natuurlike breekpunt is n&aacute; stap 04.</p>
+
+  <div class="note"><b>Hierdie eenheid het nie sy eie e-Klas toets nie.</b> Leereenheid 3 word
+  in die <b>Kwartaaltoets</b> geassesseer, saam met Leereenhede 1 en 2. Stap 08 hier is dus
+  <b>oefening</b>, nie 'n assessering nie.</p></div>
+
+  <p>Dit is ook die eenheid met die minste somme en die meeste oordeel. Dit maak dit nie
+  makliker nie &mdash; dit maak dit anders. Die eksamen vra hier vir <i>onderskeid</i>: watter
+  sisteem is dit, en waaraan sien jy dit?</p>
+
+  <label class="q" for="f_naam">Jou naam en van</label>
+  <input type="text" id="f_naam" data-field="naam" autocomplete="name">
+
+  <label class="q" for="f_nr">Jou studentenommer</label>
+  <input type="text" id="f_nr" data-field="studentenr" inputmode="numeric" autocomplete="off">
+
+  <div class="nav"><span></span><button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="step" data-title="Voorspel" data-tag="alleen" data-min="6">
+  <div class="stephead"><span class="stepnum">01</span>
+    <span class="steptitle">Voorspel eers</span>
+    <span class="steptag">alleen</span><span class="stepmin">6 min</span></div>
+
+  <p class="lead">Ses stellings, voordat jy iets lees. Waar of onwaar?</p>
+
+  <p>Jy kry nie nou terugvoer nie. Aan die einde wys ons jou wat jy geraai het en wat die
+  antwoord is.</p>
+
+  <div class="sorter" data-field="voorspel" data-bins="Waar|Onwaar" data-noreveal="1">
+    <div class="sortrow" data-a="Waar"><div class="txt">Suid-Afrika is 'n gemengde ekonomie.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">In 'n markekonomie besluit die regering wat geproduseer word.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Adam Smith word met die bevelsekonomie verbind.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">Die meeste lande in die wêreld het vandag 'n gemengde ekonomie.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Privatisering is wanneer die regering 'n private maatskappy oorneem.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">Ekonome stem meestal saam oor die basiese teorie, maar verskil oor die toepassing daarvan.</div></div>
+  </div>
+
+  <label class="q" for="f_gr89">Watter een van die ses sal jou Graad 8- of 9-leerders die
+  moeilikste vind? Hoekom?</label>
+  <textarea id="f_gr89" data-field="gr89_voorspel" data-lock-with-predictions></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en sluit my raaiskote</button></div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="step" data-title="Die drie sentrale vrae" data-tag="lees en doen" data-min="12">
+  <div class="stephead"><span class="stepnum">02</span>
+    <span class="steptitle">Die drie sentrale ekonomiese vrae</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Elke gemeenskap wat nog ooit bestaan het, moes drie vrae beantwoord. Die
+  antwoorde bepaal watter ekonomiese sisteem jy het.</p>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 31 &middot; Mohr et al., 2015:25</div>
+    <ol>
+      <li><b>Wat</b> moet geproduseer word, en hoeveel daarvan?</li>
+      <li><b>Hoe</b> moet dit geproduseer word?</li>
+      <li><b>Vir wie</b> moet dit geproduseer word?</li>
+    </ol>
+  </div>
+
+  <p>Dit klink eenvoudig. Dit is nie. Elke gemeenskap moet die drie vrae beantwoord, en
+  daar is geen antwoord wat niemand benadeel nie &mdash; want hulpbronne is skaars. Dit is
+  Leereenheid 1 se skaarsheid, nou op die vlak van 'n hele samelewing.</p>
+
+  <h3>Die Skrif gee ons riglyne</h3>
+
+  <p>Die Leesbundel anker elke vraag in die Skrif. Dit is nie versiering nie: dit is 'n
+  antwoord op die vraag waarvolgens ons oordeel wanneer die ekonomie self geen antwoord
+  gee nie.</p>
+
+  <div class="scroll"><table>
+    <tr><th>Vraag</th><th>Skrifgedeelte</th><th>Wat dit vir ons s&ecirc;</th></tr>
+    <tr><td><b>Wat?</b></td><td>Genesis 41</td>
+      <td>Josef l&ecirc; die farao se droom uit en beplan vooruit: hoop op in die jare van
+      oorvloed, vir die hongersnood wat kom. Produseer met die dag van m&ocirc;re in gedagte.</td></tr>
+    <tr><td><b>Hoe?</b></td><td>Genesis 41; Genesis 1:28; Eksodus 35:2</td>
+      <td>Besluitnemers oor produksiemetodes moet verstandig wees. Ons heers oor die aarde,
+      maar verantwoordelik en volhoubaar &mdash; en met rus op die sewende dag.</td></tr>
+    <tr><td><b>Vir wie?</b></td><td>2 Tessalonisense 3:10; 2 Timoteus 2:6; Handelinge 20:35</td>
+      <td>Daar word geproduseer vir wie werk. Maar ons dra ook die swakkes: dit is saliger om
+      te gee as om te ontvang.</td></tr>
+  </table></div>
+
+  <div class="note"><b>Klein regstelling op die Leesbundel.</b> Die Leesbundel haal
+  &ldquo;Die landbouer wat swaar werk, behoort eerste van die vrugte te geniet&rdquo; aan as
+  <b>1 Timoteus 3:1</b>. Dit is nie reg nie &mdash; die vers is <b>2 Timoteus 2:6</b>.
+  (1 Timoteus 3:1 handel oor die begeerte na die amp van opsiener.) Ons gebruik hier die
+  korrekte verwysing. Gaan verwysings altyd self na voordat jy hulle in 'n klas gebruik.</div>
+
+  <div class="def"><strong>Definisie</strong>
+  'n Ekonomiese sisteem is die sisteem wat 'n gemeenskap gebruik om skaars hulpbronne toe te
+  wys, en so die drie sentrale ekonomiese vrae te beantwoord (Boettke, 2020).</div>
+
+  <div class="mcq" data-field="m_drie" data-a="a"
+    data-why="Wat, hoe en vir wie. Dit is die drie vrae wat elke gemeenskap moet beantwoord — en die antwoorde daarop is presies wat 'n ekonomiese sisteem is.">
+    <label class="q">Wat is die drie sentrale ekonomiese vrae? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Wat, hoe, en vir wie word geproduseer?</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Wat, wanneer, en waar word geproduseer?</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Hoeveel, hoe duur, en vir wie?</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Wie besit, wie werk, en wie betaal?</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="step" data-title="Hoe ons sisteme onderskei" data-tag="doen" data-min="10">
+  <div class="stephead"><span class="stepnum">03</span>
+    <span class="steptitle">Twee vrae skei die sisteme</span>
+    <span class="steptag">doen</span><span class="stepmin">10 min</span></div>
+
+  <p class="lead">Jy hoef nie vier stelsels uit die kop te leer nie. Jy hoef net twee vrae te
+  onthou.</p>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 33</div>
+    <p><b>Eiendomsreg</b> &mdash; wie mag wat besit? Dit omskryf die regte van individue,
+    besighede en regerings ten opsigte van die eienaarskap van bates, en hoe daardie bates
+    aangewend mag word (Kenton, 2020a).</p>
+    <p><b>Koördineringsmeganisme</b> &mdash; wat laat die stukke bymekaar pas? Dit is die manier
+    waarop inligting verwerk word om die ekonomiese aktiwiteite van rolspelers te koördineer
+    (Mohr et al., 2015:27).</p>
+  </div>
+
+  <div class="def"><strong>Die kortpad</strong>
+  Vra van enige ekonomie twee dinge: <b>wie besit die produksiefaktore?</b> en
+  <b>wat koördineer die besluite &mdash; pryse, die staat, of tradisie?</b>
+  Die twee antwoorde s&ecirc; jou watter sisteem jy na kyk.</div>
+
+  <p>Sorteer die volgende. Gaan dit oor eienaarskap, of oor koördinering?</p>
+
+  <div class="sorter" data-field="onderskei" data-bins="Eiendomsreg|Koördinering">
+    <div class="sortrow" data-a="Eiendomsreg" data-why="Dit gaan oor wie die bate besit."><div class="txt">Wie die grond, fabrieke en masjiene besit</div></div>
+    <div class="sortrow" data-a="Koördinering" data-why="Pryse dra die inligting wat besluite bymekaar laat pas — Adam Smith se onsigbare hand."><div class="txt">Die &ldquo;onsigbare hand&rdquo; van pryse</div></div>
+    <div class="sortrow" data-a="Eiendomsreg" data-why="Die reg om te verkoop is deel van eiendomsreg."><div class="txt">Of 'n boer sy plaas mag verkoop</div></div>
+    <div class="sortrow" data-a="Koördinering" data-why="Sentrale beplanning is 'n koördineringsmeganisme, nie 'n eienaarskapsvraag nie."><div class="txt">Vyfjaarplanne van 'n sentrale regering</div></div>
+    <div class="sortrow" data-a="Koördinering" data-why="Tradisie is die derde meganisme, naas pryse en die staat."><div class="txt">Gebruike wat oor geslagte oorgedra word</div></div>
+    <div class="sortrow" data-a="Eiendomsreg" data-why="Privaat of staatsbesit — 'n eienaarskapsvraag."><div class="txt">Of 'n maatskappy in privaat hande is</div></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="step" data-title="Die vier sisteme" data-tag="doen" data-min="18">
+  <div class="stephead"><span class="stepnum">04</span>
+    <span class="steptitle">Die vier sisteme</span>
+    <span class="steptag">doen</span><span class="stepmin">18 min</span></div>
+
+  <div class="scroll"><table>
+    <tr><th>Sisteem</th><th>Wie besit?</th><th>Wat koördineer?</th><th>Voorbeeld</th></tr>
+    <tr><td><b>Tradisioneel</b></td><td>Individue en gesinne, maar onderhewig aan tradisie en
+      die gemeenskap se toestemming</td><td>Tradisie</td><td>Die Masai in Oos-Afrika</td></tr>
+    <tr><td><b>Mark</b></td><td>Privaat, en deur die wet beskerm</td>
+      <td>Die &ldquo;onsigbare hand&rdquo; &mdash; eiebelang wat deur pryse werk</td>
+      <td>Nieu-Seeland</td></tr>
+    <tr><td><b>Bevel</b></td><td>Die staat besit die meeste of alles</td>
+      <td>Die regering besluit</td><td>Noord-Korea</td></tr>
+    <tr><td><b>Gemeng</b></td><td>Meestal privaat, onder regeringsregulasie; sommige
+      sleutelentiteite in staatsbesit</td><td>Grotendeels vraag en aanbod, met
+      regeringsingryping</td><td>Suid-Afrika</td></tr>
+  </table></div>
+  <p class="hint">Leesbundel bl. 33&ndash;38.</p>
+
+  <h3>Plaas hulle op die as</h3>
+
+  <p>Hier is 'n lyn van 'n <b>suiwer markekonomie</b> links tot 'n <b>suiwer
+  bevelsekonomie</b> regs. Tik op die lyn om elke ekonomie te plaas.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="spectrum" viewBox="0 0 640 300" role="img"
+      aria-label="'n As van suiwer markekonomie tot suiwer bevelsekonomie"></svg>
+  </div>
+  <div class="verdictbox" id="spec_verdict">Kies hieronder watter ekonomie jy wil plaas.</div>
+  <div class="ctrls" id="spec_pick"></div>
+  <div class="ctrls">
+    <button id="spec_reveal" type="button">Wys die antwoord</button>
+    <button id="spec_clear" type="button">Begin oor</button>
+  </div>
+
+  <h3>Watter sisteem is dit?</h3>
+  <p>Ses beskrywings. Geen name nie &mdash; net die twee vrae uit stap 03.</p>
+
+  <div class="sorter" data-field="watter" data-bins="Tradisioneel|Mark|Bevel|Gemeng">
+    <div class="sortrow" data-a="Tradisioneel" data-why="Produksie volg gevestigde gebruik. Groei is ondergeskik aan die handhawing van die status quo."><div class="txt">Daar word geproduseer op die maniere waarop vorige geslagte geproduseer het</div></div>
+    <div class="sortrow" data-a="Bevel" data-why="Staatsbesit van die produksiefaktore plus staatsbesluite oor pryse — dit is die bevelsekonomie."><div class="txt">Die staat besit die produksiefaktore en besluit wat geproduseer word en wat dit kos</div></div>
+    <div class="sortrow" data-a="Mark" data-why="Privaat eiendomsreg, beperkte inmenging, eiebelang as dryfveer."><div class="txt">Privaat eiendomsreg, min regeringsinmenging, en eiebelang dryf alles</div></div>
+    <div class="sortrow" data-a="Gemeng" data-why="Privaat besit as reël, met staatsbesit van sleutelentiteite — soos Eskom in Suid-Afrika."><div class="txt">Die meeste faktore is in privaat besit, maar die staat besit die elektrisiteitsverskaffer</div></div>
+    <div class="sortrow" data-a="Tradisioneel" data-why="Bestaansproduksie met ruilhandel, nie produksie vir wins nie."><div class="txt">Daar word geproduseer om in die gemeenskap se eie behoeftes te voorsien, en soms geruil</div></div>
+    <div class="sortrow" data-a="Gemeng" data-why="Sondebelasting op alkohol en tabak is ingryping bo-op 'n markstelsel — die kenmerk van 'n gemengde ekonomie."><div class="txt">Pryse word grotendeels deur die mark bepaal, maar daar is belasting op alkohol en tabak</div></div>
+  </div>
+
+  <h3>Nasionalisering en privatisering</h3>
+  <div class="def"><strong>Twee woorde wat mense verwar</strong>
+  <b>Nasionalisering</b> is wanneer privaat eiendom in die regering se besit geplaas word
+  (Kenton, 2020b). <b>Privatisering</b> is die presiese teenoorgestelde: eiendom gaan van die
+  regering na privaat besit oor (Hargrave, 2021).</div>
+
+  <div class="mcq" data-field="m_nas" data-a="c"
+    data-why="Eskom is 'n staatsentiteit wat 'n openbare diens lewer binne 'n grotendeels private ekonomie — die handboekvoorbeeld van 'n gemengde stelsel. Dit maak Suid-Afrika nie 'n bevelsekonomie nie: die pryse van die meeste produkte word steeds deur vraag en aanbod bepaal.">
+    <label class="q">Suid-Afrika se staat besit Eskom, die SAL, Denel en die SAUK. Wat maak dit
+      van Suid-Afrika? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>'n Bevelsekonomie.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Tradisionele ekonomie.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>'n Gemengde ekonomie.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Suiwer markekonomie.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="step" data-title="Die ekonome" data-tag="lees en doen" data-min="14">
+  <div class="stephead"><span class="stepnum">05</span>
+    <span class="steptitle">Die ekonome agter die teorie</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">14 min</span></div>
+
+  <p class="lead">Drie mense, drie sisteme. Die stelsels het nie uit die lug geval nie
+  &mdash; iemand het hulle beredeneer.</p>
+
+  <div class="scroll"><table>
+    <tr><th></th><th>Adam Smith<br>1723&ndash;1790</th><th>Karl Marx<br>1818&ndash;1883</th>
+      <th>J.M. Keynes<br>1883&ndash;1946</th></tr>
+    <tr><th>Werk</th>
+      <td><i>An Inquiry into the Nature and Causes of the Wealth of Nations</i> (1776)</td>
+      <td><i>The Communist Manifesto</i> (1848, saam met Friedrich Engels)</td>
+      <td><i>The General Theory of Employment, Interest and Money</i></td></tr>
+    <tr><th>Kernidee</th>
+      <td>Mense wat hul eie belang najaag, word deur 'n <b>onsigbare hand</b> gelei om 'n
+        uitkoms te bevorder wat nie hul doel was nie</td>
+      <td>Die samelewing bestaan uit kapitaliste wat die produksiemiddele besit, en die
+        <b>proletariaat</b> wat net arbeid verkoop</td>
+      <td>Ekonomiese aktiwiteit word bepaal deur die <b>vraag</b> na goedere, nie noodwendig
+        deur die aanbod nie</td></tr>
+    <tr><th>Beleid</th>
+      <td>Privaat eiendom; handel sonder regeringsinmenging</td>
+      <td>Die reëling buit werkers uit en moet omgekeer word</td>
+      <td>In 'n resessie: <b>meer</b> regeringsbesteding en <b>laer</b> belasting</td></tr>
+    <tr><th>Gekoppel aan</th><td>Die <b>markekonomie</b></td><td>Die <b>bevelsekonomie</b></td>
+      <td>Die <b>gemengde ekonomie</b></td></tr>
+  </table></div>
+  <p class="hint">Leesbundel bl. 38&ndash;41.</p>
+
+  <div class="note"><b>Die twis in een sin.</b> Die klassieke ekonome het geglo dat aanbod sy
+  eie vraag skep &mdash; produseer, en die kopers sal kom. Keynes het in die Groot Depressie
+  gekyk na fabrieke wat stilstaan en mense sonder werk, en gesê: nee, die vraag kan opdroog en
+  daar bly. Dit is presies die punt waar die gemengde ekonomie ontstaan het.</div>
+
+  <p>Sorteer die nege stellings.</p>
+
+  <div class="sorter" data-field="ekonome" data-bins="Smith|Marx|Keynes">
+    <div class="sortrow" data-a="Smith" data-why="Smith se bekendste beeld, uit die Wealth of Nations."><div class="txt">Die &ldquo;onsigbare hand&rdquo;</div></div>
+    <div class="sortrow" data-a="Marx" data-why="Marx se woord vir die klas wat net arbeid het om te verkoop."><div class="txt">Die proletariaat besit nie die produksiemiddele nie</div></div>
+    <div class="sortrow" data-a="Keynes" data-why="Keynes se resep vir 'n resessie: stimuleer die vraag."><div class="txt">In 'n resessie moet die regering meer bestee en belasting verlaag</div></div>
+    <div class="sortrow" data-a="Smith" data-why="1776 — en die rede waarom hy die vader van die ekonomie genoem word."><div class="txt"><i>The Wealth of Nations</i></div></div>
+    <div class="sortrow" data-a="Marx" data-why="1848, saam met Friedrich Engels."><div class="txt"><i>The Communist Manifesto</i></div></div>
+    <div class="sortrow" data-a="Keynes" data-why="Word gesien as die eerste sistematiese makro-ekonomiese publikasie."><div class="txt"><i>The General Theory of Employment, Interest and Money</i></div></div>
+    <div class="sortrow" data-a="Smith" data-why="Sy teorie vorm die basis van die markstelsel en die klassieke ekonomie."><div class="txt">Word met die markekonomie verbind</div></div>
+    <div class="sortrow" data-a="Marx" data-why="Marxisme is aan die bevelstelsel gekoppel."><div class="txt">Word met die bevelsekonomie verbind</div></div>
+    <div class="sortrow" data-a="Keynes" data-why="Keynes se voorstel — 'n mark met regeringsingryping — is die gemengde ekonomie."><div class="txt">Word met die gemengde ekonomie verbind</div></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="step" data-title="Waarom ekonome verskil" data-tag="dink" data-min="12">
+  <div class="stephead"><span class="stepnum">06</span>
+    <span class="steptitle">Waarom ekonome van mekaar verskil</span>
+    <span class="steptag">dink</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Jou leerders gaan dit vra, en dit is 'n goeie vraag: as ekonomie 'n
+  wetenskap is, hoekom stry ekonome so?</p>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 41&ndash;44</div>
+    <p>Ekonome stem meestal <b>wel</b> saam oor die fundamentele teorie &mdash; dat skaarste
+    keuses afdwing, en keuses geleentheidskoste skep. Hulle verskil oor die <b>toepassing</b>
+    daarvan. Drie redes:</p>
+    <ol>
+      <li><b>Dit is 'n onbeantwoordbare vraag.</b> Beperkte hulpbronne kan nooit onbeperkte
+      behoeftes bevredig nie, so daar m&oacute;&eacute;t opgeoffer word. Oor <i>wat</i>
+      opgeoffer moet word, is daar geen tegniese antwoord nie &mdash; dit is 'n
+      waarde-oordeel.</li>
+      <li><b>Dit is moeilik om op 'n ekonomie te eksperimenteer.</b> Ander wetenskappe het
+      laboratoriums en kontrolegroepe. 'n Nuwe belastingteorie kan uiteindelik net getoets word
+      deur dit werklik toe te pas &mdash; en as dit misluk, ly mense.</li>
+      <li><b>Bevooroordeelde opinies.</b> Ons eie waardes kleur watter data ons raaksien en hoe
+      ons dit lees. Boonop is ekonomiese metings dikwels net benaderings, en teen die tyd dat
+      die data ingesamel is, kon die werklikheid verander het.</li>
+    </ol>
+  </div>
+
+  <h3>Die R50 miljoen</h3>
+  <p>Onthou Leereenheid 1 se voorbeeld: die regering het R50 miljoen en drie projekte
+  &mdash; gratis onderwys, paaie, en gratis mediese sorg. Vier ekonome, vier antwoorde, en
+  <b>elkeen is verdedigbaar</b>:</p>
+  <div class="scroll"><table>
+    <tr><th>Keuse</th><th>Die argument</th></tr>
+    <tr><td>Alles na onderwys</td><td>Beter gekwalifiseerde burgers neem beter ekonomiese
+      besluite en dra meer tot groei by</td></tr>
+    <tr><td>Alles na paaie</td><td>Sonder vervoer kan handel nie ongehinderd voortgaan nie</td></tr>
+    <tr><td>Alles na gesondheidsorg</td><td>'n Ongesonde arbeidsmag kan nie ekonomies
+      doeltreffend wees nie</td></tr>
+    <tr><td>Gelyk verdeel</td><td>Regverdig &mdash; maar as geen deel groot genoeg is om 'n
+      verskil te maak nie, is die volle R50 miljoen dalk vermors</td></tr>
+  </table></div>
+
+  <div class="note"><b>Dit is nie 'n swakheid van die vak nie.</b> Die verskil tussen ekonome
+  is nie 'n teken dat niemand weet waarvan hulle praat nie. Dit is 'n teken dat die vraag
+  gedeeltelik 'n <i>waarde</i>-vraag is. Leereenheid 1 het dit al genoem: dit is die grens
+  tussen positiewe en normatiewe ekonomie. Hier sien jy waarom daardie onderskeid saak maak.</div>
+
+  <div class="mcq" data-field="m_verskil" data-a="b"
+    data-why="Ekonome stem grootliks saam oor die basiese teorie. Hulle verskil oor die toepassing — omdat die keuse van wat opgeoffer word 'n waarde-oordeel is, en omdat 'n mens nie 'n hele ekonomie in 'n laboratorium kan toets nie.">
+    <label class="q">Wat is die beste verduideliking vir waarom ekonome verskil?
+      <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Hulle stem nie saam oor die basiese teorie nie.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Hulle stem saam oor die teorie, maar die toepassing daarvan verg waarde-oordele wat nie getoets kan word nie.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Ekonomiese data is altyd verkeerd.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Ekonomie is nie regtig 'n wetenskap nie.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="txtq" data-field="eie_oordeel">
+    <label class="q">As jy die R50 miljoen moes verdeel: hoe, en waarom? Twee sinne.</label>
+    <textarea></textarea>
+    <p class="hint">Daar is geen regte antwoord nie. Die punt is om te sien dat jou antwoord
+    'n waarde-oordeel bevat &mdash; en om te kan s&ecirc; watter een.</p>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section class="step" data-title="Leer dit vir Graad 8 en 9" data-tag="onderwyser" data-min="12">
+  <div class="stephead"><span class="stepnum">07</span>
+    <span class="steptitle">Leer dit vir Graad 8 en 9</span>
+    <span class="steptag">onderwyser</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Hierdie eenheid raak aan politiek. Dit is presies waarom dit goed onderrig
+  moet word, en nie vermy nie.</p>
+
+  <h3>Drie wanbegrippe wat leerders inbring</h3>
+  <div class="scroll"><table>
+    <tr><th>Wat die leerder dink</th><th>Waarom dit vashaak</th></tr>
+    <tr><td>&ldquo;Kapitalisme is goed en kommunisme is sleg&rdquo; (of andersom).</td>
+      <td>Hulle het die woorde eerste as skeldname g&eacute;hoor en daarna eers as begrippe
+      geleer. Die vak vra 'n beskrywing v&oacute;&oacute;r 'n oordeel &mdash; presies die
+      onderskeid tussen positief en normatief.</td></tr>
+    <tr><td>&ldquo;Suid-Afrika is 'n kapitalistiese land.&rdquo;</td>
+      <td>Half waar, en dus moeilik. Die meeste produksiefaktore is privaat, m&aacute;&aacute;r
+      die staat besit die elektrisiteit. Die eerlike antwoord is 'n mengsel, en leerders wil 'n
+      etiket h&ecirc;.</td></tr>
+    <tr><td>&ldquo;'n Tradisionele ekonomie is 'n agterlike ekonomie.&rdquo;</td>
+      <td>Die Leesbundel s&ecirc; groei is nie die eerste prioriteit nie &mdash; nie dat dit
+      misluk nie. 'n Sisteem wat kulturele waardes bo groei stel, het 'n ander doel gekies,
+      nie 'n slegter een nie.</td></tr>
+  </table></div>
+
+  <h3>Wat werk in 'n Graad 8-klas</h3>
+  <ul>
+    <li><b>Laat die klas self die drie vrae beantwoord.</b> Gee hulle 'n eiland en tien mense.
+    Wat produseer julle? Hoe? Vir wie? Binne tien minute het hulle 'n stelsel uitgevind, en
+    gestry. Dan gee jy dit 'n naam.</li>
+    <li><b>Gebruik die skool as ekonomie.</b> Wie besit die banke en die rekenaars? Wie besluit
+    wat in die snoepie verkoop word? Dieselfde twee vrae, op iets wat hulle elke dag sien.</li>
+    <li><b>Moenie by die etikette begin nie.</b> Begin by die twee vrae uit stap 03. Die name
+    kom laaste. Anders leer hulle vier woorde en geen onderskeid nie.</li>
+    <li><b>Wees eerlik oor die twis.</b> Vertel hulle dat volwassenes hieroor stry en dat die
+    stryery nie beteken dat niemand iets weet nie. 'n Klas wat sien dat 'n vak oop vrae h&ecirc;t,
+    raak meer be&iuml;ndruk, nie minder nie.</li>
+  </ul>
+
+  <div class="note"><b>Vergelyk met jou raaiskoot.</b> In stap 01 het jy gesê watter stelling
+  jou leerders die moeilikste sou vind. Kyk of jy nou dieselfde sou antwoord.</div>
+
+  <label class="q" for="f_lesplan">Skryf die opdrag vir 'n aktiwiteit van tien minute waarin
+  'n Graad 8-klas s&eacute;lf 'n ekonomiese sisteem moet uitdink. Wat gee jy hulle, en wat vra
+  jy hulle?</label>
+  <textarea id="f_lesplan" data-field="lesplan" style="min-height:150px"></textarea>
+  <p class="hint">Dit tel nie punte nie, maar dit gaan in jou uitvoer in en jou dosent lees dit.</p>
+
+  <label class="q" for="f_vraag">Watter een vraag oor Leereenheid 3 wil jy in die klas
+  bespreek?</label>
+  <textarea id="f_vraag" data-field="klasvraag" style="min-height:70px"></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section class="step" data-title="Toets jouself" data-tag="oefening" data-min="14">
+  <div class="stephead"><span class="stepnum">08</span>
+    <span class="steptitle">Toets jouself</span>
+    <span class="steptag">oefening &middot; tel nie punte nie</span><span class="stepmin">14 min</span></div>
+
+  <div class="note"><b>Oefening, nie assessering nie.</b> Leereenheid 3 word in die
+  <b>Kwartaaltoets</b> geassesseer, saam met Leereenhede 1 en 2. Jy kry terugvoer sodra jy 'n
+  vraag beantwoord &mdash; lees dit, dit is die punt van die oefening.</div>
+
+  <div class="mcq quiz" data-field="q1" data-a="d"
+    data-why="In 'n kommunistiese of bevelstelsel besit die staat die produksiefaktore. Suid-Afrika is gemeng, nie tradisioneel nie; Swede is óók gemeng, nie 'n bevelstelsel nie; en vyfjaarplanne is juis die teenoorgestelde van 'n markstelsel.">
+    <label class="q">1. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Suid-Afrika is 'n voorbeeld van 'n tradisionele stelsel.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Swede is 'n voorbeeld van 'n bevelstelsel.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>In die markstelsel word die &ldquo;hoe om te produseer&rdquo; deur vyfjaarplanne bepaal.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>In 'n kommunistiese stelsel besit die regering al die kapitaal en natuurlike hulpbronne.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q2" data-a="c"
+    data-why="'n Mark is enige plek waar kopers en verkopers bymekaarkom — die hoekwinkel is 'n plaaslike mark. 'n Koper sonder geld en 'n verkoper sonder voorraad kan nie handel dryf nie, en is dus nie deel van die mark nie.">
+    <label class="q">2. Watter een van die volgende stellings is korrek?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die onderhandeling tussen kopers en verkopers is 'n maatstaf van mededinging in 'n mark.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Koper sonder geld is deel van die mark.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Die hoekwinkel is 'n voorbeeld van 'n plaaslike mark.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Verkoper sonder voorraad is deel van die mark.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q3" data-a="a"
+    data-why="Eiendomsreg (wie besit?) en koördineringsmeganisme (wat laat besluite bymekaar pas?). Dit is die twee vrae uit stap 03, en saam onderskei hulle al vier die sisteme.">
+    <label class="q">3. Watter twee eienskappe gebruik ons om ekonomiese sisteme van mekaar te
+      onderskei?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Eiendomsreg en koördineringsmeganisme</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Inflasie en werkloosheid</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Vraag en aanbod</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Bevolkingsgrootte en hulpbronne</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q4" data-a="b"
+    data-why="Die onsigbare hand: eiebelang wat deur pryse werk. Vyfjaarplanne hoort by die bevelstelsel en tradisie by die tradisionele stelsel.">
+    <label class="q">4. Wat is die koördineringsmeganisme van 'n vryemarkekonomie?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Vyfjaarplanne van die regering</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die &ldquo;onsigbare hand&rdquo; — eiebelang wat deur pryse werk</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Tradisie wat oor geslagte oorgedra word</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Direkte regeringsregulasie van elke prys</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q5" data-a="c"
+    data-why="Nasionalisering: privaat eiendom gaan oor in die regering se besit. Opsie b beskryf privatisering — die presiese teenoorgestelde. Hierdie twee word gereeld verwar.">
+    <label class="q">5. Wat is nasionalisering?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Wanneer die regering belasting verhoog</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Wanneer regeringseiendom aan private eienaars oorgedra word</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Wanneer privaat eiendom in die regering se besit geplaas word</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Wanneer 'n land ophou handel dryf met die buiteland</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q6" data-a="b"
+    data-why="Marxisme is aan die bevelstelsel gekoppel. Smith hoort by die mark en Keynes by die gemengde ekonomie.">
+    <label class="q">6. Watter ekonoom word met die bevelsekonomiese stelsel verbind?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Adam Smith</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Karl Marx</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>John Maynard Keynes</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q7" data-a="d"
+    data-why="Smith se punt is juis dat die goeie uitkoms <i>onbedoeld</i> is: dit vorm nie deel van die individu se kerndoelwit nie. Dit is nie 'n verborge beplanner nie — dit is die markmeganisme self.">
+    <label class="q">7. Adam Smith se &ldquo;onsigbare hand&rdquo; beteken dat:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>die regering die ekonomie in die geheim beheer</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>pryse deur 'n sentrale beplanner vasgestel word</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>handel deur tariewe beskerm moet word</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>individue wat hul eie belang najaag, onbedoeld die algemene welvaart bevorder</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q8" data-a="c"
+    data-why="Keynes se resep: verhoog besteding en verlaag belasting om die vraag te stimuleer en werk te skep. Opsie b is die klassieke standpunt waarteen hy juis geskryf het.">
+    <label class="q">8. Keynes het voorgestel dat 'n regering in 'n resessie moet:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>besteding verlaag en belasting verhoog</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>niks doen nie — die mark stel homself reg</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>besteding verhoog en belasting verlaag</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>alle produksiefaktore nasionaliseer</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q9" data-a="d"
+    data-why="Die Masai se ekonomie word deur tradisie gekoördineer: produksietegnieke en die verdeling van arbeid volg gevestigde gebruik, en welvaart word aan beeste en kinders gemeet eerder as aan produksie.">
+    <label class="q">9. Die Masai in Oos-Afrika is 'n voorbeeld van watter sisteem?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>'n Markekonomie</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>'n Bevelsekonomie</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>'n Gemengde ekonomie</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>'n Tradisionele ekonomie</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q10" data-a="b"
+    data-why="Ekonome stem grootliks saam oor die basiese teorie. Die verskil sit in die toepassing — die keuse van wat opgeoffer word, is 'n waarde-oordeel, en 'n mens kan nie 'n hele ekonomie in 'n laboratorium toets nie.">
+    <label class="q">10. Waarom verskil ekonome dikwels van mekaar?</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Hulle stem nie saam oor die basiese teorie van die vak nie.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Die toepassing van die teorie verg waarde-oordele oor wat opgeoffer word.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Ekonomiese data is onbetroubaar, so elkeen kies sy eie syfers.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Ekonomie is nie 'n wetenskap nie, dus is enige mening ewe geldig.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 09 ============ -->
+<section class="step" data-title="Terugvoer en uitvoer" data-tag="afsluit" data-min="5">
+  <div class="stephead"><span class="stepnum">09</span>
+    <span class="steptitle">Terugvoer en uitvoer</span>
+    <span class="steptag">afsluit</span><span class="stepmin">5 min</span></div>
+
+  <div id="scorehost"></div>
+
+  <h3>Jou raaiskote uit stap 01</h3>
+  <div id="predhost"></div>
+
+  <h3>Jou voltooiingskode</h3>
+  <p>Hierdie kode bevat jou studentenommer en hoeveel van die eenheid jy voltooi het. Dit is
+  <b>nie</b> 'n punt nie &mdash; al jou assessering gebeur op e-Klas. Jy hoef dit nie nou
+  iewers in te sleutel nie; hou dit net, want jou dosent kan later daarvoor vra om te sien
+  wie die eenhede gebruik.</p>
+  <div class="codebox" id="codebox">&mdash;</div>
+  <button class="ghost" id="copycode">Kopieer kode</button>
+
+  <h3>Laai jou werk af</h3>
+  <p>Laai 'n afskrif van alles wat jy ingevul het af. Dit is jou eie opsomming om mee te leer
+  wanneer die Kwartaaltoets kom.</p>
+  <button class="act" id="exportbtn">Laai my werk af</button>
+  <button class="ghost" id="showexport">Wys as teks</button>
+  <textarea id="exportbox" readonly></textarea>
+
+  <div class="note" style="margin-top:26px"><b>Die Kwartaaltoets is nou in sig.</b> Dit dek
+  <b>Leereenhede 1 tot 3</b> &mdash; alles wat jy tot dusver gedoen het. Gaan die drie
+  laboratoriums se uitvoere deur voordat jy skryf: jou eie foute in die oefenvrae is die beste
+  studiegids wat jy gaan kry.</div>
+
+  <p style="margin-top:26px"><button class="ghost" id="resetbtn"
+    style="border-color:var(--bad);color:var(--bad)">Begin heeltemal oor</button></p>
+  <p class="locknote">Dit vee alles op hierdie toestel uit.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button><span></span></div>
+</section>
+</main>
+</div>
+
+<script>
+/* ===================================================================
+   AEKN121 lab shell — shared engine.
+
+   Every unit's index.html loads this, then its own unit.js, which must:
+     AROS.config({ ... });      // before anything else
+     ... unit-specific charts, hooks ...
+     AROS.init();               // last line
+
+   The shell owns: local storage, step navigation, the table of contents,
+   plain field binding, and the four declarative widgets:
+
+     .mcq     data-field, data-a, data-why      add .test to defer the reveal
+     .numq    data-field, data-a, data-why      add .test to defer the reveal
+     .txtq    data-field                        free text, never auto-marked
+     .sorter  data-field, data-bins="A|B"       rows carry data-a and data-why
+                                                data-noreveal="1" keeps it silent
+
+   Nothing here is unit-specific. If you find yourself adding a unit's
+   content to this file, it belongs in that unit's unit.js instead.
+   =================================================================== */
+window.AROS = (function(){
+"use strict";
+
+var cfg = {
+  key:null, schema:1, codePrefix:null, codeSalt:null,
+  predictions:[], lockStep:null
+};
+var state = {schemaVersion:1, fields:{}, done:{}, step:0, extra:{}};
+var resultHooks = [], exportHooks = [], stepHooks = [];
+var steps = [], total = 0;
+
+/* ---------------- storage ---------------- */
+function load(){
+  try{
+    var raw = localStorage.getItem(cfg.key);
+    if(!raw) return;
+    var o = JSON.parse(raw);
+    if(o && o.schemaVersion === cfg.schema){
+      state.fields = o.fields || {};
+      state.done   = o.done   || {};
+      state.step   = o.step   || 0;
+      state.extra  = o.extra  || {};
+    }
+  }catch(e){}
+}
+var saveTimer=null, flagEl=null, flagTimer=null;
+function save(){
+  try{
+    state.schemaVersion = cfg.schema;
+    localStorage.setItem(cfg.key, JSON.stringify(state));
+    if(flagEl){
+      flagEl.classList.add("on");
+      clearTimeout(flagTimer);
+      flagTimer=setTimeout(function(){ flagEl.classList.remove("on"); },1200);
+    }
+  }catch(e){}
+}
+function queueSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(save,350); }
+function get(f){ return state.fields[f]; }
+function set(f,v){ state.fields[f]=v; queueSave(); }
+function getExtra(k){ return state.extra[k]; }
+function setExtra(k,v){ state.extra[k]=v; queueSave(); }
+
+/* ---------------- steps ---------------- */
+function doneCount(){ var n=0; for(var k in state.done){ if(state.done[k]) n++; } return n; }
+function pctDone(){ return total ? Math.round(doneCount()/total*100) : 0; }
+function showStep(i,scroll){
+  i = Math.max(0, Math.min(total-1, i));
+  steps.forEach(function(s,n){ s.classList.toggle("active", n===i); });
+  state.step = i; queueSave(); updateProgress();
+  if(scroll !== false) window.scrollTo(0,0);
+  stepHooks.forEach(function(fn){ try{ fn(i); }catch(e){} });
+}
+function updateProgress(){
+  var fill=document.getElementById("progfill"), txt=document.getElementById("progtext");
+  if(fill) fill.style.width = pctDone()+"%";
+  if(txt) txt.textContent = "Stap "+(state.step+1)+" van "+total+" · "+pctDone()+"% voltooi";
+}
+
+/* ---------------- table of contents ---------------- */
+function wireTOC(){
+  var toc=document.getElementById("toc"), inner=document.getElementById("tocinner");
+  var btn=document.getElementById("tocbtn");
+  if(!toc||!inner||!btn) return;
+  btn.addEventListener("click",function(){
+    inner.innerHTML="";
+    steps.forEach(function(s,n){
+      var b=document.createElement("button"); b.className="tocitem"; b.type="button";
+      b.innerHTML='<span class="n">'+String(n).padStart(2,"0")+'</span><span>'+
+        s.dataset.title+'</span>'+(state.done[n]?'<span class="dn">&#10003;</span>':'');
+      b.addEventListener("click",function(){ toc.classList.remove("open"); showStep(n); });
+      inner.appendChild(b);
+    });
+    toc.classList.add("open");
+  });
+  toc.addEventListener("click",function(e){ if(e.target===toc) toc.classList.remove("open"); });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape") toc.classList.remove("open");
+  });
+}
+
+/* ---------------- plain fields ---------------- */
+function wireFields(){
+  [].forEach.call(document.querySelectorAll("[data-field]"),function(el){
+    if(el.tagName!=="INPUT" && el.tagName!=="TEXTAREA") return;
+    if(el.type==="range") return;
+    if(el.closest(".mcq,.numq,.txtq")) return;   /* those wire themselves */
+    var f=el.dataset.field, v=get(f);
+    if(v!=null) el.value=v;
+    el.addEventListener("input",function(){ set(f,el.value); });
+  });
+}
+
+/* ---------------- widget: multiple choice ---------------- */
+function wireMCQ(box){
+  var f=box.dataset.field, ans=box.dataset.a, why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var opts=[].slice.call(box.querySelectorAll(".opt")), fb=box.querySelector(".fb");
+  function paint(reveal){
+    var cur=get(f);
+    opts.forEach(function(o){
+      o.classList.remove("picked","right","wrong");
+      if(o.dataset.v===cur) o.classList.add("picked");
+      if(reveal){
+        if(o.dataset.v===ans) o.classList.add("right");
+        else if(o.dataset.v===cur) o.classList.add("wrong");
+        o.classList.add("locked");
+      }
+    });
+    if(reveal && cur!=null && fb){
+      var ok=cur===ans;
+      fb.className="fb show "+(ok?"ok":"no");
+      fb.querySelector(".verdict").textContent = ok?"Korrek":"Nie reg nie";
+      fb.querySelector(".why").innerHTML = why;
+    }
+  }
+  opts.forEach(function(o){
+    o.setAttribute("tabindex","0");
+    function pick(){
+      if(box.__locked) return;
+      if(!deferred && get(f)!=null) return;   /* practice: one shot */
+      if(deferred && box.__submitted) return;
+      set(f,o.dataset.v);
+      paint(!deferred);
+    }
+    o.addEventListener("click",pick);
+    o.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }
+    });
+  });
+  box.__paint=paint;
+  box.__correct=function(){ return get(f)===ans; };
+  box.__answered=function(){ var v=get(f); return v!=null && v!==""; };
+  paint(deferred ? !!box.__submitted : get(f)!=null);
+}
+
+/* ---------------- widget: numeric ---------------- */
+function wireNum(box){
+  var f=box.dataset.field, ans=parseFloat(box.dataset.a), why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var inp=box.querySelector("input"), fb=box.querySelector(".fb");
+  if(!inp) return;
+  inp.dataset.field=f;
+  var v=get(f); if(v!=null) inp.value=v;
+  function value(){ return parseFloat(String(get(f)||"").replace(/[\s,R]/g,"")); }
+  function correct(){ var c=value(); return !isNaN(c) && Math.abs(c-ans)<0.5; }
+  function paint(reveal){
+    if(!reveal || !fb) return;
+    if(deferred) inp.disabled=true;
+    if(isNaN(value())) return;
+    var ok=correct();
+    fb.className="fb show "+(ok?"ok":"no");
+    fb.querySelector(".verdict").textContent =
+      ok ? "Korrek" : ("Nie reg nie — die antwoord is "+fmt(ans));
+    fb.querySelector(".why").innerHTML = why;
+  }
+  inp.addEventListener("input",function(){ set(f,inp.value); });
+  inp.addEventListener("blur",function(){ if(!deferred && inp.value!=="") paint(true); });
+  box.__paint=paint;
+  box.__correct=correct;
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  if(deferred && box.__submitted) paint(true);
+  else if(!deferred && v!=null && v!=="") paint(true);
+}
+
+/* ---------------- widget: free text ---------------- */
+function wireTxt(box){
+  var f=box.dataset.field, ta=box.querySelector("textarea");
+  if(!ta) return;
+  ta.dataset.field=f;
+  var v=get(f); if(v!=null) ta.value=v;
+  ta.addEventListener("input",function(){ set(f,ta.value); });
+  box.__correct=function(){ return null; };            /* never auto-marked */
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  box.__paint=function(reveal){ if(reveal) ta.disabled=true; };
+}
+
+/* ---------------- widget: sorter ---------------- */
+function wireSorter(box){
+  var base=box.dataset.field, bins=box.dataset.bins.split("|");
+  var noreveal=box.dataset.noreveal==="1";
+  var rows=[].slice.call(box.querySelectorAll(".sortrow"));
+  rows.forEach(function(r,i){
+    var f=base+"_"+i;
+    var picks=document.createElement("div"); picks.className="picks";
+    bins.forEach(function(b){
+      var btn=document.createElement("button"); btn.type="button"; btn.textContent=b;
+      btn.addEventListener("click",function(){
+        if(box.__locked) return;
+        set(f,b); repaint();
+      });
+      picks.appendChild(btn);
+    });
+    r.appendChild(picks);
+    if(r.dataset.why){
+      var w=document.createElement("div"); w.className="why";
+      w.innerHTML=r.dataset.why; r.appendChild(w);
+    }
+    r.__f=f;
+  });
+  function repaint(){
+    var reveal = !noreveal && rows.every(function(r){ return get(r.__f)!=null; });
+    rows.forEach(function(r){
+      var cur=get(r.__f);
+      [].forEach.call(r.querySelectorAll(".picks button"),function(b){
+        b.classList.toggle("sel", b.textContent===cur);
+      });
+      r.classList.remove("right","wrong","reveal");
+      if(reveal) r.classList.add(cur===r.dataset.a ? "right" : "wrong","reveal");
+    });
+    if(reveal) box.__locked=true;
+  }
+  box.__rows=rows;
+  box.__lock=function(){ box.__locked=true; };
+  box.__repaint=repaint;
+  repaint();
+}
+
+function lockPredictions(){
+  var s=document.querySelector('.sorter[data-field="voorspel"]');
+  if(s) s.__lock();
+  [].forEach.call(document.querySelectorAll("[data-lock-with-predictions]"),function(el){
+    el.disabled=true;
+  });
+}
+
+/* ---------------- helpers ---------------- */
+function svgEl(tag,attrs){
+  var e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(var k in attrs) e.setAttribute(k,attrs[k]);
+  return e;
+}
+function fmt(n){
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+}
+/* Deterministic 4-character check, mirrored by AROS/verifieer_kodes.py.
+   Alphabet excludes I, O, 0 and 1 so a handwritten code stays readable. */
+function checkCode(nr,value){
+  var s=String(nr||"")+"|"+value+"|"+cfg.codeSalt, h=0;
+  for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  var A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out="";
+  for(var j=0;j<4;j++){ out+=A[h%32]; h=Math.floor(h/32); }
+  return out;
+}
+function codeValue(){
+  return (typeof cfg.codeValue==="function") ? cfg.codeValue() : pctDone();
+}
+function buildCode(){
+  var nr=(get("studentenr")||"").replace(/\s/g,"");
+  var v=codeValue();
+  return cfg.codePrefix+"-"+(nr||"0000")+"-"+v+"-"+checkCode(nr,v);
+}
+
+/* ---------------- results ---------------- */
+function renderPredictions(){
+  var ph=document.getElementById("predhost");
+  if(!ph || !cfg.predictions.length) return;
+  ph.innerHTML="";
+  var wrong=0, answered=0;
+  cfg.predictions.forEach(function(p,i){
+    var mine=get("voorspel_"+i), ok=mine===p[1];
+    if(mine){ answered++; if(!ok) wrong++; }
+    var d=document.createElement("div");
+    d.className="sortrow "+(mine?(ok?"right":"wrong"):"");
+    d.innerHTML='<div class="txt">'+p[0]+'<br><span style="font-family:var(--mono);'+
+      'font-size:12.5px;opacity:.8">jy: '+(mine||"—")+' &middot; antwoord: '+p[1]+
+      '</span></div><div class="why" style="display:block">'+p[2]+'</div>';
+    ph.appendChild(d);
+  });
+  var s=document.createElement("p"); s.className="hint";
+  s.textContent = answered===0
+    ? "Jy het nie in stap 01 geraai nie, so daar is niks om mee te vergelyk nie."
+    : wrong===0
+      ? "Jy het al "+answered+" reg geraai voordat jy begin het."
+      : "Jy het "+wrong+" van die "+answered+" verkeerd geraai. Daardie is die idees wat verskil "+
+        "van wat jy gedink het — en dus die idees om te onderrig.";
+  ph.appendChild(s);
+}
+function renderResults(){
+  resultHooks.forEach(function(fn){ try{ fn(); }catch(e){} });
+  renderPredictions();
+  var cb=document.getElementById("codebox");
+  if(cb) cb.textContent=buildCode();
+}
+
+/* ---------------- export ---------------- */
+function buildExport(){
+  var L=[];
+  L.push("AEKN121 — "+(cfg.exportTitle||document.title)+" — UITVOER");
+  L.push("AROS · Inleiding tot Ekonomie");
+  L.push("Uitgevoer: "+new Date().toLocaleString("af-ZA"));
+  L.push("");
+  L.push("Naam:            "+(get("naam")||"—"));
+  L.push("Studentenommer:  "+(get("studentenr")||"—"));
+  L.push("Kode:            "+buildCode());
+  L.push("Voltooi:         "+pctDone()+"%");
+  L.push("");
+  exportHooks.forEach(function(fn){
+    try{
+      var lines=fn();
+      if(lines && lines.length) L=L.concat(lines,[""]);
+    }catch(e){}
+  });
+  if(cfg.predictions.length){
+    L.push("--- STAP 01: VOORSPELLINGS ---");
+    cfg.predictions.forEach(function(p,i){
+      L.push("  "+(get("voorspel_"+i)||"—")+" (antwoord: "+p[1]+")  — "+p[0]);
+    });
+    L.push("");
+  }
+  return L.join("\n");
+}
+function wireExport(){
+  var eb=document.getElementById("exportbtn");
+  var sb=document.getElementById("showexport");
+  var box=document.getElementById("exportbox");
+  var cc=document.getElementById("copycode");
+  var rb=document.getElementById("resetbtn");
+  if(eb) eb.addEventListener("click",function(){
+    var txt=buildExport();
+    var nr=(get("studentenr")||"student").replace(/[^0-9A-Za-z]/g,"");
+    try{
+      var blob=new Blob([txt],{type:"text/plain;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="AEKN121_"+cfg.codePrefix+"_"+nr+".txt";
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+    }catch(e){
+      if(box){ box.style.display="block"; box.value=txt; box.select(); }
+    }
+  });
+  if(sb && box) sb.addEventListener("click",function(){
+    box.style.display = box.style.display==="none" ? "block" : "none";
+    box.value=buildExport();
+  });
+  if(cc) cc.addEventListener("click",function(){
+    var c=buildCode(), btn=this;
+    function done(){
+      btn.textContent="Gekopieer";
+      setTimeout(function(){ btn.textContent="Kopieer kode"; },1500);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(c).then(done,function(){ window.prompt("Kopieer:",c); });
+    } else window.prompt("Kopieer:",c);
+  });
+  if(rb) rb.addEventListener("click",function(){
+    if(!window.confirm("Vee alles uit en begin oor? Dit kan nie ongedaan gemaak word nie.")) return;
+    try{ localStorage.removeItem(cfg.key); }catch(e){}
+    location.reload();
+  });
+}
+
+/* ---------------- init ---------------- */
+function init(){
+  /* state was already loaded by config(); a second load() here would discard
+     anything the unit's own setup wrote while it was building its charts. */
+  flagEl=document.getElementById("saveflag");
+  steps=[].slice.call(document.querySelectorAll(".step"));
+  total=steps.length;
+
+  wireFields();
+  [].forEach.call(document.querySelectorAll(".mcq"),wireMCQ);
+  [].forEach.call(document.querySelectorAll(".numq"),wireNum);
+  [].forEach.call(document.querySelectorAll(".txtq"),wireTxt);
+  [].forEach.call(document.querySelectorAll(".sorter"),wireSorter);
+  wireTOC();
+  wireExport();
+
+  document.addEventListener("click",function(e){
+    var b=e.target.closest(".nextbtn,.prevbtn");
+    if(!b||b.disabled) return;
+    if(b.classList.contains("nextbtn")){
+      state.done[state.step]=true;
+      if(cfg.lockStep!=null && state.step===cfg.lockStep) lockPredictions();
+      showStep(state.step+1);
+    } else showStep(state.step-1);
+  });
+
+  if(cfg.lockStep!=null && state.done[cfg.lockStep]) lockPredictions();
+  /* The last step has no "next" button, so it can never be ticked off the way the others
+     are — without this, 100% voltooi is unreachable and a completion code tops out at 90. */
+  stepHooks.push(function(i){
+    if(i===total-1){ state.done[i]=true; queueSave(); updateProgress(); renderResults(); }
+  });
+
+  showStep(state.step,false);
+  updateProgress();
+  if(state.step===total-1){ state.done[state.step]=true; queueSave(); updateProgress(); renderResults(); }
+}
+
+return {
+  /* config() loads saved state immediately, because a unit's chart setup runs
+     between config() and init() and needs to restore its own slider and
+     placement values. */
+  config:function(o){
+    for(var k in o) cfg[k]=o[k];
+    if(o.schema) state.schemaVersion=o.schema;
+    if(cfg.key) load();
+  },
+  init:init,
+  get:get, set:set, save:save, getExtra:getExtra, setExtra:setExtra,
+  svgEl:svgEl, fmt:fmt,
+  buildCode:buildCode, checkCode:checkCode,
+  doneCount:doneCount, pctDone:pctDone, showStep:showStep,
+  totalSteps:function(){ return total; },
+  lockPredictions:lockPredictions,
+  renderResults:renderResults,
+  onResults:function(fn){ resultHooks.push(fn); },
+  onExport:function(fn){ exportHooks.push(fn); },
+  onStep:function(fn){ stepHooks.push(fn); }
+};
+})();
+
+
+/* ==== unit ==== */
+/* Leereenheid 3 — Ekonomiese sisteme
+   Unit-specific: the mark-tot-bevel spectrum, and the formative quiz.
+   Like LE2, this unit has no summative test of its own — it is assessed in the
+   Kwartaaltoets — so the code carries completion, not a mark. */
+
+AROS.config({
+  key:"aros_aekn121_le3_v1",
+  schema:1,
+  codePrefix:"LE3",
+  codeSalt:"AEKN121LE3",
+  exportTitle:"LEEREENHEID 3: EKONOMIESE SISTEME",
+  lockStep:1,
+  predictions:[
+   ["Suid-Afrika is 'n gemengde ekonomie.","Waar",
+    "Die meeste produksiefaktore is privaat, maar die staat besit Eskom, die SAL, Denel en die SAUK, en pas prysbeheer op sommige items toe."],
+   ["In 'n markekonomie besluit die regering wat geproduseer word.","Onwaar",
+    "In 'n markekonomie besluit die optrede van individue en besighede in hul eie belang. Die regering se rol is beperk."],
+   ["Adam Smith word met die bevelsekonomie verbind.","Onwaar",
+    "Smith hoort by die mark. Marx is die een wat aan die bevelstelsel gekoppel word."],
+   ["Die meeste lande in die wêreld het vandag 'n gemengde ekonomie.","Waar",
+    "Suiwer mark- of bevelsekonomieë is skaars. Die meeste lande meng, en verskil net in die verhouding."],
+   ["Privatisering is wanneer die regering 'n private maatskappy oorneem.","Onwaar",
+    "Dit is nasionalisering. Privatisering loop die ander kant toe: van die staat na privaat besit."],
+   ["Ekonome stem meestal saam oor die basiese teorie, maar verskil oor die toepassing daarvan.","Waar",
+    "Presies. Die twis sit in die waarde-oordele wat toepassing verg, nie in die teorie nie."]
+  ]
+});
+
+var svgEl=AROS.svgEl;
+
+/* ================= die mark-tot-bevel spektrum =================
+   Four economies from the Leesbundel. Three sit on a market-to-command axis;
+   the Masai deliberately do not, because tradition is a third coordinating
+   mechanism and not a point between the other two. That is the lesson. */
+(function(){
+  var svg=document.getElementById("spectrum"); if(!svg) return;
+
+  var ECON=[
+    {id:"nz",   name:"Nieu-Seeland",     target:12, band:18,
+     why:"Min beperkinge, ongekompliseerde lisensiëring, lae tariewe en sterk privaat eiendomsreg. Ver na die markkant toe."},
+    {id:"sa",   name:"Suid-Afrika",      target:45, band:20,
+     why:"Meeste faktore privaat, maar die staat besit Eskom, die SAL, Denel en die SAUK, en pas prysbeheer op elektrisiteit, brandstof en lisensiëring toe. In die middel — 'n gemengde ekonomie."},
+    {id:"nk",   name:"Noord-Korea",      target:92, band:18,
+     why:"Die regering bepaal wat geproduseer word, hoeveel, en teen watter prys. Die staat besit die produksiefaktore. Ver na die bevelkant toe."},
+    {id:"masai",name:"Masai-gemeenskap", target:null, band:null,
+     why:"Die Masai pas nêrens op hierdie as nie. Hul ekonomie word nie deur pryse of deur 'n staat gekoördineer nie, maar deur <b>tradisie</b>: produksiemetodes en die verdeling van arbeid volg gevestigde gebruik, en welvaart word aan beeste en kinders gemeet. Dit is 'n derde meganisme, nie 'n punt tussen die ander twee nie."}
+  ];
+
+  var X0=60, X1=580, AXIS=150, TRAD=246;
+  function sx(v){ return X0+(v/100)*(X1-X0); }
+  function ix(px){ return (px-X0)/(X1-X0)*100; }
+
+  /* --- static frame --- */
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:AXIS,x2:X1,y2:AXIS}));
+  [[X0,"Suiwer","markekonomie"],[X1,"Suiwer","bevelsekonomie"]].forEach(function(e,i){
+    svg.appendChild(svgEl("line",{class:"axis",x1:e[0],y1:AXIS-10,x2:e[0],y2:AXIS+10}));
+    var a=svgEl("text",{class:"axname",x:e[0],y:AXIS-34,"text-anchor":i?"end":"start"});
+    a.textContent=e[1];
+    var b=svgEl("text",{class:"axname",x:e[0],y:AXIS-18,"text-anchor":i?"end":"start"});
+    b.textContent=e[2];
+    svg.appendChild(a); svg.appendChild(b);
+  });
+  var hint=svgEl("text",{class:"axlbl",x:(X0+X1)/2,y:AXIS+26,"text-anchor":"middle"});
+  hint.textContent="tik hier om te plaas"; svg.appendChild(hint);
+
+  /* the tradition zone, deliberately off the axis */
+  svg.appendChild(svgEl("rect",{class:"tradzone",x:X0,y:TRAD-30,
+    width:X1-X0,height:52,rx:4}));
+  var tz=svgEl("text",{class:"axname",x:(X0+X1)/2,y:TRAD-8,"text-anchor":"middle"});
+  tz.textContent="Gekoördineer deur tradisie"; svg.appendChild(tz);
+  var tz2=svgEl("text",{class:"axlbl",x:(X0+X1)/2,y:TRAD+10,"text-anchor":"middle"});
+  tz2.textContent="hoort nie op die as hierbo nie"; svg.appendChild(tz2);
+
+  var placedG=svgEl("g",{}); svg.appendChild(placedG);
+  var answerG=svgEl("g",{style:"display:none"}); svg.appendChild(answerG);
+
+  var current=ECON[0].id, revealed=false;
+
+  function placements(){ return AROS.get("spec_place") ? JSON.parse(AROS.get("spec_place")) : {}; }
+  function savePlacement(id,val){
+    var p=placements(); p[id]=val; AROS.set("spec_place",JSON.stringify(p));
+  }
+
+  function drawPlaced(){
+    placedG.innerHTML="";
+    var p=placements();
+    ECON.forEach(function(e,i){
+      var v=p[e.id]; if(v==null) return;
+      var onTrad = v==="trad";
+      var x = onTrad ? (X0+X1)/2 + (i-1.5)*96 : sx(v);
+      var y = onTrad ? TRAD+30 : AXIS-2;
+      var g=svgEl("g",{});
+      g.appendChild(svgEl("circle",{class:"marker"+(e.id===current?" cur":""),
+        cx:x,cy:y,r:7}));
+      var t=svgEl("text",{class:"markerlbl",x:x,y:y-13,"text-anchor":"middle"});
+      t.textContent=e.name;
+      g.appendChild(t); placedG.appendChild(g);
+    });
+  }
+
+  function drawAnswers(){
+    answerG.innerHTML="";
+    ECON.forEach(function(e,i){
+      if(e.target==null){
+        var x=(X0+X1)/2+(i-1.5)*96;
+        answerG.appendChild(svgEl("circle",{class:"answer",cx:x,cy:TRAD+30,r:9}));
+        return;
+      }
+      answerG.appendChild(svgEl("rect",{class:"band",
+        x:sx(Math.max(0,e.target-e.band)), y:AXIS-16,
+        width:sx(Math.min(100,e.target+e.band))-sx(Math.max(0,e.target-e.band)),
+        height:32, rx:3}));
+      answerG.appendChild(svgEl("circle",{class:"answer",cx:sx(e.target),cy:AXIS,r:9}));
+    });
+    answerG.style.display="";
+  }
+
+  function pickButtons(){
+    var host=document.getElementById("spec_pick"); host.innerHTML="";
+    var p=placements();
+    ECON.forEach(function(e){
+      var b=document.createElement("button"); b.type="button";
+      b.textContent=e.name+(p[e.id]!=null?" ✓":"");
+      b.classList.toggle("sel",e.id===current);
+      b.addEventListener("click",function(){
+        current=e.id; pickButtons(); drawPlaced();
+        say("Tik nou op die as (of op die tradisieblok) om <b>"+e.name+"</b> te plaas.");
+      });
+      host.appendChild(b);
+    });
+  }
+
+  function say(html){ document.getElementById("spec_verdict").innerHTML=html; }
+
+  function place(val){
+    if(revealed) return;
+    savePlacement(current,val);
+    drawPlaced(); pickButtons();
+    var done=ECON.filter(function(e){ return placements()[e.id]!=null; }).length;
+    if(done<ECON.length){
+      var next=ECON.filter(function(e){ return placements()[e.id]==null; })[0];
+      current=next.id; pickButtons(); drawPlaced();
+      say("Geplaas. Plaas nou <b>"+next.name+"</b>.");
+    } else {
+      say("Al vier geplaas. Druk <b>Wys die antwoord</b> om te sien hoe jy gevaar het.");
+    }
+  }
+
+  svg.addEventListener("click",function(ev){
+    var r=svg.getBoundingClientRect();
+    if(!r.width||!r.height) return;   /* step not visible — nothing to map onto */
+    var px=(ev.clientX-r.left)/r.width*640, py=(ev.clientY-r.top)/r.height*300;
+    if(py>TRAD-34 && py<TRAD+34) return place("trad");
+    if(py>AXIS-46 && py<AXIS+40){
+      var v=Math.max(0,Math.min(100,ix(px)));
+      return place(Math.round(v));
+    }
+  });
+
+  document.getElementById("spec_reveal").addEventListener("click",function(){
+    var p=placements();
+    if(Object.keys(p).length<ECON.length){
+      say("Plaas eers al vier ekonomieë."); return;
+    }
+    revealed=true; drawAnswers();
+    var lines=[], right=0;
+    ECON.forEach(function(e){
+      var v=p[e.id], ok;
+      if(e.target==null) ok = (v==="trad");
+      else ok = (v!=="trad" && Math.abs(v-e.target)<=e.band);
+      if(ok) right++;
+      lines.push("<b>"+e.name+"</b> — "+(ok?"reg":"nie reg nie")+". "+e.why);
+    });
+    say("<b>"+right+" van 4 reg.</b><br>"+lines.join("<br>")+
+        "<br><br>Let op die vorm van die antwoord: <b>drie</b> ekonomieë pas op die as, en die "+
+        "vierde pas nie. Dit is nie 'n strikvraag nie — dit is die punt. Tradisie is 'n derde "+
+        "koördineringsmeganisme, nie 'n halfpad-punt tussen mark en bevel nie.");
+    AROS.set("spec_score",String(right));
+  });
+
+  document.getElementById("spec_clear").addEventListener("click",function(){
+    AROS.set("spec_place","{}"); AROS.set("spec_score","");
+    revealed=false; answerG.style.display="none"; answerG.innerHTML="";
+    current=ECON[0].id; drawPlaced(); pickButtons();
+    say("Kies hieronder watter ekonomie jy wil plaas.");
+  });
+
+  /* restore */
+  pickButtons(); drawPlaced();
+  if(Object.keys(placements()).length===ECON.length && AROS.get("spec_score")){
+    revealed=true; drawAnswers();
+    say("Jy het hierdie oefening reeds gedoen — <b>"+AROS.get("spec_score")+
+        " van 4 reg</b>. Druk <b>Begin oor</b> om weer te probeer.");
+  } else if(Object.keys(placements()).length){
+    say("Gaan voort waar jy opgehou het.");
+  }
+})();
+
+/* ---------- formative quiz ---------- */
+var QUIZ=[].slice.call(document.querySelectorAll(".mcq.quiz"));
+function quizScore(){
+  var got=0,ans=0;
+  QUIZ.forEach(function(b){
+    if(b.__answered()){ ans++; if(b.__correct()) got++; }
+  });
+  return {got:got, answered:ans, max:QUIZ.length};
+}
+
+AROS.onResults(function(){
+  var host=document.getElementById("scorehost"); if(!host) return;
+  var q=quizScore(), spec=AROS.get("spec_score");
+  host.innerHTML='<div class="scorecard"><div class="big">'+q.got+' / '+q.max+'</div>'+
+    '<div class="cap">oefenvrae reg &middot; tel nie punte nie</div></div>'+
+    (spec ? '<p>Op die mark-tot-bevel-as het jy <b>'+spec+' van 4</b> reg geplaas.</p>' : '')+
+    (q.answered<q.max
+      ? '<div class="note">Jy het '+(q.max-q.answered)+' van die oefenvrae nog nie beantwoord nie. '+
+        'Gaan terug na stap 08 as jy wil.</div>'
+      : '<p>Al tien beantwoord. Twee daarvan kom reguit uit die Kwartaaltoets se vraepoel.</p>');
+});
+
+AROS.onExport(function(){
+  var L=[], q=quizScore();
+  L.push("OEFENVRAE (stap 08) — tel nie punte nie");
+  L.push("  Reg: "+q.got+" / "+q.max+"   (beantwoord: "+q.answered+")");
+  QUIZ.forEach(function(b,i){
+    var v=AROS.get(b.dataset.field);
+    L.push("  "+(i+1)+": "+(v||"—")+"   "+
+      (v?(b.__correct()?"[reg]":"[verkeerd — "+b.dataset.a+"]"):""));
+  });
+  L.push("");
+  L.push("SPEKTRUM (stap 04): "+(AROS.get("spec_score")||"—")+" / 4");
+  return L;
+});
+
+AROS.onExport(function(){
+  return ["--- STAP 06: DIE R50 MILJOEN ---",
+    AROS.get("eie_oordeel")||"[geen antwoord]",
+    "",
+    "--- STAP 07: AKTIWITEIT VIR GRAAD 8 ---",
+    AROS.get("lesplan")||"[geen antwoord]",
+    "",
+    "--- STAP 07: VRAAG VIR DIE KLAS ---",
+    AROS.get("klasvraag")||"[geen antwoord]"];
+});
+
+AROS.init();
+</script>
+</body>
+</html>
