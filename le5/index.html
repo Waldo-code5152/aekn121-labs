@@ -1,0 +1,1728 @@
+<!doctype html>
+<html lang="af">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>Leereenheid 5 &mdash; Die Monet&ecirc;re Sektor</title>
+<style>
+/* ===================================================================
+   AEKN121 lab shell — shared across every Leereenheid.
+   Do not put unit-specific styling here; use the unit's own unit.css.
+   =================================================================== */
+:root{
+  --paper:#fbfaf7; --panel:#ffffff; --ink:#1c1c1a; --ink-soft:#54524d;
+  --line:#ddd9d0; --line-soft:#eeeae2;
+  --accent:#7a3b1f; --accent-soft:#f4ece6;
+  --good:#2f6b3d; --good-soft:#eaf3ec;
+  --bad:#9a2f2f; --bad-soft:#f8ecec;
+  --note:#3a5a7a; --note-soft:#eaf0f6;
+  --demand:#7a3b1f; --supply:#2f5f6b;
+  --mono:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+  --serif:Cambria,Georgia,"Times New Roman",serif;
+  --sans:Calibri,"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+/* Dark tokens declared twice on purpose: the media query covers the default
+   "system" state, the [data-theme] rule covers a host that stamps an explicit
+   choice on the root element. The :not() guard lets an explicit light choice
+   beat a dark OS. */
+@media (prefers-color-scheme:dark){
+ :root:not([data-theme="light"]){
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+ }
+}
+:root[data-theme="dark"]{
+  --paper:#16150f; --panel:#1e1d17; --ink:#ece8df; --ink-soft:#a8a396;
+  --line:#3a382e; --line-soft:#2a2822;
+  --accent:#d99a72; --accent-soft:#2c221b;
+  --good:#7fc08d; --good-soft:#1c2a1f;
+  --bad:#e08a8a; --bad-soft:#2c1c1c;
+  --note:#8fb4d6; --note-soft:#1a2029;
+  --demand:#d99a72; --supply:#7fb8c4;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:17px;line-height:1.6;-webkit-text-size-adjust:100%}
+.wrap{max-width:820px;margin:0 auto;padding:0 18px 120px}
+
+/* ---------- masthead + progress ---------- */
+header.mast{border-bottom:2px solid var(--ink);padding:22px 0 12px}
+.mast .code{font-family:var(--mono);font-size:12px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft)}
+.mast h1{font-family:var(--serif);font-size:26px;line-height:1.2;margin:6px 0 2px;font-weight:700}
+.mast .sub{font-family:var(--serif);font-style:italic;color:var(--ink-soft);font-size:17px}
+.progwrap{position:sticky;top:0;z-index:40;background:var(--paper);
+  border-bottom:1px solid var(--line);padding:8px 0 9px}
+.progbar{height:4px;background:var(--line-soft);border-radius:2px;overflow:hidden}
+.progfill{height:100%;width:0;background:var(--accent);transition:width .3s ease}
+.progtext{display:flex;justify-content:space-between;align-items:baseline;
+  font-family:var(--mono);font-size:11px;color:var(--ink-soft);margin-top:5px;letter-spacing:.04em}
+.saveflag{opacity:0;transition:opacity .4s;color:var(--good)}
+.saveflag.on{opacity:1}
+#tocbtn{background:none;border:0;color:inherit;font-family:var(--mono);font-size:11px;
+  cursor:pointer;padding:0 0 0 12px;letter-spacing:.04em;opacity:.75}
+
+/* ---------- steps ---------- */
+.step{display:none;padding-top:26px}
+.step.active{display:block}
+.stephead{display:flex;gap:12px;align-items:baseline;flex-wrap:wrap;
+  border-bottom:1px solid var(--line);padding-bottom:9px;margin-bottom:18px}
+.stepnum{font-family:var(--mono);font-size:22px;color:var(--accent);font-weight:700}
+.steptitle{font-family:var(--serif);font-size:22px;font-weight:700;flex:1 1 auto;line-height:1.2}
+.steptag{font-style:italic;color:var(--ink-soft);font-size:14px;font-family:var(--serif)}
+.stepmin{font-family:var(--mono);font-size:12px;color:var(--ink-soft);white-space:nowrap}
+
+/* ---------- prose ---------- */
+h3{font-family:var(--serif);font-size:19px;margin:26px 0 8px;font-weight:700}
+h4{font-family:var(--sans);font-size:15px;margin:20px 0 6px;font-weight:700}
+p{margin:0 0 13px}
+ul,ol{margin:0 0 13px;padding-left:22px}
+li{margin-bottom:5px}
+.lead{font-family:var(--serif);font-size:19px;line-height:1.55}
+.scripture{border-left:3px solid var(--accent);background:var(--accent-soft);
+  padding:14px 16px;margin:0 0 18px;font-family:var(--serif);font-style:italic}
+.scripture .ref{display:block;font-style:normal;font-family:var(--mono);
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-soft);margin-top:8px}
+.def{border:1px solid var(--accent);border-left-width:4px;background:var(--panel);
+  padding:13px 15px;margin:0 0 16px;font-family:var(--serif);font-size:18px}
+.def strong{font-family:var(--sans);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent);display:block;margin-bottom:5px;font-weight:700}
+.note{border-left:3px solid var(--note);background:var(--note-soft);
+  padding:12px 15px;margin:0 0 16px;font-size:15px}
+.note b{color:var(--note)}
+.readbox{background:var(--panel);border:1px solid var(--line);
+  padding:16px 18px;margin:0 0 18px;border-radius:3px}
+.readbox .src{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px;
+  padding-bottom:8px;border-bottom:1px solid var(--line-soft)}
+.hint{font-size:14px;color:var(--ink-soft);margin:5px 0 0;font-style:italic}
+
+/* ---------- forms ---------- */
+label.q{display:block;font-weight:700;margin:18px 0 7px;font-size:16px}
+label.q .mk{font-family:var(--mono);font-size:12px;color:var(--ink-soft);
+  font-weight:400;margin-left:6px}
+input[type=text],input[type=number],textarea,select{
+  width:100%;font-family:inherit;font-size:16px;padding:10px 12px;
+  border:1px solid var(--line);border-radius:3px;background:var(--panel);color:var(--ink)}
+textarea{min-height:92px;resize:vertical;line-height:1.5}
+input:focus,textarea:focus,select:focus{outline:2px solid var(--accent);outline-offset:-1px}
+input:disabled,textarea:disabled,select:disabled{opacity:.55;cursor:not-allowed}
+button:focus-visible,.opt:focus-visible,.tocitem:focus-visible{
+  outline:2px solid var(--accent);outline-offset:2px}
+
+/* ---------- multiple choice ---------- */
+.opts{display:flex;flex-direction:column;gap:7px;margin:8px 0 4px}
+.opt{display:flex;gap:10px;align-items:flex-start;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:11px 13px;cursor:pointer;
+  font-size:16px;line-height:1.45;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent)}
+.opt.picked{border-color:var(--accent);background:var(--accent-soft)}
+.opt.right{border-color:var(--good);background:var(--good-soft)}
+.opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.opt .lt{font-family:var(--mono);font-weight:700;flex:0 0 auto}
+.opt.locked{cursor:default}
+.fb{margin-top:10px;padding:11px 14px;border-radius:3px;font-size:15px;display:none;line-height:1.5}
+.fb.show{display:block}
+.fb.ok{background:var(--good-soft);border-left:3px solid var(--good)}
+.fb.no{background:var(--bad-soft);border-left:3px solid var(--bad)}
+.fb .verdict{font-weight:700;display:block;margin-bottom:4px}
+.fb.ok .verdict{color:var(--good)}
+.fb.no .verdict{color:var(--bad)}
+
+/* ---------- buttons ---------- */
+button.act{font-family:var(--sans);font-size:15px;font-weight:700;padding:10px 20px;
+  border:1px solid var(--accent);background:var(--accent);color:#fff;border-radius:3px;cursor:pointer}
+button.act:hover{filter:brightness(1.08)}
+button.ghost{font-family:var(--sans);font-size:15px;padding:10px 20px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+button.ghost:hover{border-color:var(--accent)}
+button:disabled{opacity:.5;cursor:not-allowed}
+
+/* ---------- sorter ---------- */
+.sorter{margin:14px 0 6px}
+.sortrow{display:flex;gap:9px;align-items:center;border:1px solid var(--line);
+  background:var(--panel);border-radius:3px;padding:9px 11px;margin-bottom:7px;flex-wrap:wrap}
+.sortrow .txt{flex:1 1 190px;font-size:15.5px;line-height:1.4}
+.sortrow .picks{display:flex;gap:5px;flex-wrap:wrap}
+.sortrow .picks button{font-family:var(--sans);font-size:13px;padding:6px 12px;
+  border:1px solid var(--line);background:transparent;color:var(--ink-soft);
+  border-radius:3px;cursor:pointer;white-space:nowrap}
+.sortrow .picks button.sel{border-color:var(--accent);background:var(--accent-soft);
+  color:var(--accent);font-weight:700}
+.sortrow.right{border-color:var(--good);background:var(--good-soft)}
+.sortrow.wrong{border-color:var(--bad);background:var(--bad-soft)}
+.sortrow .why{flex:1 1 100%;font-size:14px;color:var(--ink-soft);
+  font-style:italic;margin-top:4px;display:none}
+.sortrow.reveal .why{display:block}
+
+/* ---------- tables ---------- */
+table{width:100%;border-collapse:collapse;margin:0 0 16px;font-size:15px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:var(--line-soft);font-weight:700;font-size:14px}
+td.num,th.num{text-align:right;font-family:var(--mono);font-size:14px;
+  font-variant-numeric:tabular-nums}
+tr.eq td{background:var(--accent-soft);font-weight:700}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 16px}
+.scroll table{margin:0;min-width:420px}
+
+/* ---------- navigation ---------- */
+.nav{display:flex;gap:10px;justify-content:space-between;align-items:center;
+  border-top:1px solid var(--line);margin-top:34px;padding-top:16px;flex-wrap:wrap}
+
+/* ---------- charts (generic frame; curve styling lives in unit.css) ---------- */
+.chartwrap{background:var(--panel);border:1px solid var(--line);border-radius:3px;
+  padding:10px;margin:0 0 14px}
+svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
+.chart .axis{stroke:currentColor;stroke-width:2;fill:none}
+.chart .helper{stroke:currentColor;stroke-width:1;stroke-dasharray:4 3;opacity:.45}
+.chart .axlbl{font-family:var(--sans);font-size:12px;fill:currentColor;opacity:.7;
+  font-variant-numeric:tabular-nums}
+.chart .axname{font-family:var(--sans);font-size:13px;fill:currentColor;font-weight:700}
+.chart .ptlbl{font-family:var(--mono);font-size:14px;fill:currentColor;font-weight:700}
+.verdictbox{font-size:15px;padding:11px 14px;border-radius:3px;margin:0 0 12px;
+  background:var(--note-soft);border-left:3px solid var(--note);min-height:22px}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 12px}
+.ctrls button{font-family:var(--sans);font-size:14px;padding:8px 14px;
+  border:1px solid var(--line);background:var(--panel);color:var(--ink);
+  border-radius:3px;cursor:pointer}
+.ctrls button.sel{border-color:var(--note);background:var(--note-soft);
+  color:var(--note);font-weight:700}
+.slider{margin:0 0 12px}
+.slider input[type=range]{width:100%;accent-color:var(--accent)}
+.slider .val{font-family:var(--mono);font-size:19px;color:var(--accent);font-weight:700}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:14px;margin:0 0 10px}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend i{width:22px;height:3px;display:inline-block;border-radius:2px}
+
+/* ---------- results + export ---------- */
+.scorecard{border:2px solid var(--accent);border-radius:3px;padding:18px;
+  margin:0 0 20px;background:var(--panel);text-align:center}
+.scorecard .big{font-family:var(--serif);font-size:42px;font-weight:700;
+  color:var(--accent);line-height:1}
+.scorecard .cap{font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-soft);margin-top:6px}
+.codebox{font-family:var(--mono);font-size:19px;letter-spacing:.14em;
+  background:var(--accent-soft);border:1px dashed var(--accent);color:var(--accent);
+  padding:14px;text-align:center;border-radius:3px;margin:0 0 8px;
+  user-select:all;word-break:break-all;font-weight:700}
+.locknote{font-family:var(--mono);font-size:11.5px;color:var(--ink-soft);
+  letter-spacing:.05em;margin:6px 0 0}
+#exportbox{display:none;margin-top:12px;min-height:230px;
+  font-family:var(--mono);font-size:12.5px}
+
+/* ---------- table of contents ---------- */
+.toc{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:60;
+  padding:40px 18px;overflow-y:auto}
+.toc.open{display:block}
+.toc .inner{max-width:520px;margin:0 auto;background:var(--panel);
+  border:1px solid var(--line);border-radius:4px;padding:8px}
+.tocitem{display:flex;width:100%;gap:11px;align-items:baseline;text-align:left;
+  background:transparent;border:0;border-bottom:1px solid var(--line-soft);
+  padding:12px 10px;cursor:pointer;color:var(--ink);font-family:var(--sans);font-size:15px}
+.tocitem:last-child{border-bottom:0}
+.tocitem:hover{background:var(--accent-soft)}
+.tocitem .n{font-family:var(--mono);font-size:12px;color:var(--accent);font-weight:700}
+.tocitem .dn{margin-left:auto;color:var(--good);font-family:var(--mono);font-size:12px}
+
+/* ---------- small screens ---------- */
+@media (max-width:520px){
+  body{font-size:16px}
+  .mast h1{font-size:22px}
+  .steptitle{font-size:19px}
+  .wrap{padding:0 14px 110px}
+  .nav button{flex:1 1 100%}
+  /* the SVG scales down with the viewport, so scale its type back up */
+  .chart .axlbl{font-size:16px}
+  .chart .axname{font-size:17px}
+  .chart .ptlbl{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition:none!important;animation:none!important}
+}
+@media print{
+  .progwrap,.nav,.ctrls,.toc{display:none!important}
+  .step{display:block!important;page-break-after:always}
+}
+
+
+/* ---- unit-specific ---- */
+/* Leereenheid 5 — inflasieband, repoketting, sakesiklus */
+
+/* "not in the Leesbundel" callout — deliberately distinct from .note */
+.gap{border:1px solid var(--bad);border-left-width:4px;background:var(--bad-soft);
+  padding:13px 15px;margin:0 0 16px;border-radius:3px;font-size:15px}
+.gap .gaphead{font-family:var(--sans);font-size:11px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--bad);font-weight:700;margin-bottom:7px}
+.gap p:last-child{margin-bottom:0}
+.gap table{font-size:14.5px}
+
+/* inflasieband */
+.chart .band{fill:var(--good);opacity:.2}
+.chart .bandlbl{font-family:var(--sans);font-size:12px;fill:currentColor;
+  opacity:.75;font-weight:700}
+.chart .marker{stroke:var(--accent);stroke-width:2}
+.chart .markerdot{fill:var(--accent);stroke:var(--panel);stroke-width:2}
+
+/* repoketting */
+.chart .tbox{fill:var(--panel);stroke:var(--line);stroke-width:2}
+.chart .tbox.on{stroke:var(--accent)}
+.chart .tlbl{font-family:var(--sans);font-size:12.5px;fill:currentColor;font-weight:700}
+.chart .tdir{font-family:var(--mono);font-size:13px;fill:currentColor;opacity:.85}
+.chart .tdir.up{fill:var(--bad)}
+.chart .tdir.down{fill:var(--note)}
+.chart .tarrow{stroke:currentColor;stroke-width:2;opacity:.6;fill:none}
+.chart .tarrowhead{fill:currentColor;opacity:.6}
+
+/* sakesiklus */
+.chart .wave{stroke:var(--accent);stroke-width:2.5;fill:none}
+.chart .trend{stroke:currentColor;stroke-width:1.5;stroke-dasharray:7 5;opacity:.45}
+.chart .trendlbl{font-family:var(--sans);font-size:12px;fill:currentColor;opacity:.6}
+.chart .turn{fill:var(--accent);stroke:var(--panel);stroke-width:2}
+.chart .turnlbl{font-family:var(--mono);font-size:13px;fill:currentColor;font-weight:700}
+.chart .probeline{stroke:var(--note);stroke-width:1;stroke-dasharray:3 3}
+.chart .probedot{fill:var(--note);stroke:var(--panel);stroke-width:2}
+
+@media (max-width:520px){
+  .chart .bandlbl{font-size:15px}
+  .chart .tlbl{font-size:15px}
+  .chart .tdir{font-size:16px}
+  .chart .turnlbl{font-size:17px}
+  .chart .trendlbl{font-size:15px}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="code">AEKN121 &middot; Inleiding tot Ekonomie &middot; AROS</div>
+  <h1>Leereenheid 5 &mdash; Die Monet&ecirc;re Sektor</h1>
+  <div class="sub">Werk in jou eie tyd hierdeur. Jou antwoorde word outomaties gestoor.</div>
+</header>
+
+<div class="progwrap">
+  <div class="progbar"><div class="progfill" id="progfill"></div></div>
+  <div class="progtext">
+    <span id="progtext">&nbsp;</span>
+    <span><span class="saveflag" id="saveflag">gestoor</span>
+      <button id="tocbtn" type="button">inhoud &#9662;</button></span>
+  </div>
+</div>
+
+<div class="toc" id="toc"><div class="inner" id="tocinner"></div></div>
+
+<main id="steps">
+<!-- ============ 00 ============ -->
+<section class="step" data-title="Begin" data-tag="alleen" data-min="4">
+  <div class="stephead"><span class="stepnum">00</span>
+    <span class="steptitle">Begin hier</span>
+    <span class="steptag">alleen</span><span class="stepmin">4 min</span></div>
+
+  <p class="lead">Die laaste eenheid. En die een waar die Leesbundel die kortste is, terwyl die
+  toets die meeste vra.</p>
+
+  <p>Reken op ongeveer <b>110 minute</b>. Breekpunt n&aacute; stap 04.</p>
+
+  <div class="note"><b>Lees hierdie een mooi.</b> Leereenheid 5 se afdeling in die Leesbundel
+  is ses bladsye lank. Maar van die 30 vrae in <b>e-Klas toets 2</b> se poel gaan
+  <b>veertien</b> oor hierdie werk &mdash; meer as enige ander eenheid.
+  <br><br>Ek het elke een van daardie veertien teen die Leesbundel nagegaan.
+  <b>Ses van hulle kan jy nie uit die Leesbundel alleen beantwoord nie.</b> Hulle is in
+  hierdie laboratorium ingebou en duidelik gemerk met <b>&ldquo;nie in die Leesbundel
+  nie&rdquo;</b>. Slaan daardie blokkies nie oor nie.</div>
+
+  <p>Daarna kom die hersieningsweek en die toets self, wat oor Leereenhede 2 tot 5 trek.</p>
+
+  <label class="q" for="f_naam">Jou naam en van</label>
+  <input type="text" id="f_naam" data-field="naam" autocomplete="name">
+
+  <label class="q" for="f_nr">Jou studentenommer</label>
+  <input type="text" id="f_nr" data-field="studentenr" inputmode="numeric" autocomplete="off">
+
+  <div class="nav"><span></span><button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 01 ============ -->
+<section class="step" data-title="Voorspel" data-tag="alleen" data-min="6">
+  <div class="stephead"><span class="stepnum">01</span>
+    <span class="steptitle">Voorspel eers</span>
+    <span class="steptag">alleen</span><span class="stepmin">6 min</span></div>
+
+  <p class="lead">Ses stellings, voordat jy iets lees. Waar of onwaar?</p>
+
+  <div class="sorter" data-field="voorspel" data-bins="Waar|Onwaar" data-noreveal="1">
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Geld is dieselfde ding as welvaart.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">Die SARB se inflasiemikpunt is tussen 3% en 6%.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Wanneer die repokoers styg, word lenings goedkoper.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">'n Resessie is wanneer BBP vir twee opeenvolgende kwartale gedaal het.</div></div>
+    <div class="sortrow" data-a="Onwaar"><div class="txt">Wanneer rentekoerse hoog is, hou mense méér kontant byderhand.</div></div>
+    <div class="sortrow" data-a="Waar"><div class="txt">Die geleentheidskoste om geld te hou, is die rente wat jy daarop kon verdien het.</div></div>
+  </div>
+
+  <label class="q" for="f_gr89">Watter een van die ses sal jou Graad 8- of 9-leerders die
+  moeilikste vind? Hoekom?</label>
+  <textarea id="f_gr89" data-field="gr89_voorspel" data-lock-with-predictions></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en sluit my raaiskote</button></div>
+</section>
+
+<!-- ============ 02 ============ -->
+<section class="step" data-title="Wat geld is en doen" data-tag="lees en doen" data-min="14">
+  <div class="stephead"><span class="stepnum">02</span>
+    <span class="steptitle">Wat geld is, en wat dit doen</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">14 min</span></div>
+
+  <p class="lead">Ons het in Leereenheid 1 begin deur te s&ecirc; ekonomie gaan nie oor geld
+  nie. Nou, heel laaste, kom ons by geld self.</p>
+
+  <div class="def"><strong>Definisie</strong>
+  Geld is <b>enigiets wat algemeen aanvaar word</b> as betaling vir goedere en dienste, of vir
+  die vereffening van skuld (Mohr et al., 2015:256).</div>
+
+  <p>Let op wat die definisie n&iacute;e s&ecirc; nie. Dit s&ecirc; niks van munte, note of
+  banke nie. Wat geld tot geld maak, is <b>algemene aanvaarding</b> &mdash; niks anders nie.</p>
+
+  <div class="scripture">&ldquo;&hellip;want skielik maak dit vir hom vlerke en vlieg soos die
+  arend na die hemel toe!&rdquo;
+  <span class="ref">Spreuke 23:5 &middot; Die Bybel, 1953</span></div>
+
+  <p>Omdat geld algemeen aanvaar word, begin baie mense geld aanbid in plaas van God. Die
+  Leesbundel plaas drie Skrifgedeeltes hierteenoor: <b>Spreuke 23:4&ndash;5</b> oor rykdom wat
+  vlerke kry, <b>Hebre&euml;rs 13:5</b> oor tevredenheid met wat 'n mens het, en
+  <b>Prediker 7:12</b> oor wysheid wat 'n beter beskutting is as geld. Al drie verwysings is
+  nagegaan en korrek.</p>
+
+  <h3>Drie funksies</h3>
+  <div class="scroll"><table>
+    <tr><th>Funksie</th><th>Wat dit beteken</th></tr>
+    <tr><td><b>Ruilmiddel</b></td><td>Algemeen aanvaar as betaalmiddel vir produkte en
+      dienste</td></tr>
+    <tr><td><b>Rekeneenheid</b></td><td>'n Ooreengekome maatstaf om pryse in uit te druk
+      &mdash; dit maak begrotings en geleentheidskoste berekenbaar</td></tr>
+    <tr><td><b>Stoor van waarde</b></td><td>'n Manier om welvaart oor tyd te hou. Geld is
+      <i>een</i> moontlike vorm daarvan, nie die enigste nie</td></tr>
+  </table></div>
+
+  <div class="sorter" data-field="funksies" data-bins="Ruilmiddel|Rekeneenheid|Stoor van waarde">
+    <div class="sortrow" data-a="Ruilmiddel" data-why="Jy gee geld en kry goedere — dit is ruil."><div class="txt">Jy betaal met jou kaart by die winkel</div></div>
+    <div class="sortrow" data-a="Rekeneenheid" data-why="Jy gebruik rand as die maatstaf om twee verskillende dinge te vergelyk."><div class="txt">'n Brood kos R18 en melk R25, so jy kan hulle vergelyk</div></div>
+    <div class="sortrow" data-a="Stoor van waarde" data-why="Waarde word oor tyd gehou vir later gebruik."><div class="txt">Jy hou R5 000 opsy vir 'n noodgeval</div></div>
+    <div class="sortrow" data-a="Rekeneenheid" data-why="'n Begroting werk net as alles in dieselfde eenheid uitgedruk word."><div class="txt">Jy stel 'n begroting vir die maand op</div></div>
+    <div class="sortrow" data-a="Ruilmiddel" data-why="Kontant vir 'n diens — ruil."><div class="txt">Jy gee kontant vir die taxi</div></div>
+    <div class="sortrow" data-a="Stoor van waarde" data-why="Koopkrag word oor drie jaar bewaar — tot 'n mate, want inflasie vreet daaraan."><div class="txt">Jy bêre geld om oor drie jaar 'n motor te koop</div></div>
+  </div>
+
+  <div class="def"><strong>Wat geld nie is nie</strong>
+  Geld is <b>nie inkomste nie</b>, en <b>nie welvaart nie</b>. Inkomste is die vergoeding wat in
+  die produksieproses op die produksiefaktore verdien word &mdash; 'n vloei. Welvaart is bates
+  wat oor tyd opgebou is (eiendom, aandele, kuns, &oacute;&oacute;k geld) &mdash; 'n voorraad.
+  Geld is die <i>maatstaf</i> waarin ons albei meet.</div>
+
+  <p class="hint">Vloei en voorraad: presies die onderskeid uit Leereenheid 4, stap 02.</p>
+
+  <div class="mcq" data-field="m_geld" data-a="c"
+    data-why="Wat geld tot geld maak, is algemene aanvaarding. Dit hoef nie deur 'n regering uitgereik te wees nie, dit hoef nie kontant te wees nie, en dit hoef nie sy waarde perfek te hou nie.">
+    <label class="q">Wat maak iets geld? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Dat 'n regering dit uitgereik het</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Dat dit in kontantvorm bestaan</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Dat dit algemeen as betaling aanvaar word</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dat dit sy waarde perfek behou</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 03 ============ -->
+<section class="step" data-title="Die SARB" data-tag="doen" data-min="12">
+  <div class="stephead"><span class="stepnum">03</span>
+    <span class="steptitle">Die Suid-Afrikaanse Reserwebank</span>
+    <span class="steptag">doen</span><span class="stepmin">12 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 64&ndash;65 &middot; SARB, 2021a en 2021b</div>
+    <p>Die SARB is in <b>1921</b> gestig, weens die ongewone finansi&euml;le en monet&ecirc;re
+    toestande wat uit die Eerste W&ecirc;reldoorlog voortgespruit het. Sy hoofdoel is om
+    <b>finansi&euml;le stabiliteit</b> in Suid-Afrika te beskerm.</p>
+    <ul>
+      <li>uitreiking en vernietiging van banknote en muntstukke</li>
+      <li>regulering van en toesig oor finansi&euml;le instellings</li>
+      <li>bestuur van die land se amptelike goud- en buitelandse reserwes</li>
+      <li>bestuur van die nasionale betalingstelsel</li>
+      <li>administrasie van die wisselkoersbeheerstelsels</li>
+      <li>bankier van die regering</li>
+      <li><b>laaste-uitweglener</b> aan ander banke, vir likiditeitshulp in uitsonderlike
+      gevalle</li>
+    </ul>
+  </div>
+
+  <div class="gap">
+    <div class="gaphead">Nie in die Leesbundel nie &mdash; maar wel in die toets</div>
+    <p>Die poel vra na die verskil tussen <b>monet&ecirc;re</b> en <b>fiskale</b> beleid.
+    Die Leesbundel behandel net die eerste een. Hier is albei:</p>
+    <div class="scroll"><table>
+      <tr><th></th><th>Monet&ecirc;re beleid</th><th>Fiskale beleid</th></tr>
+      <tr><th>Wie?</th><td>Die <b>SARB</b></td><td>Die <b>regering</b> (Nasionale Tesourie)</td></tr>
+      <tr><th>Instrument</th><td>Die repokoers &mdash; en daardeur die geldvoorraad en
+        rentekoerse</td><td>Regeringsbesteding en belasting</td></tr>
+      <tr><th>Voorbeeld</th><td>Die repokoers word met 0,25 persentasiepunt verhoog</td>
+        <td>Die BTW-koers word verhoog, of meer word aan paaie bestee</td></tr>
+    </table></div>
+    <p>Dit is nie 'n nuwe idee nie &mdash; Keynes in Leereenheid 3 het pr&eacute;sies fiskale
+    beleid voorgestel toe hy ges&ecirc; het die regering moet in 'n resessie meer bestee en
+    belasting verlaag.</p>
+  </div>
+
+  <p>Sorteer: wie doen wat?</p>
+
+  <div class="sorter" data-field="sarb" data-bins="SARB|Regering">
+    <div class="sortrow" data-a="SARB" data-why="Die uitreiking van banknote en munte is 'n sentralebankfunksie."><div class="txt">Reik banknote en muntstukke uit</div></div>
+    <div class="sortrow" data-a="Regering" data-why="Belasting is fiskale beleid — die Tesourie en die Parlement, nie die SARB nie."><div class="txt">Stel die BTW-koers vas</div></div>
+    <div class="sortrow" data-a="SARB" data-why="Die bestuur van goud- en buitelandse reserwes is 'n uitdruklike SARB-funksie."><div class="txt">Bestuur die land se goud- en buitelandse reserwes</div></div>
+    <div class="sortrow" data-a="SARB" data-why="Die repokoers is die SARB se belangrikste instrument."><div class="txt">Bepaal die repokoers</div></div>
+    <div class="sortrow" data-a="Regering" data-why="Die begroting is fiskale beleid."><div class="txt">Stel die nasionale begroting op</div></div>
+    <div class="sortrow" data-a="SARB" data-why="Laaste-uitweglener aan banke wat likiditeitshulp nodig het."><div class="txt">Leen aan 'n bank wat in 'n likiditeitsknyp sit</div></div>
+    <div class="sortrow" data-a="Regering" data-why="Besteding aan onderwys is fiskale beleid."><div class="txt">Besluit hoeveel aan onderwys bestee word</div></div>
+    <div class="sortrow" data-a="SARB" data-why="Toesig oor finansiële instellings is 'n SARB-funksie."><div class="txt">Hou toesig oor die banke</div></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 04 ============ -->
+<section class="step" data-title="Die vraag na geld" data-tag="lees en doen" data-min="12">
+  <div class="stephead"><span class="stepnum">04</span>
+    <span class="steptitle">Die vraag na geld</span>
+    <span class="steptag">lees en doen</span><span class="stepmin">12 min</span></div>
+
+  <div class="def"><strong>Definisie</strong>
+  Die vraag na geld is <b>nie</b> hoeveel geld mense graag wil h&ecirc; nie. Dit is die
+  <b>geldbalanse</b> wat ekonomiese rolspelers beplan om te <i>hou</i> (Mohr et al., 2015:262).</div>
+
+  <p>Dit is 'n subtiele onderskeid en dit word gereeld getoets. Almal wil m&eacute;&eacute;r
+  geld h&ecirc;. Die vraag is hoeveel jy op enige oomblik <b>in kontant of in die bank</b>
+  wil hou, in plaas daarvan om dit te bel&ecirc;.</p>
+
+  <div class="def"><strong>Die sleutel: geleentheidskoste</strong>
+  Die geleentheidskoste daarvan om geld te hou, is die <b>rente wat jy kon verdien het</b> as
+  jy dit eerder in effekte bel&ecirc; het (Mohr et al., 2015:262).</div>
+
+  <p>Daar is Leereenheid 1 se geleentheidskoste weer &mdash; die naasbeste alternatief wat
+  jy opgee. Dit verklaar albei die motiewe hieronder.</p>
+
+  <div class="scroll"><table>
+    <tr><th>Motief</th><th>Hang af van</th><th>Meer geld gehou wanneer&hellip;</th></tr>
+    <tr><td><b>Transaksievraag</b></td><td>Die totale inkomste in die ekonomie</td>
+      <td>&hellip;ekonomiese aktiwiteit en inkomste <b>styg</b> &mdash; want ontvangste en
+      betalings val nie op dieselfde dag nie</td></tr>
+    <tr><td><b>Vraag na geld as 'n bate</b></td><td>Die rentekoers</td>
+      <td>&hellip;rentekoerse <b>laag</b> is &mdash; want dan is die geleentheidskoste van
+      kontant hou laag</td></tr>
+  </table></div>
+
+  <div class="gap">
+    <div class="gaphead">Naamverskil &mdash; dit gaan jou in die toets pootjie</div>
+    <p>Die Leesbundel noem die tweede motief <b>&ldquo;die vraag na geld as 'n bate&rdquo;</b>.
+    Die toets noem dit <b>&ldquo;die spekulasievraag na geld&rdquo;</b>.</p>
+    <p><b>Dit is dieselfde ding.</b> Albei beteken: hoeveel geld hou jy eerder as om dit te
+    bel&ecirc;, en dit hang van die rentekoers af. As jy die vraag sien wat vra wanneer die
+    <i>spekulasievraag</i> toeneem, is die antwoord: <b>wanneer rentekoerse laag is en mense
+    eerder kontant hou</b>.</p>
+  </div>
+
+  <div class="mcq" data-field="m_vraaggeld" data-a="a"
+    data-why="Hoë rente maak dit duur om kontant te hou — jy gee daardie rente op. Dus hou mense minder geld. Lae rente maak kontant goedkoop om te hou, dus hou hulle meer. Dit is die spekulasie- of batemotief.">
+    <label class="q">Wanneer rentekoerse <b>styg</b>, wat gebeur met die hoeveelheid geld wat
+      mense wil hou? <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Dit neem af — die geleentheidskoste van kontant hou het gestyg.</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Dit neem toe — rente maak geld aantrekliker.</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Dit bly dieselfde — rente raak nie geldbalanse nie.</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Dit hang net van inkomste af.</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 05 ============ -->
+<section class="step" data-title="Repokoers en inflasie" data-tag="doen" data-min="18">
+  <div class="stephead"><span class="stepnum">05</span>
+    <span class="steptitle">Monet&ecirc;re beleid: die repokoers</span>
+    <span class="steptag">doen</span><span class="stepmin">18 min</span></div>
+
+  <div class="readbox">
+    <div class="src">Leesbundel bl. 66 &middot; SARB, 2021b</div>
+    <p>Die SARB gebruik monet&ecirc;re beleid om die <b>geldvoorraad</b> te bestuur. Om die
+    waarde van die rand te beskerm, volg die Bank <b>inflasieteikening</b>: die doel is om
+    inflasie <b>tussen 3% en 6%</b> te hou.</p>
+    <p>Die beleid word ge&iuml;mplementeer deur die korttermynrentekoers &mdash; die
+    <b>repokoers</b> &mdash; te verstel. Daardie koers be&iuml;nvloed die koste van lenings aan
+    die finansi&euml;le sektor, wat dit weer aan die br&euml;er ekonomie oordra.</p>
+  </div>
+
+  <h3>Jy is die Reserwebank</h3>
+  <p>Skuif die stippel om te wys waar inflasie is. Die geskakeerde blok is die mikpuntband van
+  3% tot 6%. Besluit dan wat die SARB behoort te doen.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="inflband" viewBox="0 0 640 150" role="img"
+      aria-label="Inflasie teenoor die SARB se mikpuntband van 3 tot 6 persent"></svg>
+  </div>
+  <div class="slider">
+    <label class="q" style="margin-top:0" for="infl">Inflasie:
+      <span class="val" id="infl_lbl">4,5%</span></label>
+    <input type="range" id="infl" min="0" max="12" step="0.5" value="4.5">
+  </div>
+  <div class="verdictbox" id="infl_verdict"></div>
+
+  <div class="gap">
+    <div class="gaphead">Nie in die Leesbundel nie &mdash; maar wel in die toets</div>
+    <p>Die Leesbundel s&ecirc; die repokoers be&iuml;nvloed die koste van lenings, maar dit volg
+    nie die ketting deur nie. Die toets doen wel. Hier is dit:</p>
+  </div>
+
+  <div class="chartwrap">
+    <svg class="chart" id="transmit" viewBox="0 0 640 190" role="img"
+      aria-label="Hoe 'n verandering in die repokoers deur die ekonomie werk"></svg>
+  </div>
+  <div class="ctrls">
+    <button data-repo="up" type="button">Repokoers STYG</button>
+    <button data-repo="down" type="button">Repokoers DAAL</button>
+  </div>
+  <div class="verdictbox" id="repo_verdict">Kies 'n rigting om die ketting te volg.</div>
+
+  <div class="gap">
+    <div class="gaphead">Nog een wat nie in die Leesbundel is nie</div>
+    <p><b>Verwagte inflasie verander gedrag nou.</b> As mense verwag dat pryse volgende jaar
+    baie ho&euml;r gaan wees, koop hulle <b>vandag</b> &mdash; om die ho&euml;r prys te ontduik.
+    Daardie ekstra besteding stoot die vraag op, en dus die pryse. Die verwagting maak
+    homself waar.</p>
+    <p>Jy het presies hierdie meganisme in Leereenheid 2 gesien: verbruikers se
+    <i>verwagtinge</i> is een van die vyf dinge wat die vraagkurwe laat skuif.</p>
+  </div>
+
+  <div class="mcq" data-field="m_repo" data-a="d"
+    data-why="Hoër repokoers → banke se fondse is duurder → krediet duurder vir huishoudings en besighede → hulle leen en bestee minder → die vraag koel af → inflasiedruk verminder. Dit is die hele punt van die instrument.">
+    <label class="q">Wanneer die repokoers verhoog word, dan: <span class="mk">(oefen)</span></label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>word lenings goedkoper</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>styg uitvoere onmiddellik</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>daal bankdepositokoerse</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>word krediet duurder en besteding neem af</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <p class="hint">Die mikpuntband van 3&ndash;6% is die amptelike band soos die Leesbundel dit
+  gee. Die SARB hersien sy raamwerk van tyd tot tyd &mdash; <b>[gaan die huidige band na]</b>
+  voordat jy dit in 'n klas as vandag se feit gebruik.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 06 ============ -->
+<section class="step" data-title="Die sakesiklus" data-tag="doen" data-min="16">
+  <div class="stephead"><span class="stepnum">06</span>
+    <span class="steptitle">Die sakesiklus</span>
+    <span class="steptag">doen</span><span class="stepmin">16 min</span></div>
+
+  <div class="gap">
+    <div class="gaphead">Begin met die definisie wat die Leesbundel nie gee nie</div>
+    <p>Die Leesbundel spring reguit na die vier fases sonder om te s&ecirc; wat 'n sakesiklus
+    <i>is</i>. Die toets vra dit direk.</p>
+    <p>Die <b>sakesiklus</b> is die op-en-af skommeling van <b>re&euml;le BBP oor tyd</b>,
+    rondom die ekonomie se langtermyn-groeipad. Nie pryse nie, nie rentekoerse nie, nie
+    voorraadvlakke nie &mdash; <b>re&euml;le BBP</b>.</p>
+  </div>
+
+  <h3>Tik op die golf</h3>
+  <p>Tik enige plek op die kurwe. Die grafiek s&ecirc; jou in watter fase jy is en wat daar
+  gebeur.</p>
+
+  <div class="chartwrap">
+    <svg class="chart" id="cycle" viewBox="0 0 640 340" role="img"
+      aria-label="Die vier fases van die sakesiklus rondom die langtermyn-groeipad"></svg>
+  </div>
+  <div class="verdictbox" id="cycle_verdict">Tik op die kurwe hierbo.</div>
+
+  <div class="scroll"><table>
+    <tr><th>Fase</th><th>Wat gebeur</th></tr>
+    <tr><td><b>Trog</b></td><td>Die laagste punt. Die inkrimping loop uit en 'n nuwe
+      uitbreiding begin.</td></tr>
+    <tr><td><b>Opswaai</b></td><td>Geleidelike uitbreiding tot 'n piek bereik word.</td></tr>
+    <tr><td><b>Piek</b></td><td>Produksie en pryse is op hul maksimum vlakke. Die opswaai loop
+      oor in 'n afswaai.</td></tr>
+    <tr><td><b>Afswaai</b></td><td>Ekonomiese aktiwiteit neem af, werkloosheid neem toe,
+      aandelepryse daal.</td></tr>
+  </table></div>
+  <p class="hint">Leesbundel bl. 67. Die bundel se lys noem &ldquo;trog&rdquo; twee keer en
+  gee die opswaaifase nie 'n eie punt nie &mdash; hierbo is die vier fases uitmekaar gehaal.</p>
+
+  <div class="def"><strong>Wanneer is dit 'n resessie?</strong>
+  Wanneer BBP vir <b>twee opeenvolgende kwartale</b> gedaal het (Hussain &amp; Ashe, 2020).</div>
+
+  <div class="sorter" data-field="fases" data-bins="Trog|Opswaai|Piek|Afswaai">
+    <div class="sortrow" data-a="Piek" data-why="Produksie en pryse op hul maksimum — dit is die definisie van die piek."><div class="txt">Produksie en pryse is op hul hoogste punt</div></div>
+    <div class="sortrow" data-a="Afswaai" data-why="Aktiwiteit daal, werkloosheid styg, aandelepryse daal."><div class="txt">Werkloosheid neem toe en aandelepryse daal</div></div>
+    <div class="sortrow" data-a="Trog" data-why="Die laagste punt, waar 'n nuwe uitbreiding begin."><div class="txt">Die laagste punt, waar 'n nuwe uitbreiding begin</div></div>
+    <div class="sortrow" data-a="Opswaai" data-why="Geleidelike uitbreiding op pad na 'n piek."><div class="txt">Ekonomiese aktiwiteit neem geleidelik toe</div></div>
+    <div class="sortrow" data-a="Afswaai" data-why="Twee kwartale se daling val binne die afswaaifase — dit is 'n resessie."><div class="txt">BBP het twee kwartale agtereen gedaal</div></div>
+    <div class="sortrow" data-a="Opswaai" data-why="Firmas begin weer aanstel namate die vraag herstel."><div class="txt">Firmas begin weer werkers aanstel</div></div>
+  </div>
+
+  <div class="note"><b>Die verband met Leereenheid 4.</b> Sikliese werkloosheid &mdash; een van
+  die vier soorte wat jy daar geleer het &mdash; is presies die werkloosheid wat in die
+  afswaaifase ontstaan en in die opswaai verdwyn. Die sakesiklus is die meganisme daaragter.</div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 07 ============ -->
+<section class="step" data-title="Leer dit vir Graad 8 en 9" data-tag="onderwyser" data-min="12">
+  <div class="stephead"><span class="stepnum">07</span>
+    <span class="steptitle">Leer dit vir Graad 8 en 9</span>
+    <span class="steptag">onderwyser</span><span class="stepmin">12 min</span></div>
+
+  <p class="lead">Geld is die een onderwerp waaroor elke leerder al 'n mening h&ecirc;t voordat
+  jy die klas binnestap.</p>
+
+  <h3>Drie wanbegrippe wat leerders inbring</h3>
+  <div class="scroll"><table>
+    <tr><th>Wat die leerder dink</th><th>Waarom dit vashaak</th></tr>
+    <tr><td>&ldquo;Die regering kan net meer geld druk.&rdquo;</td>
+      <td>Dit is die mees hardnekkige een, en die antwoord is nie &lsquo;nee&rsquo; nie
+      &mdash; dit is &lsquo;ja, en kyk wat dan met pryse gebeur&rsquo;. Meer geld agter
+      dieselfde hoeveelheid goedere beteken net ho&euml;r pryse.</td></tr>
+    <tr><td>&ldquo;Rente is 'n straf vir lenings.&rdquo;</td>
+      <td>Hulle sien rente as boete eerder as prys. Sodra rente 'n <i>prys</i> word &mdash;
+      die prys van geld nou, in plaas van later &mdash; werk die hele eenheid.</td></tr>
+    <tr><td>&ldquo;Inflasie beteken dinge is duur.&rdquo;</td>
+      <td>Duur is 'n vlak; inflasie is 'n <i>tempo</i>. 'n Land kan duur wees met lae inflasie.
+      Dit is dieselfde vlak-teenoor-tempo-probleem as by BBP-groei.</td></tr>
+  </table></div>
+
+  <h3>Wat werk in 'n Graad 8-klas</h3>
+  <ul>
+    <li><b>Begin met ruilhandel, nie met geld nie.</b> Laat hulle vir tien minute sonder geld
+    handel dryf in die klas. Die frustrasie doen die verduideliking vir jou: geld los 'n
+    probleem op wat hulle self net gevoel het.</li>
+    <li><b>Vra wat R100 in hulle ouma se tyd gekoop het.</b> Huiswerk vir een aand. Die
+    antwoorde wat hulle terugbring, is 'n beter inflasieles as enige grafiek.</li>
+    <li><b>Teken die golf en laat hulle die nuus daarop plak.</b> Waar op die golf is ons nou?
+    Hulle sal stry, en die stryery is die punt &mdash; niemand weet dit op die oomblik self
+    nie.</li>
+    <li><b>Hou 'n repokoersvergadering.</b> Gee hulle 'n inflasiesyfer en laat hulle stem oor
+    op, af of hou. Vyf minute, en hulle verstaan monet&ecirc;re beleid beter as uit 'n
+    definisie.</li>
+  </ul>
+
+  <div class="note"><b>Vergelyk met jou raaiskoot.</b> In stap 01 het jy gesê watter stelling
+  jou leerders die moeilikste sou vind. Kyk of jy nou dieselfde sou antwoord.</div>
+
+  <label class="q" for="f_lesplan">Skryf die opdrag vir 'n klasaktiwiteit waarin leerders
+  <b>sonder geld</b> moet handel dryf. Wat gee jy hulle, en watter vraag vra jy agterna?</label>
+  <textarea id="f_lesplan" data-field="lesplan" style="min-height:150px"></textarea>
+  <p class="hint">Dit tel nie punte nie, maar dit gaan in jou uitvoer in en jou dosent lees dit.</p>
+
+  <label class="q" for="f_vraag">Watter een vraag oor Leereenheid 5 wil jy in die klas
+  bespreek?</label>
+  <textarea id="f_vraag" data-field="klasvraag" style="min-height:70px"></textarea>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 08 ============ -->
+<section class="step" data-title="Toets jouself" data-tag="oefening" data-min="16">
+  <div class="stephead"><span class="stepnum">08</span>
+    <span class="steptitle">Toets jouself</span>
+    <span class="steptag">oefening &middot; tel nie punte nie</span><span class="stepmin">16 min</span></div>
+
+  <div class="note"><b>Al veertien vrae kom woordeliks uit e-Klas toets 2 se poel van 30</b>
+  &mdash; dit is elke Leereenheid 5-item daarin. Die toets trek 15 vrae uit die poel, dus is
+  hierdie werk waarskynlik die grootste enkele blok punte in daardie toets.
+  <br><br>Ses van hierdie veertien kon jy <b>nie</b> uit die Leesbundel alleen beantwoord nie.
+  Hulle is die vrae wat 'n merkie <b>&dagger;</b> dra.</div>
+
+  <div class="mcq quiz" data-field="q1" data-a="c"
+    data-why="Ruilmiddel beteken: dit kan gebruik word om vir goedere en dienste te betaal. Die ander drie beskryf die stoor-van-waarde-funksie of net kontant.">
+    <label class="q">1. Geld dien as 'n <b>ruilmiddel</b> wanneer dit:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>slegs as spaarrekening gebruik word</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>slegs waarde behou oor tyd</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>vir betaling van goedere en dienste gebruik kan word</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>slegs in kontantvorm bestaan</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q2" data-a="a"
+    data-why="&lsquo;Tot 'n mate&rsquo; doen die werk in hierdie opsie. Geld hou koopkrag oor tyd — maar inflasie vreet daaraan, dus is dit nie 'n perfekte stoor van waarde nie. Opsie b is te sterk.">
+    <label class="q">2. Die <b>stoor-van-waarde</b>-funksie van geld beteken:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Geld kan koopkrag oor tyd behou (tot 'n mate)</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Geld verloor nooit waarde nie</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Geld word slegs in munte gehou</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Geld word deur banke geskep</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q3" data-a="d"
+    data-why="Die transaksievraag is 'n funksie van inkomste: hoe meer ekonomiese aktiwiteit, hoe meer geld word benodig om die transaksies mee te doen.">
+    <label class="q">3. Die <b>transaksievraag</b> na geld neem toe wanneer:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Rentekoerse styg</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Ekonomiese aktiwiteit daal</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Ontplooiing van tegnologie toeneem</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Inkomste en bestedingsvlakke styg</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q4" data-a="b"
+    data-why="&dagger; Dit is die motief wat die Leesbundel &lsquo;die vraag na geld as 'n bate&rsquo; noem. Lae rente = lae geleentheidskoste om kontant te hou, dus hou mense meer.">
+    <label class="q">4. &dagger; Die <b>spekulasievraag</b> na geld neem toe wanneer:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Rentekoerse styg</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Rentekoerse laag is en mense eerder kontant hou</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Werkloosheid daal</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Inflasie laag is</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q5" data-a="a"
+    data-why="Die repokoers is monetêre beleid en dit is die SARB se instrument. Fiskale beleid is die regering se werk; tariewe en uitvoerbeperkings is handelsbeleid.">
+    <label class="q">5. Die SARB be&iuml;nvloed die ekonomie hoofsaaklik deur:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Die repokoers (monetêre beleid)</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Fiskale beleid</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Tariefbeheer</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Uitvoerbeperkings</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q6" data-a="c"
+    data-why="Die amptelike band is 3% tot 6%, soos die Leesbundel dit gee.">
+    <label class="q">6. Inflasieteikening in Suid-Afrika poog om inflasie te hou:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Onder 2%</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Tussen 6% en 12%</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Tussen 3% en 6%</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Presies 10%</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q7" data-a="d"
+    data-why="&dagger; Die ketting uit stap 05: hoër repo → duurder krediet → minder leen en bestee → vraag koel af. Opsie a is die teenoorgestelde, en depositokoerse styg juis eerder as dat hulle daal.">
+    <label class="q">7. &dagger; Wanneer die repokoers verhoog word, dan:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Word lenings goedkoper</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Styg uitvoere onmiddellik</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Daal bankdepositokoerse</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Word krediet duurder en besteding neem af</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q8" data-a="c"
+    data-why="&dagger; Die sakesiklus is die skommeling van reële BBP oor tyd. Nie pryse, nie rentekoerse, nie voorraad nie. Die Leesbundel gee hierdie definisie nêrens nie.">
+    <label class="q">8. &dagger; Die sakesiklus meet skommelinge in:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Rentekoerse</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Voorraadvlakke</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Reële BBP oor tyd</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Prysstabiliteit</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q9" data-a="a"
+    data-why="Die piek is waar produksie en pryse hul maksimum bereik. Werkloosheid is dáár op sy laagste, nie sy hoogste nie — en nooit nul nie, want wrywingswerkloosheid bly altyd.">
+    <label class="q">9. In die <b>piekfase</b> van die sakesiklus is:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Produksie en pryse op hul hoogtepunt</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Werkloosheid gewoonlik op sy hoogste</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Werkloosheid nul</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Ekonomiese aktiwiteit laag</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q10" data-a="d"
+    data-why="Die trog is die laagste punt, waar die inkrimping uitloop en 'n nuwe uitbreiding begin. Pryse is dáár op hul laagste, nie hul maksimum nie.">
+    <label class="q">10. In die <b>trogfase</b> van die sakesiklus:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Bereik pryse hul maksimum</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Is alle hulpbronne volledig benut</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Is vraag gewoonlik te hoog</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Begin 'n nuwe uitbreidingsfase wanneer die ekonomie herstel</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q11" data-a="c"
+    data-why="Monetêre beleid werk op die geldvoorraad en rentekoerse. Staatskuld, tariewe en minimum lone is nie die sentrale bank se instrumente nie.">
+    <label class="q">11. Monet&ecirc;re beleid word hoofsaaklik gebruik om te beheer:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Staatskuld</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Uitvoertariewe</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Geldvoorraad en rentekoerse</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Minimum lone</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q12" data-a="b"
+    data-why="&dagger; Goedkoper krediet maak dit aantrekliker om te leen, te bel&ecirc; en te bestee. Dit is die repoketting in die ander rigting. Die Leesbundel volg hierdie stap nie deur nie.">
+    <label class="q">12. &dagger; 'n Dalende rentekoers sal waarskynlik:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Besparing verhoog en belegging laat daal</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Belegging en verbruik stimuleer</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Besteding afkoel</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Inflasie verminder</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q13" data-a="d"
+    data-why="&dagger; Verwag jy hoër pryse, koop jy nou. Daardie ekstra besteding stoot die vraag op en help om die prysstyging waar te maak — 'n verwagting wat homself vervul. Dieselfde meganisme as Leereenheid 2 se vraagverskuiwers.">
+    <label class="q">13. &dagger; Wanneer verwagte inflasie toeneem:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Spaar mense meer</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Daal rentekoerse outomaties</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Daal werkloosheid onmiddellik</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Spandeer mense nou om latere hoër pryse te vermy</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="mcq quiz" data-field="q14" data-a="b"
+    data-why="&dagger; Fiskale beleid is die regering se begroting: hoeveel hy bestee en hoeveel belasting hy hef. Die ander drie is monet&ecirc;re of wisselkoersinstrumente &mdash; die SARB se terrein, nie die Tesourie s'n nie. Sien die tabel in stap 05.">
+    <label class="q">14. &dagger; Fiskale beleid behels:</label>
+    <div class="opts">
+      <div class="opt" data-v="a"><span class="lt">a</span><span>Geldvoorraadbeheer</span></div>
+      <div class="opt" data-v="b"><span class="lt">b</span><span>Regeringsbesteding en belastingveranderinge</span></div>
+      <div class="opt" data-v="c"><span class="lt">c</span><span>Wisselkoersaanpassings</span></div>
+      <div class="opt" data-v="d"><span class="lt">d</span><span>Rentekoersverhogings</span></div>
+    </div>
+    <div class="fb"><span class="verdict"></span><span class="why"></span></div>
+  </div>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button>
+    <button class="act nextbtn">Merk klaar en gaan voort</button></div>
+</section>
+
+<!-- ============ 09 ============ -->
+<section class="step" data-title="Terugvoer en uitvoer" data-tag="afsluit" data-min="5">
+  <div class="stephead"><span class="stepnum">09</span>
+    <span class="steptitle">Terugvoer en uitvoer</span>
+    <span class="steptag">afsluit</span><span class="stepmin">5 min</span></div>
+
+  <div id="scorehost"></div>
+
+  <h3>Jou raaiskote uit stap 01</h3>
+  <div id="predhost"></div>
+
+  <h3>Jou voltooiingskode</h3>
+  <p>Hierdie kode bevat jou studentenommer en hoeveel van die eenheid jy voltooi het. Dit is
+  <b>nie</b> 'n punt nie &mdash; al jou assessering gebeur op e-Klas. Jy hoef dit nie nou
+  iewers in te sleutel nie; hou dit net, want jou dosent kan later daarvoor vra om te sien
+  wie die eenhede gebruik.</p>
+  <div class="codebox" id="codebox">&mdash;</div>
+  <button class="ghost" id="copycode">Kopieer kode</button>
+
+  <h3>Laai jou werk af</h3>
+  <p>Hou hierdie een. Dit is jou studiegids vir e-Klas toets 2.</p>
+  <button class="act" id="exportbtn">Laai my werk af</button>
+  <button class="ghost" id="showexport">Wys as teks</button>
+  <textarea id="exportbox" readonly></textarea>
+
+  <div class="note" style="margin-top:26px"><b>Dis al vyf.</b> Volgende is die
+  hersieningsweek en <b>e-Klas toets 2</b>, wat 15 vrae uit 'n poel van 30 trek oor
+  Leereenhede 2 tot 5. Die verspreiding van daardie poel is: LE2 vier vrae, LE3 twee,
+  <b>LE4 tien</b>, <b>LE5 veertien</b>. Weet waar om jou tyd te bestee.
+  <br><br>Gaan al vyf laboratoriums se uitvoere deur. Jou eie foute in die oefenvrae is die
+  beste studiegids wat jy gaan kry.</div>
+
+  <p style="margin-top:26px"><button class="ghost" id="resetbtn"
+    style="border-color:var(--bad);color:var(--bad)">Begin heeltemal oor</button></p>
+  <p class="locknote">Dit vee alles op hierdie toestel uit.</p>
+
+  <div class="nav"><button class="ghost prevbtn">Vorige</button><span></span></div>
+</section>
+</main>
+</div>
+
+<script>
+/* ===================================================================
+   AEKN121 lab shell — shared engine.
+
+   Every unit's index.html loads this, then its own unit.js, which must:
+     AROS.config({ ... });      // before anything else
+     ... unit-specific charts, hooks ...
+     AROS.init();               // last line
+
+   The shell owns: local storage, step navigation, the table of contents,
+   plain field binding, and the four declarative widgets:
+
+     .mcq     data-field, data-a, data-why      add .test to defer the reveal
+     .numq    data-field, data-a, data-why      add .test to defer the reveal
+     .txtq    data-field                        free text, never auto-marked
+     .sorter  data-field, data-bins="A|B"       rows carry data-a and data-why
+                                                data-noreveal="1" keeps it silent
+
+   Nothing here is unit-specific. If you find yourself adding a unit's
+   content to this file, it belongs in that unit's unit.js instead.
+   =================================================================== */
+window.AROS = (function(){
+"use strict";
+
+var cfg = {
+  key:null, schema:1, codePrefix:null, codeSalt:null,
+  predictions:[], lockStep:null
+};
+var state = {schemaVersion:1, fields:{}, done:{}, step:0, extra:{}};
+var resultHooks = [], exportHooks = [], stepHooks = [];
+var steps = [], total = 0;
+
+/* ---------------- storage ---------------- */
+function load(){
+  try{
+    var raw = localStorage.getItem(cfg.key);
+    if(!raw) return;
+    var o = JSON.parse(raw);
+    if(o && o.schemaVersion === cfg.schema){
+      state.fields = o.fields || {};
+      state.done   = o.done   || {};
+      state.step   = o.step   || 0;
+      state.extra  = o.extra  || {};
+    }
+  }catch(e){}
+}
+var saveTimer=null, flagEl=null, flagTimer=null;
+function save(){
+  try{
+    state.schemaVersion = cfg.schema;
+    localStorage.setItem(cfg.key, JSON.stringify(state));
+    if(flagEl){
+      flagEl.classList.add("on");
+      clearTimeout(flagTimer);
+      flagTimer=setTimeout(function(){ flagEl.classList.remove("on"); },1200);
+    }
+  }catch(e){}
+}
+function queueSave(){ clearTimeout(saveTimer); saveTimer=setTimeout(save,350); }
+function get(f){ return state.fields[f]; }
+function set(f,v){ state.fields[f]=v; queueSave(); }
+function getExtra(k){ return state.extra[k]; }
+function setExtra(k,v){ state.extra[k]=v; queueSave(); }
+
+/* ---------------- steps ---------------- */
+function doneCount(){ var n=0; for(var k in state.done){ if(state.done[k]) n++; } return n; }
+function pctDone(){ return total ? Math.round(doneCount()/total*100) : 0; }
+function showStep(i,scroll){
+  i = Math.max(0, Math.min(total-1, i));
+  steps.forEach(function(s,n){ s.classList.toggle("active", n===i); });
+  state.step = i; queueSave(); updateProgress();
+  if(scroll !== false) window.scrollTo(0,0);
+  stepHooks.forEach(function(fn){ try{ fn(i); }catch(e){} });
+}
+function updateProgress(){
+  var fill=document.getElementById("progfill"), txt=document.getElementById("progtext");
+  if(fill) fill.style.width = pctDone()+"%";
+  if(txt) txt.textContent = "Stap "+(state.step+1)+" van "+total+" · "+pctDone()+"% voltooi";
+}
+
+/* ---------------- table of contents ---------------- */
+function wireTOC(){
+  var toc=document.getElementById("toc"), inner=document.getElementById("tocinner");
+  var btn=document.getElementById("tocbtn");
+  if(!toc||!inner||!btn) return;
+  btn.addEventListener("click",function(){
+    inner.innerHTML="";
+    steps.forEach(function(s,n){
+      var b=document.createElement("button"); b.className="tocitem"; b.type="button";
+      b.innerHTML='<span class="n">'+String(n).padStart(2,"0")+'</span><span>'+
+        s.dataset.title+'</span>'+(state.done[n]?'<span class="dn">&#10003;</span>':'');
+      b.addEventListener("click",function(){ toc.classList.remove("open"); showStep(n); });
+      inner.appendChild(b);
+    });
+    toc.classList.add("open");
+  });
+  toc.addEventListener("click",function(e){ if(e.target===toc) toc.classList.remove("open"); });
+  document.addEventListener("keydown",function(e){
+    if(e.key==="Escape") toc.classList.remove("open");
+  });
+}
+
+/* ---------------- plain fields ---------------- */
+function wireFields(){
+  [].forEach.call(document.querySelectorAll("[data-field]"),function(el){
+    if(el.tagName!=="INPUT" && el.tagName!=="TEXTAREA") return;
+    if(el.type==="range") return;
+    if(el.closest(".mcq,.numq,.txtq")) return;   /* those wire themselves */
+    var f=el.dataset.field, v=get(f);
+    if(v!=null) el.value=v;
+    el.addEventListener("input",function(){ set(f,el.value); });
+  });
+}
+
+/* ---------------- widget: multiple choice ---------------- */
+function wireMCQ(box){
+  var f=box.dataset.field, ans=box.dataset.a, why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var opts=[].slice.call(box.querySelectorAll(".opt")), fb=box.querySelector(".fb");
+  function paint(reveal){
+    var cur=get(f);
+    opts.forEach(function(o){
+      o.classList.remove("picked","right","wrong");
+      if(o.dataset.v===cur) o.classList.add("picked");
+      if(reveal){
+        if(o.dataset.v===ans) o.classList.add("right");
+        else if(o.dataset.v===cur) o.classList.add("wrong");
+        o.classList.add("locked");
+      }
+    });
+    if(reveal && cur!=null && fb){
+      var ok=cur===ans;
+      fb.className="fb show "+(ok?"ok":"no");
+      fb.querySelector(".verdict").textContent = ok?"Korrek":"Nie reg nie";
+      fb.querySelector(".why").innerHTML = why;
+    }
+  }
+  opts.forEach(function(o){
+    o.setAttribute("tabindex","0");
+    function pick(){
+      if(box.__locked) return;
+      if(!deferred && get(f)!=null) return;   /* practice: one shot */
+      if(deferred && box.__submitted) return;
+      set(f,o.dataset.v);
+      paint(!deferred);
+    }
+    o.addEventListener("click",pick);
+    o.addEventListener("keydown",function(e){
+      if(e.key==="Enter"||e.key===" "){ e.preventDefault(); pick(); }
+    });
+  });
+  box.__paint=paint;
+  box.__correct=function(){ return get(f)===ans; };
+  box.__answered=function(){ var v=get(f); return v!=null && v!==""; };
+  paint(deferred ? !!box.__submitted : get(f)!=null);
+}
+
+/* ---------------- widget: numeric ---------------- */
+function wireNum(box){
+  var f=box.dataset.field, ans=parseFloat(box.dataset.a), why=box.dataset.why||"";
+  var deferred=box.classList.contains("test");
+  var inp=box.querySelector("input"), fb=box.querySelector(".fb");
+  if(!inp) return;
+  inp.dataset.field=f;
+  var v=get(f); if(v!=null) inp.value=v;
+  function value(){ return parseFloat(String(get(f)||"").replace(/[\s,R]/g,"")); }
+  function correct(){ var c=value(); return !isNaN(c) && Math.abs(c-ans)<0.5; }
+  function paint(reveal){
+    if(!reveal || !fb) return;
+    if(deferred) inp.disabled=true;
+    if(isNaN(value())) return;
+    var ok=correct();
+    fb.className="fb show "+(ok?"ok":"no");
+    fb.querySelector(".verdict").textContent =
+      ok ? "Korrek" : ("Nie reg nie — die antwoord is "+fmt(ans));
+    fb.querySelector(".why").innerHTML = why;
+  }
+  inp.addEventListener("input",function(){ set(f,inp.value); });
+  inp.addEventListener("blur",function(){ if(!deferred && inp.value!=="") paint(true); });
+  box.__paint=paint;
+  box.__correct=correct;
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  if(deferred && box.__submitted) paint(true);
+  else if(!deferred && v!=null && v!=="") paint(true);
+}
+
+/* ---------------- widget: free text ---------------- */
+function wireTxt(box){
+  var f=box.dataset.field, ta=box.querySelector("textarea");
+  if(!ta) return;
+  ta.dataset.field=f;
+  var v=get(f); if(v!=null) ta.value=v;
+  ta.addEventListener("input",function(){ set(f,ta.value); });
+  box.__correct=function(){ return null; };            /* never auto-marked */
+  box.__answered=function(){ var x=get(f); return x!=null && String(x).trim()!==""; };
+  box.__paint=function(reveal){ if(reveal) ta.disabled=true; };
+}
+
+/* ---------------- widget: sorter ---------------- */
+function wireSorter(box){
+  var base=box.dataset.field, bins=box.dataset.bins.split("|");
+  var noreveal=box.dataset.noreveal==="1";
+  var rows=[].slice.call(box.querySelectorAll(".sortrow"));
+  rows.forEach(function(r,i){
+    var f=base+"_"+i;
+    var picks=document.createElement("div"); picks.className="picks";
+    bins.forEach(function(b){
+      var btn=document.createElement("button"); btn.type="button"; btn.textContent=b;
+      btn.addEventListener("click",function(){
+        if(box.__locked) return;
+        set(f,b); repaint();
+      });
+      picks.appendChild(btn);
+    });
+    r.appendChild(picks);
+    if(r.dataset.why){
+      var w=document.createElement("div"); w.className="why";
+      w.innerHTML=r.dataset.why; r.appendChild(w);
+    }
+    r.__f=f;
+  });
+  function repaint(){
+    var reveal = !noreveal && rows.every(function(r){ return get(r.__f)!=null; });
+    rows.forEach(function(r){
+      var cur=get(r.__f);
+      [].forEach.call(r.querySelectorAll(".picks button"),function(b){
+        b.classList.toggle("sel", b.textContent===cur);
+      });
+      r.classList.remove("right","wrong","reveal");
+      if(reveal) r.classList.add(cur===r.dataset.a ? "right" : "wrong","reveal");
+    });
+    if(reveal) box.__locked=true;
+  }
+  box.__rows=rows;
+  box.__lock=function(){ box.__locked=true; };
+  box.__repaint=repaint;
+  repaint();
+}
+
+function lockPredictions(){
+  var s=document.querySelector('.sorter[data-field="voorspel"]');
+  if(s) s.__lock();
+  [].forEach.call(document.querySelectorAll("[data-lock-with-predictions]"),function(el){
+    el.disabled=true;
+  });
+}
+
+/* ---------------- helpers ---------------- */
+function svgEl(tag,attrs){
+  var e=document.createElementNS("http://www.w3.org/2000/svg",tag);
+  for(var k in attrs) e.setAttribute(k,attrs[k]);
+  return e;
+}
+function fmt(n){
+  return String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g," ");
+}
+/* Deterministic 4-character check, mirrored by AROS/verifieer_kodes.py.
+   Alphabet excludes I, O, 0 and 1 so a handwritten code stays readable. */
+function checkCode(nr,value){
+  var s=String(nr||"")+"|"+value+"|"+cfg.codeSalt, h=0;
+  for(var i=0;i<s.length;i++){ h=(h*31+s.charCodeAt(i))>>>0; }
+  var A="ABCDEFGHJKLMNPQRSTUVWXYZ23456789", out="";
+  for(var j=0;j<4;j++){ out+=A[h%32]; h=Math.floor(h/32); }
+  return out;
+}
+function codeValue(){
+  return (typeof cfg.codeValue==="function") ? cfg.codeValue() : pctDone();
+}
+function buildCode(){
+  var nr=(get("studentenr")||"").replace(/\s/g,"");
+  var v=codeValue();
+  return cfg.codePrefix+"-"+(nr||"0000")+"-"+v+"-"+checkCode(nr,v);
+}
+
+/* ---------------- results ---------------- */
+function renderPredictions(){
+  var ph=document.getElementById("predhost");
+  if(!ph || !cfg.predictions.length) return;
+  ph.innerHTML="";
+  var wrong=0, answered=0;
+  cfg.predictions.forEach(function(p,i){
+    var mine=get("voorspel_"+i), ok=mine===p[1];
+    if(mine){ answered++; if(!ok) wrong++; }
+    var d=document.createElement("div");
+    d.className="sortrow "+(mine?(ok?"right":"wrong"):"");
+    d.innerHTML='<div class="txt">'+p[0]+'<br><span style="font-family:var(--mono);'+
+      'font-size:12.5px;opacity:.8">jy: '+(mine||"—")+' &middot; antwoord: '+p[1]+
+      '</span></div><div class="why" style="display:block">'+p[2]+'</div>';
+    ph.appendChild(d);
+  });
+  var s=document.createElement("p"); s.className="hint";
+  s.textContent = answered===0
+    ? "Jy het nie in stap 01 geraai nie, so daar is niks om mee te vergelyk nie."
+    : wrong===0
+      ? "Jy het al "+answered+" reg geraai voordat jy begin het."
+      : "Jy het "+wrong+" van die "+answered+" verkeerd geraai. Daardie is die idees wat verskil "+
+        "van wat jy gedink het — en dus die idees om te onderrig.";
+  ph.appendChild(s);
+}
+function renderResults(){
+  resultHooks.forEach(function(fn){ try{ fn(); }catch(e){} });
+  renderPredictions();
+  var cb=document.getElementById("codebox");
+  if(cb) cb.textContent=buildCode();
+}
+
+/* ---------------- export ---------------- */
+function buildExport(){
+  var L=[];
+  L.push("AEKN121 — "+(cfg.exportTitle||document.title)+" — UITVOER");
+  L.push("AROS · Inleiding tot Ekonomie");
+  L.push("Uitgevoer: "+new Date().toLocaleString("af-ZA"));
+  L.push("");
+  L.push("Naam:            "+(get("naam")||"—"));
+  L.push("Studentenommer:  "+(get("studentenr")||"—"));
+  L.push("Kode:            "+buildCode());
+  L.push("Voltooi:         "+pctDone()+"%");
+  L.push("");
+  exportHooks.forEach(function(fn){
+    try{
+      var lines=fn();
+      if(lines && lines.length) L=L.concat(lines,[""]);
+    }catch(e){}
+  });
+  if(cfg.predictions.length){
+    L.push("--- STAP 01: VOORSPELLINGS ---");
+    cfg.predictions.forEach(function(p,i){
+      L.push("  "+(get("voorspel_"+i)||"—")+" (antwoord: "+p[1]+")  — "+p[0]);
+    });
+    L.push("");
+  }
+  return L.join("\n");
+}
+function wireExport(){
+  var eb=document.getElementById("exportbtn");
+  var sb=document.getElementById("showexport");
+  var box=document.getElementById("exportbox");
+  var cc=document.getElementById("copycode");
+  var rb=document.getElementById("resetbtn");
+  if(eb) eb.addEventListener("click",function(){
+    var txt=buildExport();
+    var nr=(get("studentenr")||"student").replace(/[^0-9A-Za-z]/g,"");
+    try{
+      var blob=new Blob([txt],{type:"text/plain;charset=utf-8"});
+      var a=document.createElement("a");
+      a.href=URL.createObjectURL(blob);
+      a.download="AEKN121_"+cfg.codePrefix+"_"+nr+".txt";
+      document.body.appendChild(a); a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); },400);
+    }catch(e){
+      if(box){ box.style.display="block"; box.value=txt; box.select(); }
+    }
+  });
+  if(sb && box) sb.addEventListener("click",function(){
+    box.style.display = box.style.display==="none" ? "block" : "none";
+    box.value=buildExport();
+  });
+  if(cc) cc.addEventListener("click",function(){
+    var c=buildCode(), btn=this;
+    function done(){
+      btn.textContent="Gekopieer";
+      setTimeout(function(){ btn.textContent="Kopieer kode"; },1500);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(c).then(done,function(){ window.prompt("Kopieer:",c); });
+    } else window.prompt("Kopieer:",c);
+  });
+  if(rb) rb.addEventListener("click",function(){
+    if(!window.confirm("Vee alles uit en begin oor? Dit kan nie ongedaan gemaak word nie.")) return;
+    try{ localStorage.removeItem(cfg.key); }catch(e){}
+    location.reload();
+  });
+}
+
+/* ---------------- init ---------------- */
+function init(){
+  /* state was already loaded by config(); a second load() here would discard
+     anything the unit's own setup wrote while it was building its charts. */
+  flagEl=document.getElementById("saveflag");
+  steps=[].slice.call(document.querySelectorAll(".step"));
+  total=steps.length;
+
+  wireFields();
+  [].forEach.call(document.querySelectorAll(".mcq"),wireMCQ);
+  [].forEach.call(document.querySelectorAll(".numq"),wireNum);
+  [].forEach.call(document.querySelectorAll(".txtq"),wireTxt);
+  [].forEach.call(document.querySelectorAll(".sorter"),wireSorter);
+  wireTOC();
+  wireExport();
+
+  document.addEventListener("click",function(e){
+    var b=e.target.closest(".nextbtn,.prevbtn");
+    if(!b||b.disabled) return;
+    if(b.classList.contains("nextbtn")){
+      state.done[state.step]=true;
+      if(cfg.lockStep!=null && state.step===cfg.lockStep) lockPredictions();
+      showStep(state.step+1);
+    } else showStep(state.step-1);
+  });
+
+  if(cfg.lockStep!=null && state.done[cfg.lockStep]) lockPredictions();
+  /* The last step has no "next" button, so it can never be ticked off the way the others
+     are — without this, 100% voltooi is unreachable and a completion code tops out at 90. */
+  stepHooks.push(function(i){
+    if(i===total-1){ state.done[i]=true; queueSave(); updateProgress(); renderResults(); }
+  });
+
+  showStep(state.step,false);
+  updateProgress();
+  if(state.step===total-1){ state.done[state.step]=true; queueSave(); updateProgress(); renderResults(); }
+}
+
+return {
+  /* config() loads saved state immediately, because a unit's chart setup runs
+     between config() and init() and needs to restore its own slider and
+     placement values. */
+  config:function(o){
+    for(var k in o) cfg[k]=o[k];
+    if(o.schema) state.schemaVersion=o.schema;
+    if(cfg.key) load();
+  },
+  init:init,
+  get:get, set:set, save:save, getExtra:getExtra, setExtra:setExtra,
+  svgEl:svgEl, fmt:fmt,
+  buildCode:buildCode, checkCode:checkCode,
+  doneCount:doneCount, pctDone:pctDone, showStep:showStep,
+  totalSteps:function(){ return total; },
+  lockPredictions:lockPredictions,
+  renderResults:renderResults,
+  onResults:function(fn){ resultHooks.push(fn); },
+  onExport:function(fn){ exportHooks.push(fn); },
+  onStep:function(fn){ stepHooks.push(fn); }
+};
+})();
+
+
+/* ==== unit ==== */
+/* Leereenheid 5 — Die Monetêre Sektor
+   Unit-specific: the inflation-target decision, the repo transmission chain, and
+   the business-cycle wave.
+
+   This unit's reader is the thinnest (6 pages) while its share of the e-Klas
+   toets 2 pool is the largest (14 items), six of which cannot be answered from
+   the Leesbundel at all. The interactives carry more of the teaching here than
+   in any other unit. */
+
+AROS.config({
+  key:"aros_aekn121_le5_v1",
+  schema:1,
+  codePrefix:"LE5",
+  codeSalt:"AEKN121LE5",
+  exportTitle:"LEEREENHEID 5: DIE MONETÊRE SEKTOR",
+  lockStep:1,
+  predictions:[
+   ["Geld is dieselfde ding as welvaart.","Onwaar",
+    "Geld is die maatstaf. Welvaart is bates wat oor tyd opgebou is — eiendom, aandele, kuns, en ook geld."],
+   ["Die SARB se inflasiemikpunt is tussen 3% en 6%.","Waar",
+    "Dit is die amptelike band. Die raamwerk word van tyd tot tyd hersien, so gaan dit na voor jy dit as vandag se feit gebruik."],
+   ["Wanneer die repokoers styg, word lenings goedkoper.","Onwaar",
+    "Andersom. Hoër repo maak banke se fondse duurder, en daardie koste word na die breër ekonomie oorgedra."],
+   ["'n Resessie is wanneer BBP vir twee opeenvolgende kwartale gedaal het.","Waar",
+    "Dit is die gangbare werksdefinisie."],
+   ["Wanneer rentekoerse hoog is, hou mense méér kontant byderhand.","Onwaar",
+    "Minder. Hoë rente maak die geleentheidskoste van kontant hou hoog — jy gee daardie rente op."],
+   ["Die geleentheidskoste om geld te hou, is die rente wat jy daarop kon verdien het.","Waar",
+    "Leereenheid 1 se geleentheidskoste, hier toegepas: die naasbeste alternatief is om dit te belê."]
+  ]
+});
+
+var svgEl=AROS.svgEl;
+
+/* ================= inflasie teenoor die mikpuntband ================= */
+(function(){
+  var svg=document.getElementById("inflband"); if(!svg) return;
+  var X0=60,X1=596,Y=78,MAX=12;
+  function sx(v){ return X0+(v/MAX)*(X1-X0); }
+
+  /* target band 3–6% */
+  svg.appendChild(svgEl("rect",{class:"band",x:sx(3),y:Y-24,
+    width:sx(6)-sx(3),height:48,rx:3}));
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y+24,x2:X1,y2:Y+24}));
+  for(var v=0;v<=MAX;v+=2){
+    var t=svgEl("text",{class:"axlbl",x:sx(v),y:Y+42,"text-anchor":"middle"});
+    t.textContent=v+"%"; svg.appendChild(t);
+  }
+  var bl=svgEl("text",{class:"bandlbl",x:(sx(3)+sx(6))/2,y:Y-32,"text-anchor":"middle"});
+  bl.textContent="mikpuntband 3%–6%"; svg.appendChild(bl);
+  var marker=svgEl("g",{});
+  marker.appendChild(svgEl("line",{class:"marker",x1:0,y1:Y-24,x2:0,y2:Y+24}));
+  marker.appendChild(svgEl("circle",{class:"markerdot",cx:0,cy:Y,r:8}));
+  svg.appendChild(marker);
+
+  var rng=document.getElementById("infl");
+  var saved=AROS.get("infl_pos"); if(saved) rng.value=saved;
+  function paint(){
+    var v=+rng.value;
+    document.getElementById("infl_lbl").textContent=v.toFixed(1).replace(".",",")+"%";
+    marker.querySelector("line").setAttribute("x1",sx(v));
+    marker.querySelector("line").setAttribute("x2",sx(v));
+    marker.querySelector("circle").setAttribute("cx",sx(v));
+    var msg;
+    if(v>6){
+      msg="Inflasie is <b>bo</b> die band. Die SARB sou die repokoers <b>verhoog</b> "+
+          "om die vraag af te koel en pryse terug te bring.";
+    } else if(v<3){
+      msg="Inflasie is <b>onder</b> die band. Die SARB sou die repokoers <b>verlaag</b> "+
+          "om lenings goedkoper te maak en besteding te stimuleer.";
+    } else {
+      msg="Inflasie is <b>binne</b> die band. Die SARB sou die repokoers waarskynlik "+
+          "<b>onveranderd hou</b> — die beleid doen wat dit moet.";
+    }
+    document.getElementById("infl_verdict").innerHTML=msg;
+    AROS.set("infl_pos",rng.value);
+  }
+  rng.addEventListener("input",paint); paint();
+})();
+
+/* ================= die repo-transmissieketting ================= */
+(function(){
+  var svg=document.getElementById("transmit"); if(!svg) return;
+  var STEPS=["Repokoers","Koste van krediet","Besteding en belegging","Totale vraag","Inflasie"];
+  var BW=104, BH=52, Y=58, GAP=22;
+  var xs=STEPS.map(function(_,i){ return 14+i*(BW+GAP); });
+
+  var boxes=[], arrows=[];
+  STEPS.forEach(function(n,i){
+    var g=svgEl("g",{});
+    var r=svgEl("rect",{class:"tbox",x:xs[i],y:Y,width:BW,height:BH,rx:4});
+    g.appendChild(r);
+    var lines=n.split(" ");
+    var mid=Math.ceil(lines.length/2);
+    var top=lines.slice(0,mid).join(" "), bot=lines.slice(mid).join(" ");
+    var t1=svgEl("text",{class:"tlbl",x:xs[i]+BW/2,y:Y+(bot?21:29),"text-anchor":"middle"});
+    t1.textContent=top; g.appendChild(t1);
+    if(bot){
+      var t2=svgEl("text",{class:"tlbl",x:xs[i]+BW/2,y:Y+36,"text-anchor":"middle"});
+      t2.textContent=bot; g.appendChild(t2);
+    }
+    var dir=svgEl("text",{class:"tdir",x:xs[i]+BW/2,y:Y+BH+24,"text-anchor":"middle"});
+    g.appendChild(dir);
+    svg.appendChild(g);
+    boxes.push({rect:r,dir:dir});
+    if(i){
+      var a=svgEl("path",{class:"tarrow",
+        d:"M"+(xs[i]-GAP+3)+" "+(Y+BH/2)+" L"+(xs[i]-6)+" "+(Y+BH/2)});
+      var h=svgEl("path",{class:"tarrowhead",
+        d:"M"+(xs[i]-6)+" "+(Y+BH/2)+" l-7 -5 l0 10 z"});
+      svg.appendChild(a); svg.appendChild(h);
+      arrows.push(a);
+    }
+  });
+
+  function set(dirn){
+    var up = dirn==="up";
+    /* repo, credit cost move with the decision; the rest move against it */
+    var marks = up ? ["▲","▲","▼","▼","▼"] : ["▼","▼","▲","▲","▲"];
+    var words = up
+      ? ["styg","duurder","daal","daal","koel af"]
+      : ["daal","goedkoper","styg","styg","warm op"];
+    boxes.forEach(function(b,i){
+      b.dir.textContent=marks[i]+" "+words[i];
+      b.dir.setAttribute("class","tdir "+(marks[i]==="▲"?"up":"down"));
+      b.rect.setAttribute("class","tbox on");
+    });
+    document.getElementById("repo_verdict").innerHTML = up
+      ? "<b>Repokoers styg.</b> Banke se fondse word duurder, dus word krediet duurder vir "+
+        "huishoudings en besighede. Hulle leen en bestee minder, die totale vraag daal, en "+
+        "die druk op pryse verminder. <b>Dít is hoe die SARB inflasie afbring</b> — en dit is "+
+        "ook waarom 'n repoverhoging seermaak: dieselfde ketting koel die hele ekonomie af."
+      : "<b>Repokoers daal.</b> Krediet word goedkoper, dus leen en bestee huishoudings en "+
+        "besighede meer, belegging neem toe, die totale vraag styg — en die prysdruk styg saam. "+
+        "Dit is die instrument wat gebruik word wanneer die ekonomie stimulasie nodig het.";
+    AROS.set("repo_dir",dirn);
+  }
+  [].forEach.call(document.querySelectorAll("[data-repo]"),function(b){
+    b.addEventListener("click",function(){
+      [].forEach.call(document.querySelectorAll("[data-repo]"),function(x){
+        x.classList.remove("sel"); });
+      b.classList.add("sel"); set(b.dataset.repo);
+    });
+  });
+  var savedDir=AROS.get("repo_dir");
+  if(savedDir){
+    var btn=document.querySelector('[data-repo="'+savedDir+'"]');
+    if(btn){ btn.classList.add("sel"); set(savedDir); }
+  }
+})();
+
+/* ================= die sakesiklus ================= */
+(function(){
+  var svg=document.getElementById("cycle"); if(!svg) return;
+  var X0=60,X1=600,Y0=300,Y1=40;
+  var MIDY=(Y0+Y1)/2, AMP=(Y0-Y1)*0.30;
+  /* one and a half cycles across the plot, on a gently rising trend */
+  var CYCLES=1.5, TREND=44;
+
+  function xAt(t){ return X0+t*(X1-X0); }                 /* t in 0..1 */
+  function trendY(t){ return MIDY + TREND/2 - t*TREND; }  /* long-run path */
+  function theta(t){ return t*CYCLES*2*Math.PI - Math.PI/2; }
+  function yAt(t){ return trendY(t) - AMP*Math.sin(theta(t)); }
+
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y1-8,x2:X0,y2:Y0}));
+  svg.appendChild(svgEl("line",{class:"axis",x1:X0,y1:Y0,x2:X1+8,y2:Y0}));
+  var an=svgEl("text",{class:"axname",x:X1+8,y:Y0+30,"text-anchor":"end"});
+  an.textContent="Tyd"; svg.appendChild(an);
+  var bn=svgEl("text",{class:"axname",x:X0-8,y:Y1-16,"text-anchor":"start"});
+  bn.textContent="Reële BBP"; svg.appendChild(bn);
+
+  /* trend line */
+  svg.appendChild(svgEl("line",{class:"trend",
+    x1:xAt(0),y1:trendY(0),x2:xAt(1),y2:trendY(1)}));
+  /* at t=0.62 the wave sits ~70px below the trend, so a label above the line is clear */
+  var tl=svgEl("text",{class:"trendlbl",x:xAt(0.62),y:trendY(0.62)-11,"text-anchor":"middle"});
+  tl.textContent="langtermyn-groeipad"; svg.appendChild(tl);
+
+  /* the wave */
+  var d="", N=200;
+  for(var i=0;i<=N;i++){
+    var t=i/N;
+    d += (i?"L":"M")+xAt(t).toFixed(1)+" "+yAt(t).toFixed(1);
+  }
+  svg.appendChild(svgEl("path",{class:"wave",d:d}));
+
+  /* label the turning points that fall inside the plot */
+  [[0.0,"Trog"],[0.333,"Piek"],[0.667,"Trog"],[1.0,"Piek"]].forEach(function(p){
+    var t=p[0];
+    if(t<0.01||t>0.99) { if(t>0.99) t=0.995; else t=0.005; }
+    svg.appendChild(svgEl("circle",{class:"turn",cx:xAt(t),cy:yAt(t),r:5}));
+    /* nudge the edge labels inward so they clear the axes */
+    var anchor = t<0.05 ? "start" : t>0.95 ? "end" : "middle";
+    var dx = t<0.05 ? 10 : t>0.95 ? -10 : 0;
+    var lab=svgEl("text",{class:"turnlbl",x:xAt(t)+dx,
+      y:yAt(t)+(p[1]==="Piek"?-14:22),"text-anchor":anchor});
+    lab.textContent=p[1]; svg.appendChild(lab);
+  });
+
+  var probe=svgEl("g",{style:"display:none"});
+  probe.appendChild(svgEl("line",{class:"probeline"}));
+  probe.appendChild(svgEl("circle",{class:"probedot",r:8}));
+  svg.appendChild(probe);
+
+  var FASES={
+    piek:{naam:"Piek", why:"Produksie en pryse is op hul <b>maksimum</b> vlakke. Die opswaai loop hier oor in 'n afswaai. Werkloosheid is op sy laagste — maar nooit nul nie, want wrywingswerkloosheid bly altyd."},
+    afswaai:{naam:"Afswaai", why:"Ekonomiese aktiwiteit <b>neem af</b>, werkloosheidsyfers neem toe en aandelepryse daal. Daal BBP twee kwartale agtereen, noem ons dit 'n <b>resessie</b>. Dit is waar sikliese werkloosheid ontstaan."},
+    trog:{naam:"Trog", why:"Die <b>laagste punt</b>. Die inkrimping loop hier uit en 'n nuwe uitbreidingsfase begin. Werkloosheid is op sy hoogste."},
+    opswaai:{naam:"Opswaai", why:"Geleidelike <b>uitbreiding</b> op pad na 'n piek. Firmas begin weer aanstel en die sikliese werkloosheid van die afswaai verdwyn."}
+  };
+  function faseAt(t){
+    var th=theta(t);
+    var s=Math.sin(th), c=Math.cos(th);       /* c > 0 means rising */
+    if(s>0.93) return "piek";
+    if(s<-0.93) return "trog";
+    return c>0 ? "opswaai" : "afswaai";
+  }
+
+  svg.addEventListener("click",function(ev){
+    var r=svg.getBoundingClientRect();
+    if(!r.width||!r.height) return;
+    var px=(ev.clientX-r.left)/r.width*640;
+    var t=(px-X0)/(X1-X0);
+    /* allow a small margin then clamp, so a tap exactly on the axis still counts */
+    if(t<-0.03||t>1.03) return;
+    t=Math.max(0,Math.min(1,t));
+    var y=yAt(t), f=FASES[faseAt(t)];
+    probe.style.display="";
+    probe.querySelector("circle").setAttribute("cx",xAt(t));
+    probe.querySelector("circle").setAttribute("cy",y);
+    var ln=probe.querySelector("line");
+    ln.setAttribute("x1",xAt(t)); ln.setAttribute("y1",y);
+    ln.setAttribute("x2",xAt(t)); ln.setAttribute("y2",Y0);
+    document.getElementById("cycle_verdict").innerHTML="<b>"+f.naam+".</b> "+f.why;
+    AROS.set("cycle_t",t.toFixed(3));
+  });
+
+  var savedT=parseFloat(AROS.get("cycle_t"));
+  if(!isNaN(savedT)){
+    var y=yAt(savedT), f=FASES[faseAt(savedT)];
+    probe.style.display="";
+    probe.querySelector("circle").setAttribute("cx",xAt(savedT));
+    probe.querySelector("circle").setAttribute("cy",y);
+    var ln=probe.querySelector("line");
+    ln.setAttribute("x1",xAt(savedT)); ln.setAttribute("y1",y);
+    ln.setAttribute("x2",xAt(savedT)); ln.setAttribute("y2",Y0);
+    document.getElementById("cycle_verdict").innerHTML="<b>"+f.naam+".</b> "+f.why;
+  }
+})();
+
+/* ---------- formative quiz ---------- */
+var QUIZ=[].slice.call(document.querySelectorAll(".mcq.quiz"));
+var GAP_Q=[4,7,8,12,13,14];   /* the ones the Leesbundel cannot answer, by number */
+function quizScore(){
+  var got=0,ans=0,gapGot=0,gapAns=0;
+  QUIZ.forEach(function(b,i){
+    var isGap=GAP_Q.indexOf(i+1)>=0;
+    if(b.__answered()){
+      ans++; if(isGap) gapAns++;
+      if(b.__correct()){ got++; if(isGap) gapGot++; }
+    }
+  });
+  return {got:got, answered:ans, max:QUIZ.length, gapGot:gapGot, gapAns:gapAns, gapMax:GAP_Q.length};
+}
+
+AROS.onResults(function(){
+  var host=document.getElementById("scorehost"); if(!host) return;
+  var q=quizScore();
+  host.innerHTML='<div class="scorecard"><div class="big">'+q.got+' / '+q.max+'</div>'+
+    '<div class="cap">oefenvrae reg &middot; almal uit die toets 2-poel</div></div>'+
+    '<p>Op die vrae wat jy <b>nie</b> uit die Leesbundel kon beantwoord nie (die '+
+    '&dagger;-vrae) het jy <b>'+q.gapGot+' van '+q.gapMax+'</b> reg. Dit is die werk wat '+
+    'net hier staan — gaan dit weer deur voor die toets.</p>'+
+    (q.answered<q.max
+      ? '<div class="note">Jy het '+(q.max-q.answered)+' van die oefenvrae nog nie beantwoord nie. '+
+        'Gaan terug na stap 08 as jy wil.</div>'
+      : '<p>Al veertien beantwoord.</p>');
+});
+
+AROS.onExport(function(){
+  var L=[], q=quizScore();
+  L.push("OEFENVRAE (stap 08) — al 14 uit e-Klas toets 2 se poel, tel hier nie punte nie");
+  L.push("  Reg: "+q.got+" / "+q.max+"   (beantwoord: "+q.answered+")");
+  L.push("  Waarvan die †-vrae (nie in die Leesbundel nie): "+q.gapGot+" / "+q.gapMax);
+  QUIZ.forEach(function(b,i){
+    var v=AROS.get(b.dataset.field);
+    var dag=GAP_Q.indexOf(i+1)>=0?" †":"";
+    L.push("  "+(i+1)+dag+": "+(v||"—")+"   "+
+      (v?(b.__correct()?"[reg]":"[verkeerd — "+b.dataset.a+"]"):""));
+  });
+  return L;
+});
+
+AROS.onExport(function(){
+  var t=parseFloat(AROS.get("cycle_t"));
+  return ["--- STAP 05: MONETÊRE BELEID ---",
+    "  Inflasie geplaas op: "+(AROS.get("infl_pos")||"—")+"%",
+    "  Repo-rigting gekies:  "+(AROS.get("repo_dir")||"—"),
+    "",
+    "--- STAP 06: SAKESIKLUS ---",
+    "  Punt op die kurwe: "+(isNaN(t)?"—":t.toFixed(2)),
+    "",
+    "--- STAP 07: RUILHANDEL-AKTIWITEIT VIR GRAAD 8 ---",
+    AROS.get("lesplan")||"[geen antwoord]",
+    "",
+    "--- STAP 07: VRAAG VIR DIE KLAS ---",
+    AROS.get("klasvraag")||"[geen antwoord]"];
+});
+
+AROS.init();
+</script>
+</body>
+</html>
