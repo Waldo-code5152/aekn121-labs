@@ -920,7 +920,7 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
   </div>
 
   <div class="mcq quiz" data-field="q14" data-a="b"
-    data-why="&dagger; Fiskale beleid is die regering se begroting: hoeveel hy bestee en hoeveel belasting hy hef. Die ander drie is monet&ecirc;re of wisselkoersinstrumente &mdash; die SARB se terrein, nie die Tesourie s'n nie. Sien die tabel in stap 05.">
+    data-why="&dagger; Fiskale beleid is die regering se begroting: hoeveel hy bestee en hoeveel belasting hy hef. Die ander drie is monet&ecirc;re of wisselkoersinstrumente &mdash; die SARB se terrein, nie die Tesourie s'n nie. Sien die tabel in stap 03.">
     <label class="q">14. &dagger; Fiskale beleid behels:</label>
     <div class="opts">
       <div class="opt" data-v="a"><span class="lt">a</span><span>Geldvoorraadbeheer</span></div>
@@ -993,6 +993,8 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
      .txtq    data-field                        free text, never auto-marked
      .sorter  data-field, data-bins="A|B"       rows carry data-a and data-why
                                                 data-noreveal="1" keeps it silent
+                                                add .test to defer the reveal (one
+                                                mark per row; the unit submits it)
 
    Nothing here is unit-specific. If you find yourself adding a unit's
    content to this file, it belongs in that unit's unit.js instead.
@@ -1178,6 +1180,7 @@ function wireTxt(box){
 function wireSorter(box){
   var base=box.dataset.field, bins=box.dataset.bins.split("|");
   var noreveal=box.dataset.noreveal==="1";
+  var deferred=box.classList.contains("test");
   var rows=[].slice.call(box.querySelectorAll(".sortrow"));
   rows.forEach(function(r,i){
     var f=base+"_"+i;
@@ -1198,7 +1201,8 @@ function wireSorter(box){
     r.__f=f;
   });
   function repaint(){
-    var reveal = !noreveal && rows.every(function(r){ return get(r.__f)!=null; });
+    var reveal = deferred ? !!box.__submitted
+      : (!noreveal && rows.every(function(r){ return get(r.__f)!=null; }));
     rows.forEach(function(r){
       var cur=get(r.__f);
       [].forEach.call(r.querySelectorAll(".picks button"),function(b){
@@ -1212,6 +1216,14 @@ function wireSorter(box){
   box.__rows=rows;
   box.__lock=function(){ box.__locked=true; };
   box.__repaint=repaint;
+  box.__paint=function(){ repaint(); };
+  box.__marks=function(){
+    var got=rows.filter(function(r){ return get(r.__f)===r.dataset.a; }).length;
+    return {got:got, max:rows.length};
+  };
+  box.__open=function(){
+    return rows.filter(function(r){ return get(r.__f)==null; }).length;
+  };
   repaint();
 }
 
