@@ -333,8 +333,8 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
   <p>Reken op ongeveer <b>110 minute</b>. Breekpunt n&aacute; stap 04.</p>
 
   <div class="note"><b>Lees hierdie een mooi.</b> Leereenheid 5 se afdeling in die Leesbundel
-  is ses bladsye lank. Maar van die 30 vrae in <b>e-Klas toets 2</b> se poel gaan
-  <b>veertien</b> oor hierdie werk &mdash; meer as enige ander eenheid.
+  is ses bladsye lank. Maar van die 30 vrae in <b>e-Klas toets 2</b> se 2025-poel het
+  <b>veertien</b> oor hierdie werk gegaan &mdash; meer as enige ander eenheid.
   <br><br>Ek het elke een van daardie veertien teen die Leesbundel nagegaan.
   <b>Ses van hulle kan jy nie uit die Leesbundel alleen beantwoord nie.</b> Hulle is in
   hierdie laboratorium ingebou en duidelik gemerk met <b>&ldquo;nie in die Leesbundel
@@ -471,7 +471,7 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
 
   <div class="gap">
     <div class="gaphead">Nie in die Leesbundel nie &mdash; maar wel in die toets</div>
-    <p>Die poel vra na die verskil tussen <b>monet&ecirc;re</b> en <b>fiskale</b> beleid.
+    <p>Die 2025-toetspoel vra na die verskil tussen <b>monet&ecirc;re</b> en <b>fiskale</b> beleid.
     Die Leesbundel behandel net die eerste een. Hier is albei:</p>
     <div class="scroll"><table>
       <tr><th></th><th>Monet&ecirc;re beleid</th><th>Fiskale beleid</th></tr>
@@ -757,9 +757,9 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
     <span class="steptitle">Toets jouself</span>
     <span class="steptag">oefening &middot; tel nie punte nie</span><span class="stepmin">16 min</span></div>
 
-  <div class="note"><b>Al veertien vrae kom woordeliks uit e-Klas toets 2 se poel van 30</b>
-  &mdash; dit is elke Leereenheid 5-item daarin. Die toets trek 15 vrae uit die poel, dus is
-  hierdie werk waarskynlik die grootste enkele blok punte in daardie toets.
+  <div class="note"><b>Al veertien vrae kom uit e-Klas toets 2 se 2025-poel van 30</b>
+  &mdash; dit was elke Leereenheid 5-item daarin, die grootste enkele blok in die poel.
+  Die 2026-toets word nuut opgestel, in dieselfde formaat en oor dieselfde werk, so moenie verwag om presies hierdie vrae te kry nie.
   <br><br>Ses van hierdie veertien kon jy <b>nie</b> uit die Leesbundel alleen beantwoord nie.
   Hulle is die vrae wat 'n merkie <b>&dagger;</b> dra.</div>
 
@@ -961,9 +961,9 @@ svg.chart{display:block;width:100%;height:auto;touch-action:manipulation}
   <textarea id="exportbox" readonly></textarea>
 
   <div class="note" style="margin-top:26px"><b>Dis al vyf.</b> Volgende is die
-  hersieningsweek en <b>e-Klas toets 2</b>, wat 15 vrae uit 'n poel van 30 trek oor
-  Leereenhede 2 tot 5. Die verspreiding van daardie poel is: LE2 vier vrae, LE3 twee,
-  <b>LE4 tien</b>, <b>LE5 veertien</b>. Weet waar om jou tyd te bestee.
+  hersieningsweek en <b>e-Klas toets 2</b>, wat 15 meerkeusevrae oor Leereenhede 2 tot 5
+  trek. In die 2025-poel was die verspreiding: LE2 vier vrae, LE3 twee, <b>LE4 tien</b>,
+  <b>LE5 veertien</b>. Die 2026-toets word nuut opgestel, in dieselfde formaat en oor dieselfde werk &mdash; weet waar om jou tyd te bestee.
   <br><br>Gaan al vyf laboratoriums se uitvoere deur. Jou eie foute in die oefenvrae is die
   beste studiegids wat jy gaan kry.</div>
 
@@ -1694,7 +1694,7 @@ AROS.onResults(function(){
   var host=document.getElementById("scorehost"); if(!host) return;
   var q=quizScore();
   host.innerHTML='<div class="scorecard"><div class="big">'+q.got+' / '+q.max+'</div>'+
-    '<div class="cap">oefenvrae reg &middot; almal uit die toets 2-poel</div></div>'+
+    '<div class="cap">oefenvrae reg &middot; almal uit die 2025-toetspoel</div></div>'+
     '<p>Op die vrae wat jy <b>nie</b> uit die Leesbundel kon beantwoord nie (die '+
     '&dagger;-vrae) het jy <b>'+q.gapGot+' van '+q.gapMax+'</b> reg. Dit is die werk wat '+
     'net hier staan — gaan dit weer deur voor die toets.</p>'+
@@ -1706,7 +1706,7 @@ AROS.onResults(function(){
 
 AROS.onExport(function(){
   var L=[], q=quizScore();
-  L.push("OEFENVRAE (stap 08) — al 14 uit e-Klas toets 2 se poel, tel hier nie punte nie");
+  L.push("OEFENVRAE (stap 08) — al 14 uit e-Klas toets 2 se 2025-poel, tel hier nie punte nie");
   L.push("  Reg: "+q.got+" / "+q.max+"   (beantwoord: "+q.answered+")");
   L.push("  Waarvan die †-vrae (nie in die Leesbundel nie): "+q.gapGot+" / "+q.gapMax);
   QUIZ.forEach(function(b,i){
