@@ -1102,6 +1102,8 @@ function wireFields(){
 /* ---------------- widget: multiple choice ---------------- */
 function wireMCQ(box){
   var f=box.dataset.field, ans=box.dataset.a, why=box.dataset.why||"";
+  /* data-a may hold several letters ("cd"): any of them counts as right */
+  function isKey(v){ return v!=null && v!=="" && ans.indexOf(v)>=0; }
   var deferred=box.classList.contains("test");
   var opts=[].slice.call(box.querySelectorAll(".opt")), fb=box.querySelector(".fb");
   function paint(reveal){
@@ -1110,13 +1112,13 @@ function wireMCQ(box){
       o.classList.remove("picked","right","wrong");
       if(o.dataset.v===cur) o.classList.add("picked");
       if(reveal){
-        if(o.dataset.v===ans) o.classList.add("right");
+        if(isKey(o.dataset.v)) o.classList.add("right");
         else if(o.dataset.v===cur) o.classList.add("wrong");
         o.classList.add("locked");
       }
     });
     if(reveal && cur!=null && fb){
-      var ok=cur===ans;
+      var ok=isKey(cur);
       fb.className="fb show "+(ok?"ok":"no");
       fb.querySelector(".verdict").textContent = ok?"Korrek":"Nie reg nie";
       fb.querySelector(".why").innerHTML = why;
@@ -1137,7 +1139,7 @@ function wireMCQ(box){
     });
   });
   box.__paint=paint;
-  box.__correct=function(){ return get(f)===ans; };
+  box.__correct=function(){ return isKey(get(f)); };
   box.__answered=function(){ var v=get(f); return v!=null && v!==""; };
   paint(deferred ? !!box.__submitted : get(f)!=null);
 }
